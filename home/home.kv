@@ -1,0 +1,69 @@
+
+
+<HomeScreen>:
+    navigation_bar : navigation_bar
+    home_screen_manager : home_screen_manager
+
+    canvas.before:
+        Color:
+            rgba: chex("#FFFFFF")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+    
+    FloatLayout:
+        size_hint: 1,1
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+        HomeScreenManager:
+            id:home_screen_manager
+            size_hint: 1,1
+            pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+        NavigationBar:
+            id: navigation_bar
+            size_hint: 1, None
+            height: dp(60)
+            pos_hint: {'center_x': 0.5,'y': 0}
+
+
+
+<NavigationBar>:
+    dashboard_button : dashboard_button
+    ticket_button : ticket_button
+    settings_button : settings_button
+
+    orientation: 'horizontal'
+        
+    canvas.before:
+        Color: 
+            rgba: chex('#014367')
+        RoundedRectangle:
+            pos : self.pos
+            size : self.size
+            radius: [4 , 4, 0 , 0]
+
+    MDIconButton:
+        id: dashboard_button
+        icon: 'home-analytics' 
+        size_hint: .33,1
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        theme_font_size: "Custom"
+        # font_size: "45sp" 
+
+    MDIconButton:
+        id: ticket_button
+        icon: 'ticket-account' 
+        size_hint: .33,1
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        theme_font_size: "Custom"
+        # font_size: "30sp" 
+        
+    MDIconButton:
+        id: settings_button
+        icon: "account-cog"
+        size_hint: .33,1
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        theme_font_size: "Custom"
+                # font_size: "30sp" 

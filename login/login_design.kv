@@ -1,0 +1,192 @@
+<CircleWidget1@Widget>: 
+    canvas.before:
+        Color:
+            rgba: chex("#27FFFF")
+        Ellipse:
+            pos: self.pos
+            size: self.size
+
+<CircleWidget2@Widget>:
+    canvas.before:
+        Color:
+            rgba: chex("#014367")
+        Ellipse:
+            pos: self.pos
+            size: self.size
+
+<PinButton@Button>: 
+    background_normal: ""  # Remove default button background
+    background_color: 0, 0, 0, 0  # Make background transparent
+    font_name: 'roboto_extrabold'
+    color: chex("#F7EEDD")
+    canvas.before:
+        Color:
+            rgba: chex("#014367")  # Button color
+        RoundedRectangle:
+            size: self.size  # ✅ Match the button size
+            pos: (self.center_x - self.width / 2, self.center_y - self.height / 2)  # ✅ Perfect centering
+            radius: [4]  # ✅ Keep rounded corners
+
+
+<ClickableLabel>:
+    markup: True  # Enable text formatting
+    color: chex("#014367")  # Blue color (like a hyperlink)
+    font_size: "20sp"
+    halign: "center"
+    valign: "middle"
+    size_hint_y: None
+    font_name: 'roboto_extrabolditalic'
+    height: self.texture_size[1] + dp(20) 
+
+<PinWidget>:
+
+
+<LoginBackButton>:
+    text: "Go Back" 
+    font_name: 'roboto_light'
+    color: chex('#014367')
+    halign: 'left'
+    text_size: self.size
+    valign: 'middle'
+    background_down: ''
+    background_color: (0,0,0,0)
+
+<LoginLabelTitle>:  
+    color: chex("#014367")  # Blue color (like a hyperlink)
+    halign: "left"
+    valign: "middle"
+    size_hint_y: None
+    font_name: 'roboto_extrabold' 
+    text_size: self.size
+
+
+
+<LoginTextInput>:
+    size_hint_x: 0.9
+    pos_hint: {"center_x": 0.5}
+    font_size: "15sp"
+    multiline: False
+    foreground_color: "#014367"
+    hint_text_color: "#014367"
+    padding_x: [8]
+    padding_y: [self.padding_y_dynamic, self.padding_y_dynamic]  # ✅ Use dynamic padding
+    halign: "left"
+    background_color: 1, 1, 1, 0
+    font_name: 'roboto_light'
+
+    canvas.before:
+        Color:
+            rgba: chex('#E8FBFF')  # ✅ Light blue background
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [4, 4, 4, 4]
+
+        Color:
+            rgba: 0.01, 0.26, 0.40, 1  # ✅ Dark blue border
+        Line:
+            width: 1.2
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 4)
+
+
+
+<LoginButton>:
+    size_hint_x: 0.9
+    pos_hint: {"center_x": 0.5}
+    height: dp(50)
+    font_size: "20sp"
+    bold: True
+    color: (1, 1, 1, 1)  # ✅ White text color
+    background_normal: ""  # ✅ Remove default button styling
+    background_color: (0, 0, 0, 0)  # ✅ Transparent to use custom canvas
+    font_name: 'roboto_extrabold'
+
+    canvas.before:
+        Color:
+            rgba: chex('#014367')  # ✅ Dark blue background
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [4, 4, 4, 4]  # ✅ Rounded corners
+
+
+
+<ProcessingModal>:
+    size_hint: None, None
+    size: dp(250), dp(120)  # ✅ Exact size control
+    auto_dismiss: False  # ✅ Prevent closing when tapping outside
+    background_color: 0,0,0,0
+	overlay_color: 0,0,0,0.2
+
+    canvas.before:
+        Color:
+            rgba: chex("#014367")  # ✅ Dark blue background
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [4, 4, 4, 4]  # ✅ Rounded corners
+
+        
+        # ✅ Border Color
+        Color:
+            rgba: chex("#F7EEDD")  # White border
+        Line:
+            width: 2  # ✅ Border thickness
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 4)
+
+
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, 1
+        padding: dp(10)
+        spacing: dp(10)
+
+        Label:
+            text: root.proccess_text
+            color: (1, 1, 1, 1)
+            bold: True
+            font_size: "20sp"
+            halign: "center"
+            valign: "middle"
+            text_size: self.size
+
+
+
+
+<ControllableModal>:
+    size_hint: None, None
+    size: dp(250), dp(120)  # ✅ Exact size control 
+    background_color: 0,0,0,0
+	overlay_color: 0,0,0,0.2
+
+    canvas.before:
+        Color:
+            rgba: chex("#014367")  # ✅ Dark blue background
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [4, 4, 4, 4]  # ✅ Rounded corners
+
+         
+        Color:
+            rgba: chex("#F7EEDD")  # White border
+        Line:
+            width: 2  # ✅ Border thickness
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 4)
+
+
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, 1
+        padding: dp(10)
+        spacing: dp(10)
+
+        Label:
+            text: root.my_text
+            color: (1, 1, 1, 1)
+            bold: True
+            font_size: "20sp"
+            halign: "center"
+            valign: "middle"
+            text_size: self.size
+

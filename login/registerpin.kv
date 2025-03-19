@@ -1,0 +1,103 @@
+<RegisterPinScreen>: 
+    back_image: back_image
+    back_text: back_text
+
+
+    FloatLayout:
+        size_hint: 1,1
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+        CircleWidget2: 
+            size_hint: None, None
+            size: root.circle_size, root.circle_size  # ✅ Use root property
+            pos_hint: {"center_x": 0.9, "center_y": 1}
+
+        CircleWidget1: 
+            size_hint: None, None
+            size: root.circle_size, root.circle_size  # ✅ Use root property
+            pos_hint: {"center_x": 0.1, "center_y": 0.9}
+            
+        CircleWidget1: 
+            size_hint: None, None
+            size: root.circle_size, root.circle_size  # ✅ Use root property
+            pos_hint: {"center_x": 0.15, "center_y": 0.15}
+
+        BoxLayout:
+            orientation:'vertical'
+            size_hint: 1,1
+            pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+            BoxLayout:
+                orientation:'horizontal'
+                size_hint: 1,0.1
+                
+                Image:
+                    id: back_image
+                    source: root.manager.go_back_icon if root.manager else None
+                    size_hint: 0.1 , 1
+                    # allow_stretch: True  # ✅ Allows scaling while maintaining aspect ratio
+                    # keep_ratio: True  # ✅ Ensures it doesn't distort
+                LoginBackButton:
+                    id: back_text
+                    size_hint: 0.2,1  
+                    font_size: root.go_back_screen_font_size  
+                
+                Widget:
+                    size_hint: 0.7,1 
+
+            BoxLayout:
+                size_hint: 1,0.3
+
+                Image:
+                    size_hint: .8,.8
+                    source: app.icon
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            
+            Label:
+                text: "Your PIN is personal and confidential. Never share it with\nanyone to protect your account from unauthorized access.\nUse a unique and strong PIN to ensure the security of your\ntransactions and data."
+                size_hint: .8,.1
+                font_name: 'roboto_light'
+                font_size: root.pin_info_font_size
+                color: chex("#014367")
+                pos_hint: {'center_x': 0.5}  
+
+            BoxLayout:
+                orientation:'vertical'
+                size_hint: 0.8,0.3
+                pos_hint: {'center_x': 0.5 }
+
+                LoginLabelTitle:
+                    text: "Pin ;"
+                    font_size: root.title_font_size
+                    size_hint: 1, 0.2
+ 
+
+                LoginTextInput:
+                    size_hint: 1, 0.2 
+                    hint_text: "Provide Your 4 Pins . . ."
+                    font_size: root.text_input_font_size
+
+                
+                LoginLabelTitle:
+                    text: "Pins ;"
+                    font_size: root.title_font_size 
+                    size_hint: 1, 0.2 
+
+                LoginTextInput:
+                    size_hint: 1, 0.2 
+                    hint_text: "Re-Enter Your 4 Pins . . ."
+                    font_size: root.text_input_font_size
+                
+                Widget:
+                    size_hint: 1,0.05
+
+                LoginButton:
+                    text: "Login Now"
+                    size_hint: 0.35, 0.15
+                    pos_hint: {'right': 1 , 'center_y': 0.5}
+                    font_size: root.text_input_font_size
+
+
+            BoxLayout:
+                orientation:'vertical'
+                size_hint: 1,0.2

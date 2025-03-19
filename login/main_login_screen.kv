@@ -1,0 +1,23 @@
+#:import chex kivy.utils.get_color_from_hex
+##:import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+<LoginScreen>:
+    # transition: FadeTransition(duration=0.5)
+    size_hint: 1,1
+    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+    
+    canvas.before:
+        Color:
+            rgba: chex("#FFFFFF")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            
+
+
+
+<LoginScreenManager>: 
+    size_hint: 1,1
+    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+

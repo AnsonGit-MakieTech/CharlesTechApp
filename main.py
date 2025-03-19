@@ -1,0 +1,100 @@
+from kivymd.app import MDApp
+from kivymd.uix.screenmanager import MDScreenManager
+from kivy.lang.builder import Builder
+from kivy.core.text import LabelBase
+from kivy.utils import platform
+
+
+from variables import *
+from login import main_login_screen  # Import login screen class
+from home import home
+import os
+
+from kivy.config import Config
+from kivy.core.window import Window
+
+if platform == "android":
+    from plyer.platforms.android.sms import Sms
+    from android.permissions import request_permissions, Permission, check_permission  # pylint: disable=import-error
+
+
+# Set Window Size Before App Starts
+Window.size = (320, 568)
+
+
+
+
+class MainApp(MDScreenManager):  # Acts as ScreenManager
+    pass
+
+class TechnicalApp(MDApp): 
+    
+    def on_start(self):
+        """ Check and request storage permission on Android """
+        if platform == "android":
+            if self.check_permissions():
+                print("✅ Storage permission already granted.")
+            else:
+                print("❌ Storage permission NOT granted. Requesting now...")
+                request_permissions([
+                    Permission.READ_EXTERNAL_STORAGE,
+                    Permission.WRITE_EXTERNAL_STORAGE,
+                    Permission.ACCESS_FINE_LOCATION,  # ✅ GPS Permission
+                    Permission.ACCESS_COARSE_LOCATION  # ✅ Coarse GPS Permission
+                ])
+
+    def check_permissions(self):
+        """ Check if READ/WRITE storage permissions are granted """
+        if platform == "android":
+            has_read = check_permission(Permission.READ_EXTERNAL_STORAGE)
+            has_write = check_permission(Permission.WRITE_EXTERNAL_STORAGE)
+            return has_read and has_write
+        return True  # ✅ Assume granted on other platforms
+
+            
+    def build(self):
+        
+        self.icon = os.path.join(os.path.dirname(__file__), 'assets', 'app_logo.png')
+        
+        # Load Application 
+        Builder.load_file('main.kv')  # ✅ Load only UI, not screens
+        self.root_screen_manager = MainApp()  # ✅ Initialize empty ScreenManager
+        
+        
+        # Load login screen
+        # login_component_kv_path = os.path.join(os.path.dirname(__file__), 'login', "login_design.kv")
+        # login_kv_path = os.path.join(os.path.dirname(__file__), 'login', "main_login_screen.kv")
+        # login_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "pinlogin.kv")
+        # register_account_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registeraccount.kv")
+        # register_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registerpin.kv")
+        # Builder.load_file(login_component_kv_path)
+        # Builder.load_file(login_kv_path)
+        # Builder.load_file(login_pin_kv_path)
+        # Builder.load_file(register_account_kv_path)
+        # Builder.load_file(register_pin_kv_path)
+        # login_screen = main_login_screen.LoginScreen(name=LOGIN_SCREEN)
+        # self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
+        # self.root_screen_manager.current = LOGIN_SCREEN  # ✅ Switch to first screen
+        
+        # Load home screen
+        
+        ticket_list_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'ticket_list.kv')    
+        home_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'home.kv')
+        
+        Builder.load_file(ticket_list_kv_path) 
+        Builder.load_file(home_kv_path)
+        
+        home_screen = home.HomeScreen(name=HOME_SCREEN)
+        self.root_screen_manager.add_widget(home_screen)  # ✅ Add screens via Python
+        self.root_screen_manager.current = HOME_SCREEN
+        
+        
+        
+        return self.root_screen_manager
+
+if __name__ == '__main__':
+    LabelBase.register(name="roboto_extrabolditalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBoldItalic.ttf'))
+    
+    LabelBase.register(name="roboto_extrabold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBold.ttf'))
+    LabelBase.register(name="roboto_light", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-Light.ttf'))
+    TechnicalApp().run()
