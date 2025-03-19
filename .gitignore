@@ -1,1 +1,37 @@
+# Ignore Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore virtual environment
 venv/
+.venv/
+env/
+.env/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+*.bak
+.DS_Store
+
+# Ignore Kivy cache & test files
+kivyout/
+*.pyo
+*.spec
+
+# Ignore Buildozer output folders
+.buildozer/
+bin/
+dist/
+
+# Ignore Android, iOS, and other OS-specific files
+*.apk
+*.aab
+*.ipa
+*.keystore
+
+# Ignore secret keys or sensitive files
+settings.ini
+config.json
+credentials.json
