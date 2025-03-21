@@ -10,6 +10,9 @@ from types import MethodType  # ✅ Import MethodType
 from kivy.clock import Clock
 from kivy.utils import platform
 from kivy.uix.screenmanager import SlideTransition, FadeTransition, SwapTransition, ScreenManager
+from kivymd.app import MDApp
+
+
 
 import os
 from utils import *
@@ -324,6 +327,12 @@ class LoginScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         """ Load KV file only when the screen is about to be entered """
+        
+        # Access the app instance
+        app = MDApp.get_running_app()
+        user_data = app.user_app_data
+        
+        print("App Data : ", app.user_app_data)
             
         if self.login_screen_manager is None:
             self.login_screen_manager = LoginScreenManager(transition=SlideTransition(duration=0.1)) 
@@ -331,19 +340,28 @@ class LoginScreen(Screen):
             self.add_widget(self.login_screen_manager)
         
             pinlogin = PinLoginScreen(name=LOGIN_SCREEN_PIN_LOGIN_SCREEN) 
-            self.login_screen_manager.add_widget(pinlogin)
-            self.login_screen_manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN  
+            # self.login_screen_manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN  
             print(self.login_screen_manager.current)
             
             register_account = RegisterAccountScreen(name=LOGIN_SCREEN_REGISTER_ACCOUNT_SCREEN)
-            self.login_screen_manager.add_widget(register_account)
             # self.login_screen_manager.current = LOGIN_SCREEN_REGISTER_ACCOUNT_SCREEN
             print(self.login_screen_manager.current)
             
             register_pin = RegisterPinScreen(name=LOGIN_SCREEN_REGISTER_PIN_SCREEN)
-            self.login_screen_manager.add_widget(register_pin)
             # self.login_screen_manager.current = LOGIN_SCREEN_REGISTER_PIN_SCREEN
             print(self.login_screen_manager.current)
 
+            
+            if user_data.get('pin', None) is not None:
+                # User has a PIN, show the PIN login screen
+                self.login_screen_manager.add_widget(pinlogin)
+                self.login_screen_manager.add_widget(register_account)
+            else:
+                # User does not have a PIN, show the register account screen
+                self.user_screen_action = LOGIN_SCREEN_ACTION_REGISTER
+                self.login_screen_manager.add_widget(register_account)
+                self.login_screen_manager.add_widget(pinlogin)
+                
+            self.login_screen_manager.add_widget(register_pin)
 
 

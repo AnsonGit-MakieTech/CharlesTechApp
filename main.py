@@ -9,6 +9,7 @@ from variables import *
 from login import main_login_screen  # Import login screen class
 from home import home
 import os
+import json
 
 from kivy.config import Config
 from kivy.core.window import Window
@@ -28,6 +29,8 @@ class MainApp(MDScreenManager):  # Acts as ScreenManager
     pass
 
 class TechnicalApp(MDApp): 
+    
+    user_app_data : dict = None
     
     def on_start(self):
         """ Check and request storage permission on Android """
@@ -54,6 +57,14 @@ class TechnicalApp(MDApp):
             
     def build(self):
         
+        # Get user app data
+        try:
+            with open("user_data.json", "r") as f:
+                self.user_app_data = json.load(f)
+        except:
+            self.user_app_data = {}
+        
+        # Set App Icon
         self.icon = os.path.join(os.path.dirname(__file__), 'assets', 'app_logo.png')
         
         # Load Application 
@@ -62,18 +73,18 @@ class TechnicalApp(MDApp):
         
         
         # Load login screen
-        # login_component_kv_path = os.path.join(os.path.dirname(__file__), 'login', "login_design.kv")
-        # login_kv_path = os.path.join(os.path.dirname(__file__), 'login', "main_login_screen.kv")
-        # login_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "pinlogin.kv")
-        # register_account_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registeraccount.kv")
-        # register_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registerpin.kv")
-        # Builder.load_file(login_component_kv_path)
-        # Builder.load_file(login_kv_path)
-        # Builder.load_file(login_pin_kv_path)
-        # Builder.load_file(register_account_kv_path)
-        # Builder.load_file(register_pin_kv_path)
-        # login_screen = main_login_screen.LoginScreen(name=LOGIN_SCREEN)
-        # self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
+        login_component_kv_path = os.path.join(os.path.dirname(__file__), 'login', "login_design.kv")
+        login_kv_path = os.path.join(os.path.dirname(__file__), 'login', "main_login_screen.kv")
+        login_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "pinlogin.kv")
+        register_account_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registeraccount.kv")
+        register_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registerpin.kv")
+        Builder.load_file(login_component_kv_path)
+        Builder.load_file(login_kv_path)
+        Builder.load_file(login_pin_kv_path)
+        Builder.load_file(register_account_kv_path)
+        Builder.load_file(register_pin_kv_path)
+        login_screen = main_login_screen.LoginScreen(name=LOGIN_SCREEN)
+        self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
         # self.root_screen_manager.current = LOGIN_SCREEN  # ✅ Switch to first screen
         
         # Load home screen
@@ -86,7 +97,7 @@ class TechnicalApp(MDApp):
         
         home_screen = home.HomeScreen(name=HOME_SCREEN)
         self.root_screen_manager.add_widget(home_screen)  # ✅ Add screens via Python
-        self.root_screen_manager.current = HOME_SCREEN
+        # self.root_screen_manager.current = HOME_SCREEN
         
         
         
