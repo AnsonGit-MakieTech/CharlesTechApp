@@ -251,9 +251,16 @@ class PinKeyboard(BoxLayout):
             
     def validate_pin(self):
         print('validate_pin : ', self.log_pin)
-        self.log_pin = '' 
-        self.parent.parent.parent.pinholder.shake()
-        self.parent.parent.parent.pinholder.reset()
+        app = MDApp.get_running_app()
+        user_data = app.user_app_data
+        if user_data.get('pin', None) != self.log_pin: 
+            self.parent.parent.parent.pinholder.shake()
+            self.parent.parent.parent.pinholder.reset()
+            self.log_pin = '' 
+            return
+            
+        self.parent.parent.parent.manager.parent.manager.current = HOME_SCREEN
+        self.log_pin = ''
 
 class PinLoginScreen(Screen):
     circle_size = NumericProperty(min(Window.width * 0.9, Window.height * 0.5))
@@ -294,10 +301,6 @@ class PinLoginScreen(Screen):
         self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
         self.never_forget_pin_font_size = min(Window.width, Window.height) * 0.02
         
-
-
-
-
 
 
 class LoginScreenManager(ScreenManager):
