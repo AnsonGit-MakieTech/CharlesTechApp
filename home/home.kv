@@ -1,8 +1,9 @@
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
 
 
-<HomeScreen>:
-    navigation_bar : navigation_bar
-    home_screen_manager : home_screen_manager
+<HomeScreen>: 
+    # content_parent : content_parent 
+    size_hint: 1,1
 
     canvas.before:
         Color:
@@ -12,20 +13,22 @@
             size: self.size
             
     
-    FloatLayout:
-        size_hint: 1,1
-        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+    # FloatLayout:
+    #     id: content_parent
+    #     size_hint: 1,1
+    #     pos_hint: {'center_x': 0.5,'center_y': 0.5}
 
-        HomeScreenManager:
-            id:home_screen_manager
-            size_hint: 1,1
-            pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        # HomeScreenManager:
+        #     id:home_screen_manager
+        #     transition: SlideTransition(duration=0.3)
+        #     size_hint: 1,1
+        #     pos_hint: {'center_x': 0.5,'center_y': 0.5}
 
-        NavigationBar:
-            id: navigation_bar
-            size_hint: 1, None
-            height: dp(60)
-            pos_hint: {'center_x': 0.5,'y': 0}
+        # NavigationBar:
+        #     id: navigation_bar
+        #     size_hint: 1, None
+        #     height: dp(60)
+        #     pos_hint: {'center_x': 0.5,'y': 0}
 
 
 

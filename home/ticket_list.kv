@@ -1,38 +1,111 @@
 
 
 <TicketListScreen>:
-    size_hint: 1,None
+    size_hint: 1,1
+    pos_hint: {'center_x': 0.5,'center_y': 0.5}
 
-    canvas.before:
-        Color:
-            rgba: (1 , 1, 0 , 1)
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    
-    FloatLayout:
-        
-        BoxLayout:
-            size_hint: 1,1
-            orientation: 'vertical'
+    main_parent : main_parent
+    search_box : search_box
+    refresh_layout : refresh_layout
+    ticket_list : ticket_list
 
-            BoxLayout:
-                size_hint: 1, 0.2
-                
-            BoxLayout:
-                size_hint: 1, 0.8
-                
-                
+
+    BoxLayout:
+        id:main_parent
+        pos_hint: {'center_x': 0.5,'top': 1}
+        size_hint: 1,None
+        orientation: 'vertical' 
+
+ 
+
+
+        FloatLayout:
+            size_hint: 1, 0.15
+
+
 
             
+            SearchBoxTicket:
+                id: search_box
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                size_hint: 0.8, 0.5
+                font_size: root.text_input_font_size  
+                hint_text: "Search here the ticket number . . ."
+
+
+        CustomScrollView:
+            id: refresh_layout
+            size_hint: 1, 0.85 
+
+            # canvas.before:
+            #     Color:
+            #         rgba: (1 , 0 ,1 , 1)
+            #     Rectangle:
+            #         pos:self.pos
+            #         size: self.size
+
+            MDGridLayout:
+                id: ticket_list
+                cols: 1
+                adaptive_height: True
+                padding: dp(10)
+                spacing: dp(5)
+                size_hint_y: None   
+                
 
 
 
 
+<Ticket>: 
+    size_hint: 1, None  # ✅ Correct: full width, fixed height
+    height: sp(60)
+    opacity: 0
 
+    Image:
+        source: root.background_image
+        size_hint: 0.95, 1
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        keep_ratio: False
+        allow_stretch: True
 
+    BoxLayout:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: 0.87, 1
+        orientation: 'vertical'
 
+        BoxLayout:
+            size_hint: 1, 0.5
+            
+            Widget:
+                size_hint: 0.1 , 1
+            Label:
+                text:'VGTJ9WZN'
+                size_hint: 0.45 , 1
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+                font_name: "roboto_extrabold"
+                color: chex("#F7EEDD")
+            Label:
+                text: 'Installation'
+                size_hint: 0.45 , 1
+                text_size: self.size
+                valign: 'middle'
+                halign: 'right'
+                font_name: "roboto_semibold"
+                color: chex("#F7EEDD")
 
+        BoxLayout:
+            size_hint: 1, 0.5
+
+            Label:
+                text:'July 15, 2024 - 10:00 PM'
+                size_hint: 1 , 1
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+                font_name: "roboto_lightitalic"
+                color: chex("#F7EEDD")
 
 
 

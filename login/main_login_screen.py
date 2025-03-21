@@ -285,6 +285,7 @@ class PinLoginScreen(Screen):
         return super().on_enter(*args)
 
     def forgot_pin_event(self): 
+        
         print('forgot_pin') 
         self.manager.parent.user_screen_action = LOGIN_SCREEN_ACTION_FORGOT_PIN
         self.manager.transition.direction = 'right'

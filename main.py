@@ -2,8 +2,7 @@ from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivy.lang.builder import Builder
 from kivy.core.text import LabelBase
-from kivy.utils import platform
-
+from kivy.utils import platform, get_color_from_hex
 
 from variables import *
 from login import main_login_screen  # Import login screen class
@@ -57,6 +56,8 @@ class TechnicalApp(MDApp):
             
     def build(self):
         
+        self.theme_cls.primary_dark = get_color_from_hex("#F7EEDD")
+        
         # Get user app data
         try:
             with open("user_data.json", "r") as f:
@@ -74,12 +75,11 @@ class TechnicalApp(MDApp):
         
         # Load login screen
         login_component_kv_path = os.path.join(os.path.dirname(__file__), 'login', "login_design.kv")
-        # login_kv_path = os.path.join(os.path.dirname(__file__), 'login', "main_login_screen.kv")
-        # self.root_screen_manager.current = LOGIN_SCREEN  # ✅ Switch to first screen
+        # login_kv_path = os.path.join(os.path.dirname(__file__), 'login', "main_login_screen.kv") 
         # login_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "pinlogin.kv")
         # register_account_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registeraccount.kv")
         # register_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registerpin.kv")
-        # Builder.load_file(login_component_kv_path)
+        Builder.load_file(login_component_kv_path)
         # Builder.load_file(login_kv_path)
         # Builder.load_file(login_pin_kv_path)
         # Builder.load_file(register_account_kv_path)
@@ -106,6 +106,8 @@ class TechnicalApp(MDApp):
 if __name__ == '__main__':
     LabelBase.register(name="roboto_extrabolditalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBoldItalic.ttf'))
     
+    LabelBase.register(name="roboto_semibold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-SemiBold.ttf'))
     LabelBase.register(name="roboto_extrabold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBold.ttf'))
     LabelBase.register(name="roboto_light", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-Light.ttf'))
+    LabelBase.register(name="roboto_lightitalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-LightItalic.ttf'))
     TechnicalApp().run()
