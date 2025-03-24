@@ -18,6 +18,14 @@
         BoxLayout:
             orientation:'horizontal'
             size_hint: 1,0.1
+
+            
+            canvas.before:
+                Color:
+                    rgba : chex("#ACE2E1")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             
             Image:
                 id: back_image
@@ -34,10 +42,17 @@
                 size_hint: 0.7,1 
 
 
-        BoxLayout:
+        CustomScrollView:
             size_hint: 1, 0.9
 
-
+            
+            MDGridLayout:
+                id: ticket_list
+                cols: 1
+                adaptive_height: True
+                padding: dp(10)
+                spacing: dp(5)
+                size_hint_y: None   
 
 
 

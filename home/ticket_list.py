@@ -67,6 +67,8 @@ class TicketListScreen(Screen):
     
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
+        self.refresh_layout.setup_effect_callback(self.refresh_callback)
+        # self.refresh_layout.on_pull_refresh()
         self.search_box.update_padding()
     
     def on_pre_leave(self, *args):
@@ -109,3 +111,6 @@ class TicketListScreen(Screen):
         """ Opens Google Maps with directions from current location to a given destination. """
         url = f"https://www.google.com/maps/dir/?api=1&origin=current+location&destination={destination_lat},{destination_lon}"
         webbrowser.open(url)
+
+
+

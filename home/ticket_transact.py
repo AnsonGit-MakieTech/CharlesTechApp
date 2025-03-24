@@ -4,6 +4,7 @@ from kivy.metrics import dp,sp
 from kivy.core.window import Window 
 from kivy.uix.button import Button
 from kivy.uix.image import Image
+from types import MethodType  # ✅ Import MethodType
  
 from kivy.animation import Animation
   
@@ -31,7 +32,6 @@ class TicketTransactionScreeen(Screen):
         self.go_back_icon = os.path.join(parent_dir, 'assets', 'go_back_icon.png')
         self.bind(size=self.update_size)  # Bind window resize event
         
-        self.tried = False
     
     def on_parent(self, *args):
         if self.parent:
@@ -47,7 +47,25 @@ class TicketTransactionScreeen(Screen):
 
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
+        
+        self.back_text.on_press=self.go_back
+            
+        def on_touch_down(image, touch):
+            """ Detect touch inside the image """
+            if image.collide_point(*touch.pos):
+                self.go_back()
+                return True  # ✅ Stops event propagation if needed
+            return super(image.__class__, image).on_touch_down(touch)  # ✅ Call original method
+
+        # ✅ Bind on_touch_down correctly
+        self.back_image.on_touch_down = MethodType(on_touch_down, self.back_image)
+        
         return super().on_enter(*args)
+    
+    def go_back(self, *args): 
+        self.manager.transition.duration= 0.5
+        self.manager.transition.direction = "right"
+        self.manager.current = HOME_SCREEN_TICKETLIST_SCREEN
     
     def on_leave(self, *args):
         Animation(opacity=0, duration=0.5).start(self)

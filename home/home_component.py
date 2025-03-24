@@ -34,20 +34,18 @@ class CustomScrollEffect(DampedScrollEffect):
     @CallControl(interval=1)
     def do_refresh_controlled(self):
         print("🔄 Pull-to-refresh triggered!")
-        self.parent_event()
+        if self.parent_event:
+            self.parent_event()
 
 
 class CustomScrollView(ScrollView):
     
+    refresh_callback : object = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         kwargs['effect_cls'] = CustomScrollEffect
         super().__init__(**kwargs)
-
-        self.effect_cls.parent_event = self.on_pull_refresh
-        print(kwargs)
-
-    def on_pull_refresh(self):
-        print("✅ Custom refresh triggered from CustomScrollView")
-        if self.parent:
-            self.parent.parent.refresh_callback()
+    
+    def setup_effect_callback(self, refresh_callback : object):
+        self.effect_cls.parent_event = refresh_callback
+        
