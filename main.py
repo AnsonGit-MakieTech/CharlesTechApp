@@ -88,10 +88,13 @@ class TechnicalApp(MDApp):
         # self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
         
         # Load home screen
-        
+        home_component_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'home_component.kv')
+        ticket_transaction_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'ticket_transact.kv')
         ticket_list_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'ticket_list.kv')    
         home_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'home.kv')
         
+        Builder.load_file(home_component_kv_path)   
+        Builder.load_file(ticket_transaction_kv_path)
         Builder.load_file(ticket_list_kv_path) 
         Builder.load_file(home_kv_path)
         

@@ -1,28 +1,22 @@
 from kivy.uix.screenmanager import Screen
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
-from kivy.metrics import dp,sp
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.boxlayout import BoxLayout
-from kivy.graphics import Rectangle
+from kivy.metrics import dp,sp 
 from kivy.core.window import Window
 from kivymd.uix.gridlayout import MDGridLayout
 
 from login import login_components
-  
-from kivy.clock import Clock
-from kivy.uix.scrollview import ScrollView 
-from kivy.effects.dampedscroll import DampedScrollEffect
-from time import time
-import os
-
+   
 from kivy.animation import Animation
   
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.image import Image
+from kivy.uix.floatlayout import FloatLayout 
 from kivy.properties import StringProperty
 import os
 
 import webbrowser
+
+from variables import *
+from .home_component import *
+
 
 class Ticket(FloatLayout):
     
@@ -48,50 +42,7 @@ class Ticket(FloatLayout):
             return True
         return super().on_touch_down(touch)
 
-class CallControl:
-    def __init__(self, interval=1):
-        self.interval = interval
-        self.last_call = 0
 
-    def __call__(self, func):
-        def wrapper(*args, **kwargs):
-            now = time()
-            if now - self.last_call > self.interval:
-                self.last_call = now
-                func(*args, **kwargs)
-        return wrapper
-
-
-class CustomScrollEffect(DampedScrollEffect):
-    
-    parent_event : callable = ObjectProperty(None)
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.controlled_callback = self.do_refresh_controlled
-
-    def on_overscroll(self, *args):
-        super().on_overscroll(*args)
-        if self.overscroll < -50:  # Pulling down
-            self.controlled_callback()
-
-    @CallControl(interval=1)
-    def do_refresh_controlled(self):
-        print("🔄 Pull-to-refresh triggered!")
-        self.parent_event()
-
-
-class CustomScrollView(ScrollView):
-    def __init__(self, **kwargs):
-        kwargs['effect_cls'] = CustomScrollEffect
-        super().__init__(**kwargs)
-
-        self.effect_cls.parent_event = self.on_pull_refresh
-        print(kwargs)
-
-    def on_pull_refresh(self):
-        print("✅ Custom refresh triggered from CustomScrollView")
-        if self.parent:
-            self.parent.parent.refresh_callback()
         
 class SearchBoxTicket(login_components.LoginTextInput): 
         
@@ -115,8 +66,12 @@ class TicketListScreen(Screen):
         self.tried = False
     
     def on_enter(self, *args):
+        Animation(opacity=1, duration=0.5).start(self)
         self.search_box.update_padding()
     
+    def on_pre_leave(self, *args):
+        Animation(opacity=0, duration=0.5).start(self)
+        return super().on_leave(*args)
 
     def on_parent(self, *args):
         if self.parent:
@@ -135,12 +90,20 @@ class TicketListScreen(Screen):
         
         # ✅ Create a new ticket
         new_ticket = Ticket()
+        def open_ticket( ):
+            print("Ticket Clicked!")  # Debugging
+            self.change_screen('ticket_id')
+        new_ticket.parent_event = open_ticket
 
         # ✅ Insert at the first position
         self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
         
         # self.open_google_maps(14.5995, 120.9842)
-        
+    
+    def change_screen(self, ticket_id : str):
+        self.manager.transition.duration= 0.5
+        self.manager.transition.direction = "left"
+        self.manager.current = HOME_SCREEN_TRANSACT_SCREEN
 
     def open_google_maps(self, destination_lat, destination_lon):
         """ Opens Google Maps with directions from current location to a given destination. """

@@ -1,0 +1,50 @@
+
+
+<TicketTransactionScreeen>:
+    opacity:0
+    size_hint: 1,1
+    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+    main_parent : main_parent 
+    back_image : back_image
+    back_text : back_text
+
+    BoxLayout:
+        id:main_parent
+        pos_hint: {'center_x': 0.5,'top': 1}
+        size_hint: 1,None
+        orientation: 'vertical' 
+
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint: 1,0.1
+            
+            Image:
+                id: back_image
+                source: root.go_back_icon if root.go_back_icon else None
+                size_hint: 0.1 , 1
+                # allow_stretch: True  # ✅ Allows scaling while maintaining aspect ratio
+                # keep_ratio: True  # ✅ Ensures it doesn't distort
+            LoginBackButton:
+                id: back_text
+                size_hint: 0.2,1  
+                font_size: root.go_back_screen_font_size  
+            
+            Widget:
+                size_hint: 0.7,1 
+
+
+        BoxLayout:
+            size_hint: 1, 0.9
+
+
+
+
+
+
+
+
+
+
+
+

@@ -12,7 +12,7 @@ from kivy.uix.floatlayout import FloatLayout
 
 from variables import *
 from .ticket_list import TicketListScreen
- 
+from .ticket_transact import TicketTransactionScreeen
 
 class HomeScreenManager(ScreenManager):
     def __init__(self, **kwargs):
@@ -27,6 +27,9 @@ class HomeScreenManager(ScreenManager):
 
         account = Screen(name=HOME_SCREEN_ACCOUNT_SCREEN)
         self.add_widget(account)
+        
+        transact = TicketTransactionScreeen(name=HOME_SCREEN_TRANSACT_SCREEN)
+        self.add_widget(transact)
         
 
 
