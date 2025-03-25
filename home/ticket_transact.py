@@ -1,7 +1,8 @@
+from kivy.uix.accordion import ListProperty
 from kivy.uix.accordion import BooleanProperty
 from kivy.uix.accordion import ObjectProperty
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , BooleanProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , BooleanProperty, ListProperty
 from kivy.metrics import dp,sp 
 from kivy.core.window import Window 
 from kivy.uix.button import Button
@@ -18,9 +19,19 @@ from variables import *
 from .home_component import *
 
 import webbrowser
-
+from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.modalview import ModalView
+
+
+class Remark(BoxLayout):
+    remark_text : str = StringProperty('')
+
+
+class RemarksListViewer(ModalView):
+    remarks_list : ListProperty = ListProperty([])
+
+
 
 
 class RemarksInputLayout(ModalView):
@@ -98,6 +109,7 @@ class TicketTransactionScreeen(Screen):
     account_phone3 : AccountInfoLayout = ObjectProperty(None)
     
     remarks_input : RemarksInputLayout = ObjectProperty(None)
+    remarks_list : RemarksListViewer = ObjectProperty(None)
     
     
     view_remarks_button : Button = ObjectProperty(None)
@@ -115,10 +127,12 @@ class TicketTransactionScreeen(Screen):
         
         
         self.remarks_input = RemarksInputLayout()
+        self.remarks_list = RemarksListViewer()
          
     
     def on_parent(self, *args):
         if self.parent:
+            self.view_remarks_button.on_release= self.remarks_list.open
             self.add_remarks_button.on_release= self.remarks_input.open
             self.main_parent.height = self.parent.height - dp(65)
  

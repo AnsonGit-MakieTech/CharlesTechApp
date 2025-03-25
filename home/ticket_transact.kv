@@ -177,6 +177,104 @@
 
 
 
+<RemarksListViewer>: 
+    size_hint: 1, 1
+    auto_dismiss: False
+    background: ""  # Removes default dim background
+    background_color: 0, 0, 0, 0
+
+    BoxLayout:
+        orientation:'vertical'
+        padding: sp(20)
+        spacing: sp(10)
+        size_hint: 0.85 , 0.9
+        pos_hint: { 'center_x': 0.5 , 'center_y': 0.5 }  
+         
+        
+        canvas.before:
+            Color:
+                rgba: chex("#F7EEDD")
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [10]
+            Color:
+                rgba: chex("#014367")
+            Line:
+                width: 2
+                rounded_rectangle: (*self.pos, *self.size, 10)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1 , None
+            height: sp(30)
+
+            Label:
+                text: "Remarks ;"
+                text_size: self.width, None 
+                size_hint_y: None
+                height: self.texture_size[1]
+                valign: 'top'
+                halign: 'left'
+                font_name: 'roboto_light'
+                font_size: sp(15)
+                color: chex("#014367") 
+                markup: True
+            
+            Button:
+                text: "CLOSE" 
+                font_name: "roboto_semibold"
+                size_hint: None , 1
+                background_color: (0, 0 , 0, 0)
+                width: sp(100) 
+                font_size: sp(12)
+                on_release: root.dismiss()
+                color: chex("#F7EEDD")
+                canvas.before:
+                    Color:
+                        rgba: chex("#B71E1E")
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [4]
+
+        CustomScrollView:
+            
+            MDGridLayout:
+                cols: 1
+                adaptive_height: True
+                padding: dp(10)
+                spacing: dp(10)
+                size_hint_y: None
+
+                Remark:
+                Remark:
+                Remark:
+
+<Remark>:
+    padding: dp(10), dp(10)
+    size_hint_x: 0.75
+    size_hint_y: None
+    height: self.minimum_height
+
+    canvas.before:
+        Color:
+            rgba: chex("#ACE2E1")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [4]
+
+    Label:
+        text: root.remark_text
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+        valign: 'top'
+        halign: 'left'
+        font_name: 'roboto_light'
+        font_size: sp(15)
+        color: chex("#014367")
 
 
 
@@ -251,6 +349,7 @@
                     text: "CLOSE" 
                     size_hint: None , 1
                     background_color: (0, 0 , 0, 0)
+                    color: chex("#F7EEDD")
                     width: sp(100) 
                     font_size: sp(12)
                     on_release: root.dismiss()
@@ -272,6 +371,7 @@
                     width: sp(100) 
                     font_size: sp(12)
                     opacity: 1 if root.is_ready_to_submit else 0.5
+                    color: chex("#F7EEDD")
                     canvas.before:
                         Color:
                             rgba: chex("#5CBA45")
