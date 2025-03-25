@@ -21,7 +21,7 @@
     view_remarks_button : view_remarks_button
     add_remarks_button : add_remarks_button
 
-
+    refresh_layout : refresh_layout
 
     BoxLayout:
         id:main_parent
@@ -57,6 +57,7 @@
 
 
         CustomScrollView:
+            id:refresh_layout
             size_hint: 1, 0.9
 
             
@@ -182,6 +183,7 @@
     auto_dismiss: False
     background: ""  # Removes default dim background
     background_color: 0, 0, 0, 0
+ 
 
     BoxLayout:
         orientation:'vertical'
@@ -238,8 +240,7 @@
                         size: self.size
                         radius: [4]
 
-        CustomScrollView:
-            
+        ScrollView: 
             MDGridLayout:
                 cols: 1
                 adaptive_height: True

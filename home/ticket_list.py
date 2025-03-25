@@ -34,6 +34,7 @@ class Ticket(FloatLayout):
         
     def on_touch_down(self, touch):
         """ ✅ Detect click/tap event and execute action """
+        print("Parent event ")
         if self.collide_point(*touch.pos):
             print("🎟️ Ticket Clicked!")  # Debugging
             if self.parent_event:
@@ -62,11 +63,9 @@ class TicketListScreen(Screen):
         super().__init__(**kwargs)
         self.bind(size=self.update_size)  # Bind window resize event
         
-        self.tried = False
     
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
-        self.refresh_layout.setup_effect_callback(self.refresh_callback)
         # self.refresh_layout.on_pull_refresh()
         self.search_box.update_padding()
     
@@ -76,6 +75,7 @@ class TicketListScreen(Screen):
 
     def on_parent(self, *args):
         if self.parent:
+            self.refresh_layout.setup_effect_callback(self.refresh_callback)
             self.main_parent.height = self.parent.height - dp(65)
         # print("on_pre_enter : ", self.main_parent.height)
         # print("args : ", args) 

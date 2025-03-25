@@ -22,6 +22,7 @@ import webbrowser
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.modalview import ModalView
+from kivy.uix.scrollview import ScrollView
 
 
 class Remark(BoxLayout):
@@ -29,8 +30,10 @@ class Remark(BoxLayout):
 
 
 class RemarksListViewer(ModalView):
-    remarks_list : ListProperty = ListProperty([])
-
+    remarks_list : ListProperty = ListProperty([]) 
+    
+    
+    
 
 
 
@@ -116,6 +119,9 @@ class TicketTransactionScreeen(Screen):
     add_remarks_button : Button = ObjectProperty(None)
     
     
+    refresh_layout : CustomScrollView = ObjectProperty(None)
+    
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
@@ -128,13 +134,19 @@ class TicketTransactionScreeen(Screen):
         
         self.remarks_input = RemarksInputLayout()
         self.remarks_list = RemarksListViewer()
+        
+        
          
     
     def on_parent(self, *args):
         if self.parent:
+            self.refresh_layout.setup_effect_callback(self.refresh_callback) 
             self.view_remarks_button.on_release= self.remarks_list.open
             self.add_remarks_button.on_release= self.remarks_input.open
             self.main_parent.height = self.parent.height - dp(65)
+      
+    def refresh_callback(self, *args):
+        print("refresh_callback : Ticket Transact")
  
     def update_size(self, *args):
         """ Update circle size dynamically when window size changes """  

@@ -42,10 +42,11 @@ class CustomScrollView(ScrollView):
     
     refresh_callback : object = ObjectProperty(None)
     
-    def __init__(self, **kwargs):
-        kwargs['effect_cls'] = CustomScrollEffect
-        super().__init__(**kwargs)
+    # def __init__(self, **kwargs):
+    #     kwargs['effect_cls'] = CustomScrollEffect
+    #     super().__init__(**kwargs)
     
-    def setup_effect_callback(self, refresh_callback : object):
+    def setup_effect_callback(self, refresh_callback: object): 
+        self.effect_cls = CustomScrollEffect
         self.effect_cls.parent_event = refresh_callback
-        
+        print("Setup : ", refresh_callback)
