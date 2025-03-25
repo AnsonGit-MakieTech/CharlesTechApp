@@ -1,6 +1,7 @@
+from kivy.uix.accordion import BooleanProperty
 from kivy.uix.accordion import ObjectProperty
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , BooleanProperty
 from kivy.metrics import dp,sp 
 from kivy.core.window import Window 
 from kivy.uix.button import Button
@@ -15,6 +16,27 @@ from kivy.uix.floatlayout import FloatLayout
 import os
 from variables import *
 from .home_component import *
+
+import webbrowser
+
+from kivy.uix.textinput import TextInput
+from kivy.uix.modalview import ModalView
+
+
+class RemarksInputLayout(ModalView):
+    remark_text : TextInput = ObjectProperty(None)
+    is_ready_to_submit : bool = BooleanProperty(False)
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.remark_text.bind(text=self.on_text_change)
+    
+    def on_open(self):
+        self.remark_text.focus = True
+    
+    def on_text_change(self, instance, value):
+        self.is_ready_to_submit = len(value) > 0
+    
 
 
 class AccountInfoLayout(MDBoxLayout):
@@ -75,6 +97,12 @@ class TicketTransactionScreeen(Screen):
     account_phone2 : AccountInfoLayout = ObjectProperty(None)
     account_phone3 : AccountInfoLayout = ObjectProperty(None)
     
+    remarks_input : RemarksInputLayout = ObjectProperty(None)
+    
+    
+    view_remarks_button : Button = ObjectProperty(None)
+    add_remarks_button : Button = ObjectProperty(None)
+    
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -85,9 +113,13 @@ class TicketTransactionScreeen(Screen):
         print("go back icon", self.go_back_icon)
         self.bind(size=self.update_size)  # Bind window resize event
         
+        
+        self.remarks_input = RemarksInputLayout()
+         
     
     def on_parent(self, *args):
         if self.parent:
+            self.add_remarks_button.on_release= self.remarks_input.open
             self.main_parent.height = self.parent.height - dp(65)
  
     def update_size(self, *args):
@@ -97,13 +129,27 @@ class TicketTransactionScreeen(Screen):
         self.go_back_screen_font_size = min(Window.width, Window.height) * 0.04
         print("update_size : ", self.text_input_font_size)
 
+    def on_leave(self, *args):
+        Animation(opacity=0, duration=0.5).start(self)
+        return super().on_leave(*args)
+    
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
+          
+        
         self.account_name_info.setup(icon_image='account-box' , account_info="Tech Makie Catamora")
         self.account_email.setup(icon_image='email' , account_info="techmakie@gmail.com")
-        self.account_loc1.setup(icon_image='google-maps' , account_info="123 Main St, San Francisco, CA" , click_event=self.go_back)
-        self.account_loc2.setup( account_info="456 Elm St, San Francisco, CA", click_event=self.go_back)
-        self.account_loc3.setup( account_info="789 Oak St, San Francisco, CA", click_event=self.go_back)
+        
+        def setup_location_1():
+            self.open_google_maps(14.5995, 120.9842)
+            
+        self.account_loc1.setup(icon_image='google-maps' , account_info="123 Main St, San Francisco, CA" , click_event=setup_location_1)
+        
+        self.account_loc2.setup( account_info="456 Elm St, San Francisco, CA", click_event=setup_location_1)
+        
+        self.account_loc3.setup( account_info="789 Oak St, San Francisco, CA", click_event=setup_location_1)
+        
+        
         self.account_phone1.setup(icon_image='phone' , account_info="123-456-7890")
         self.account_phone2.setup(account_info="987-654-3210")
         self.account_phone3.setup(account_info="098-765-4321")
@@ -130,6 +176,9 @@ class TicketTransactionScreeen(Screen):
         self.manager.transition.direction = "right"
         self.manager.current = HOME_SCREEN_TICKETLIST_SCREEN
     
-    def on_leave(self, *args):
-        Animation(opacity=0, duration=0.5).start(self)
-        return super().on_leave(*args)
+    
+    def open_google_maps(self, destination_lat, destination_lon):
+        """ Opens Google Maps with directions from current location to a given destination. """
+        url = f"https://www.google.com/maps/dir/?api=1&origin=current+location&destination={destination_lat},{destination_lon}"
+        webbrowser.open(url)
+        

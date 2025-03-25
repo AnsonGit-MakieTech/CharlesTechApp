@@ -12,7 +12,6 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import StringProperty
 import os
 
-import webbrowser
 
 from variables import *
 from .home_component import *
@@ -107,10 +106,7 @@ class TicketListScreen(Screen):
         self.manager.transition.direction = "left"
         self.manager.current = HOME_SCREEN_TRANSACT_SCREEN
 
-    def open_google_maps(self, destination_lat, destination_lon):
-        """ Opens Google Maps with directions from current location to a given destination. """
-        url = f"https://www.google.com/maps/dir/?api=1&origin=current+location&destination={destination_lat},{destination_lon}"
-        webbrowser.open(url)
+
 
 
 

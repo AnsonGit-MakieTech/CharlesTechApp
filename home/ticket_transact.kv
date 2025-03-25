@@ -18,6 +18,8 @@
     account_phone2 : account_phone2
     account_phone3 : account_phone3
 
+    view_remarks_button : view_remarks_button
+    add_remarks_button : add_remarks_button
 
 
 
@@ -66,14 +68,14 @@
                 spacing: dp(0)
                 size_hint_y: None  
 
-                canvas.before:
-                    Color:
-                        rgba : chex("#ACE2E1")
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
                 
-                AccountNumberNameLayout:
+                AccountNumberNameLayout: 
+                    canvas.before:
+                        Color:
+                            rgba : chex("#ACE2E1")
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
                     id: account_name
                     size_hint: 1, None
                     height: sp(100)
@@ -81,6 +83,12 @@
                 Widget:
                     size_hint: 1, None
                     height: sp(20)
+                    canvas.before:
+                        Color:
+                            rgba : chex("#ACE2E1")
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
 
                 AccountInfoLayout:  
                     id:account_name_info
@@ -102,6 +110,195 @@
                 Widget:
                     size_hint: 1, None
                     height: sp(20)
+                    canvas.before:
+                        Color:
+                            rgba : chex("#ACE2E1")
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                Widget:
+                    size_hint: 1, None
+                    height: sp(20)
+
+
+                MDBoxLayout:
+                    orientation:'horizontal' 
+                    size_hint: 1, None
+                    adaptive_height: True
+                    
+                    
+                    Widget:
+                        
+                    Button:
+                        id: view_remarks_button
+                        text: "VIEW REMARKS"
+                        size_hint: None , None
+                        size: sp(120) , sp(30) 
+                        font_size: sp(14)
+                        color: chex("#F7EEDD")
+                        font_name: 'roboto_semibold'
+                        background_color: (0 , 0, 0 ,0)
+ 
+                        canvas.before:
+                            Color:
+                                rgba : chex("#008DDA")
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: (4, 4 ,4 ,4)
+ 
+                    Widget:
+                        width: sp(10)  
+                        size_hint: None , 1
+                        
+                    Button:
+                        id: add_remarks_button
+                        text: "ADD REMARKS" 
+                        size_hint: None , None
+                        size: sp(120) , sp(30) 
+                        color: chex("#F7EEDD")
+                        font_size: sp(14)
+                        font_name: 'roboto_semibold'
+                        background_color: (0 , 0, 0 ,0)
+                        canvas.before:
+                            Color:
+                                rgba : chex("#008DDA")
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: (4, 4 ,4 ,4)
+
+                    Widget:
+                        width: sp(10)  
+                        size_hint: None , 1
+
+
+
+
+
+
+
+
+<RemarksInputLayout>:
+    size_hint: 1, 1
+    auto_dismiss: False
+    background: ""  # Removes default dim background
+    background_color: 0, 0, 0, 0
+
+    remark_text : remark_text
+
+    RelativeLayout:
+        size_hint: 1, 1
+    
+        BoxLayout:
+            orientation: 'vertical' 
+            padding: sp(20)
+            spacing: sp(10)
+            size_hint: 0.85 , 0.5
+            pos_hint: { 'center_x': 0.5 , 'top': 0.95 }  
+
+            canvas.before:
+                Color:
+                    rgba: chex("#F7EEDD")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [10]
+                Color:
+                    rgba: chex("#014367")
+                Line:
+                    width: 2
+                    rounded_rectangle: (*self.pos, *self.size, 10)
+
+
+            Label:
+                text: "Fill this up and hit submit to add this remarks" 
+                halign: "center" 
+                size_hint: 1, 0.1
+                font_size: sp(11)
+                color: chex("#014367")  # This is the actual text color
+                font_name: 'roboto_extrabold'
+
+            TextInput: 
+                id: remark_text
+                hint_text: "Provide your remarks here . . ." 
+                multiline: True 
+                size_hint: 1, 0.8
+                background_color: 0, 0, 0, 0  # Transparent
+                foreground_color: chex("#014367")  # This is the actual text color
+                cursor_color: chex("#014367")  # Optional, to see the cursor better
+                font_name: 'roboto_light'
+                font_size: sp(10)
+                padding: dp(10), dp(10)  # Add padding for readability
+
+                canvas.before:
+                    Color:
+                        rgba: chex("#D9D9D9") #
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [4]
+                    Color:
+                        rgba: chex("#014367") 
+
+
+            BoxLayout:
+                size_hint: 1 , 0.1
+                spacing: sp(10)
+
+                Button:
+                    text: "CLOSE" 
+                    size_hint: None , 1
+                    background_color: (0, 0 , 0, 0)
+                    width: sp(100) 
+                    font_size: sp(12)
+                    on_release: root.dismiss()
+                    canvas.before:
+                        Color:
+                            rgba: chex("#B71E1E")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [4]
+
+                Widget:
+                    
+
+                Button:
+                    text: "SUBMIT" 
+                    size_hint: None , 1
+                    background_color: (0, 0 , 0, 0)
+                    width: sp(100) 
+                    font_size: sp(12)
+                    opacity: 1 if root.is_ready_to_submit else 0.5
+                    canvas.before:
+                        Color:
+                            rgba: chex("#5CBA45")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [4]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <AccountInfoLayout>:
@@ -110,6 +307,13 @@
     orientation: 'horizontal'
 
     info_label : info_label
+ 
+    canvas.before:
+        Color:
+            rgba : chex("#ACE2E1")
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
     RelativeLayout:
         pos_hint: {'top': 1}

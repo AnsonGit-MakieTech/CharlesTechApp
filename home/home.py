@@ -139,6 +139,8 @@ class HomeScreen(Screen):
         self.add_widget(self.home_screen_manager)
         self.add_widget(self.navigation_bar)
         
+        self.navigation_bar.setup_butttons()  
+        
         
         
         # self.home_screen_manager.transition = SlideTransition(duration=1)
@@ -175,7 +177,6 @@ class HomeScreen(Screen):
     #     return super().on_kv_post(base_widget)
     
     def on_pre_enter(self, *args): 
-        self.navigation_bar.setup_butttons()  
         return super().on_pre_enter(*args)
     
     

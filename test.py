@@ -1,91 +1,24 @@
-from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.factory import Factory
-from kivy.properties import StringProperty
+from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
+from kivy.app import App
 
-from kivymd.app import MDApp
-from kivymd.uix.button import MDIconButton
-from kivymd.icon_definitions import md_icons
-from kivymd.uix.list import ILeftBodyTouch, OneLineIconListItem
-from kivymd.theming import ThemeManager
-from kivymd.utils import asynckivy
+kv_code = '''
+<DelayedWidget@BoxLayout>:
+    orientation: 'vertical'
+    Label:
+        text: "I'm loaded later!"
+'''
 
-Builder.load_string('''
-<ItemForList>
-    text: root.text
-
-    IconLeftSampleWidget:
-        icon: root.icon
-
-
-<Example@MDFloatLayout>
-
-    MDBoxLayout:
-        orientation: 'vertical'
-
-        MDTopAppBar:
-            title: app.title
-            md_bg_color: app.theme_cls.primary_color
-            background_palette: 'Primary'
-            elevation: 4
-            left_action_items: [['menu', lambda x: x]]
-
-        MDScrollViewRefreshLayout:
-            id: refresh_layout
-            refresh_callback: app.refresh_callback
-            root_layout: root
-
-            MDGridLayout:
-                id: box
-                adaptive_height: True
-                cols: 1
-''')
-
-
-class IconLeftSampleWidget(MDIconButton):
-    pass
-
-
-class ItemForList(OneLineIconListItem):
-    icon = StringProperty()
-
-
-class Example(MDApp):
-    title = 'Example Refresh Layout'
-    screen = None
-    x = 0
-    y = 15
-
+class MyApp(App):
     def build(self):
-        self.screen = Factory.Example()
-        self.set_list()
+        root = BoxLayout()
+        Clock.schedule_once(lambda dt: self.load_ui(root), 2)  # Delay 2 seconds
+        return root
 
-        return self.screen
+    def load_ui(self, root):
+        Builder.load_string(kv_code)
+        from kivy.factory import Factory
+        root.add_widget(Factory.DelayedWidget())
 
-    def set_list(self):
-        async def set_list():
-            names_icons_list = list(md_icons.keys())[self.x:self.y]
-            for name_icon in names_icons_list:
-                await asynckivy.sleep(0)
-                self.screen.ids.box.add_widget(
-                    ItemForList(icon=name_icon, text=name_icon))
-        asynckivy.start(set_list())
-
-    def refresh_callback(self, *args):
-        '''A method that updates the state of your application
-        while the spinner remains on the screen.'''
-
-        def refresh_callback(interval):
-            self.screen.ids.box.clear_widgets()
-            if self.x == 0:
-                self.x, self.y = 15, 30
-            else:
-                self.x, self.y = 0, 15
-            self.set_list()
-            self.screen.ids.refresh_layout.refresh_done()
-            self.tick = 0
-
-        Clock.schedule_once(refresh_callback, 1)
-
-
-Example().run()
+MyApp().run()
