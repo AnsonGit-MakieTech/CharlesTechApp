@@ -39,7 +39,6 @@ class HomeScreenManager(ScreenManager):
     
 
 
-
 class NavigationBar(BoxLayout):
     
     dashboard_button : MDIconButton = ObjectProperty(None)

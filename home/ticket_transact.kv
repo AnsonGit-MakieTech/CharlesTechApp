@@ -175,14 +175,302 @@
                         size_hint: None , 1
 
 
+                
+                
+                Step1Layout:
+                        
+
+                GeolocationStepLayout:
+
+
+<GeolocationStepLayout>:
+    orientation: 'vertical'
+    adaptive_height: True
+    padding: ( 0 , dp(20), 0, 0)
+
+
+    BoxLayout:
+        orientation:'horizontal'
+        size_hint: 1, None
+        height: dp(30)
+        padding: (dp(20), 0 ,dp(20) , 0)
+
+        Label:
+            text: root.step_text
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_extrabold'
+            font_size: sp(15)
+            color: chex("#014367")
+        
+        MDIcon: 
+            icon: "check-decagram"
+            font_size: sp(20)
+            color: chex("#ACE2E1") if root.is_not_done else chex("#5CBA45")
+
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        adaptive_height: True 
+        padding: (dp(40), dp(10) , dp(20), 0)
+        spacing:dp(10)
+        
+        Label:
+            text:'Instructions :'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(13)
+            color: chex("#014367")
+
+
+        Label:
+            text:'1. Click Submit Geo-Mapping to provide location details.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'2. Verify that the geo-mapping data is accurate before submitting.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'3. Once submitted, proceed to the next step for final checks.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+        
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, None
+        height: sp(30)
+        padding: (dp(40), dp(40), 0, 0)
+
+        MDIcon: 
+            icon: "home-map-marker"
+            font_size: sp(20)
+            color: chex("#014367")
+            size_hint: None, 1
+            width: sp(50)
+
+        Label:
+            text: 'Latitude : '
+            size_hint: None, 1
+            width: sp(80)
+            text_size: self.size
+            valign: 'center'
+            halign: 'right'
+            font_name: 'roboto_semibold'
+            font_size: sp(11)
+            color: chex("#014367")
+
+        Label:
+            text: '12.8797324332424'
+            size_hint_x: 1  # ✅ Take remaining space
+            size_hint_y: 1
+            text_size: self.size
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+             
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, None
+        height: sp(30)
+        padding: (dp(40), dp(40), 0, 0)
+
+        
+        MDIcon: 
+            icon: "home-map-marker"
+            font_size: sp(20)
+            color: chex("#014367")
+            size_hint: None, 1
+            width: sp(50)
+            opacity: 0
+
+        Label:
+            text: 'Longitude : '
+            size_hint: None, 1
+            width: sp(80)
+            text_size: self.size
+            valign: 'center'
+            halign: 'right'
+            font_name: 'roboto_semibold'
+            font_size: sp(11)
+            color: chex("#014367")
+
+        Label:
+            text: '12.8797324332424'
+            size_hint_x: 1  # ✅ Take remaining space
+            size_hint_y: 1
+            text_size: self.size
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+    MDBoxLayout:
+        orientation: 'horizontal'
+        adaptive_height: True
+        padding: (0 , dp(30) , dp(20), 0)
+
+        Widget:
+    
+        Button:
+            text: "NEXT STEP" 
+            font_name: "roboto_semibold"
+            size_hint: None , None
+            background_color: (0, 0 , 0, 0)
+            width: sp(130) 
+            height: sp(25)
+            font_size: sp(12)
+            color: chex("#F7EEDD")
+            canvas.before:
+                Color:
+                    rgba: chex("#5CBA45")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
 
 
 
+<Step1Layout>:
+    orientation: 'vertical'
+    adaptive_height: True
+    padding: ( 0 , dp(20), 0, 0)
+
+    BoxLayout:
+        orientation:'horizontal'
+        size_hint: 1, None
+        height: dp(30)
+        padding: (dp(20), 0 ,dp(20) , 0)
+
+        Label:
+            text:'Step 1: Initial Assessment'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_extrabold'
+            font_size: sp(15)
+            color: chex("#014367")
+        
+        MDIcon: 
+            icon: "check-decagram"
+            font_size: sp(20)
+            color: chex("#ACE2E1") if root.is_not_done else chex("#5CBA45")
+        
+ 
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        adaptive_height: True 
+        padding: (dp(40), dp(10) , dp(20), 0)
+        spacing:dp(10)
+        
+        Label:
+            text:'Instructions :'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(13)
+            color: chex("#014367")
 
 
+        Label:
+            text:'1. Click Next Step or Activate Account to proceed with the ticket.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'2. Review the ticket details and ensure all necessary information is correct.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'3. If additional remarks are needed, click Add Remark before proceeding.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
 
 
+    MDBoxLayout:
+        orientation: 'horizontal'
+        adaptive_height: True
+        padding: (0 , dp(20) , dp(20), 0)
 
+        Widget:
+    
+        Button:
+            text: "NEXT STEP" if root.old_account else "ACTIVATE ACCOUNT"
+            font_name: "roboto_semibold"
+            size_hint: None , None
+            background_color: (0, 0 , 0, 0)
+            width: sp(130) 
+            height: sp(25)
+            font_size: sp(12)
+            color: chex("#F7EEDD")
+            canvas.before:
+                Color:
+                    rgba: chex("#5CBA45")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
 
 
 

@@ -27,6 +27,18 @@ from kivy.uix.scrollview import ScrollView
 
 
 
+
+class GeolocationStepLayout(MDBoxLayout):
+    is_not_done : bool = BooleanProperty(True)
+    step_text : str = StringProperty('Step 3: Geo-Mapping Submission')
+
+class Step1Layout(MDBoxLayout):
+    old_account : bool = BooleanProperty(False)
+    is_not_done : bool = BooleanProperty(True)
+
+
+
+
 class Remark(BoxLayout):
     remark_text : str = StringProperty('This is a remark')
 
@@ -164,7 +176,7 @@ class TicketTransactionScreeen(Screen):
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
         
-        self.manager.proccess_layout.open()
+        # self.manager.proccess_layout.open() # Use it only if when proccessing a layout
         
         self.account_name_info.setup(icon_image='account-box' , account_info="Tech Makie Catamora")
         self.account_email.setup(icon_image='email' , account_info="techmakie@gmail.com")
