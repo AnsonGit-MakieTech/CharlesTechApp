@@ -25,17 +25,15 @@ from kivy.uix.modalview import ModalView
 from kivy.uix.scrollview import ScrollView
 
 
+
+
 class Remark(BoxLayout):
-    remark_text : str = StringProperty('')
+    remark_text : str = StringProperty('This is a remark')
 
 
 class RemarksListViewer(ModalView):
-    remarks_list : ListProperty = ListProperty([]) 
-    
-    
-    
-
-
+    pass
+     
 
 class RemarksInputLayout(ModalView):
     remark_text : TextInput = ObjectProperty(None)
@@ -92,7 +90,11 @@ class AccountNumberNameLayout(BoxLayout):
 
 
 class TicketTransactionScreeen(Screen):
-     
+    
+    
+    remarks_list : ListProperty = ListProperty([]) 
+    
+         
     main_parent : FloatLayout = ObjectProperty(None)
     text_input_font_size : int = NumericProperty(0)
     title_font_size : int = NumericProperty(0)
@@ -161,7 +163,8 @@ class TicketTransactionScreeen(Screen):
     
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
-          
+        
+        self.manager.proccess_layout.open()
         
         self.account_name_info.setup(icon_image='account-box' , account_info="Tech Makie Catamora")
         self.account_email.setup(icon_image='email' , account_info="techmakie@gmail.com")

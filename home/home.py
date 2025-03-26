@@ -13,10 +13,16 @@ from kivy.uix.floatlayout import FloatLayout
 from variables import *
 from .ticket_list import TicketListScreen
 from .ticket_transact import TicketTransactionScreeen
+from .home_component import ProcessingLayout
 
 class HomeScreenManager(ScreenManager):
+     
+    proccess_layout : ProcessingLayout = ObjectProperty(None)
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        
+        self.proccess_layout = ProcessingLayout()
+        
         self.transition = SlideTransition(duration=0.3)  # ✅ Set here!
 
         home = Screen(name=HOME_SCREEN_DASHBOARD_SCREEN)
@@ -30,7 +36,7 @@ class HomeScreenManager(ScreenManager):
         
         transact = TicketTransactionScreeen(name=HOME_SCREEN_TRANSACT_SCREEN)
         self.add_widget(transact)
-        
+    
 
 
 
@@ -45,8 +51,10 @@ class NavigationBar(BoxLayout):
     maximum_icon_font_size = 35
     minimum_icon_font_size = 23
     
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        
         self.anim_button_selected = Animation(
             font_size = sp(self.maximum_icon_font_size),
             color = get_color_from_hex("#FFFFFF"),
@@ -124,6 +132,8 @@ class HomeScreen(Screen):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        
+        
         self.home_screen_manager = HomeScreenManager(
             size_hint=(1, 1),
             pos_hint={"center_x": 0.5, "center_y": 0.5}, 
