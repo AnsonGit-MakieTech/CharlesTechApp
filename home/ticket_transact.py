@@ -32,21 +32,96 @@ from kivy_garden.mapview import MapView, MapSource
 from kivy.uix.image import Image
 from kivy.properties import ObjectProperty, NumericProperty
 
+from kivy.utils import get_color_from_hex as chex
+from kivy.core.clipboard import Clipboard
+
+
+
+from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
+
+# Optional: Custom tile server or use default
+map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                       cache_key="osm",
+                       tile_size=256,
+                       image_ext="png")
+
 
 
 # TODO: Use web view to access the google maps and display the map in the modal view
 class GeolocationModalView(ModalView):
     map = ObjectProperty(None)
+    lat : str = StringProperty('[font=roboto_semibold]Latitude :[/font] [font=roboto_light]0[/font]')
+    lon : str = StringProperty('[font=roboto_semibold]Longitude :[/font] [font=roboto_light]0[/font]')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.mapview = None  # 👈 store MapView instance
+    
+    def on_parent(self, *args):
+        Clock.schedule_once(self.load_map, 0.3)
+
+    def on_open(self):
+        def test_location(*args):
+            self.go_to_location(12.375534281221226, 123.63250384550383)
+        Clock.schedule_once(test_location, 1)
+
+    def load_map(self, *args):
+        if not self.ids.map.children:
+            self.mapview = MapView(lat=14.375534281221226, lon=123.63250384550383, zoom=25,
+                              map_source=map_source,
+                              size_hint=(1, 1),
+                              pos_hint={"center_x": 0.5, "center_y": 0.5})
+             # Optional: bind to map position updates
+            self.mapview.bind(lat=self.on_map_move, lon=self.on_map_move)
+
+            self.map.add_widget(self.mapview)
+            marker_icon = MDIcon(icon="home-map-marker",
+                                 font_size=sp(58), 
+                                 theme_text_color="Custom",
+                                 text_color=chex("#B71E1E"),
+                                 pos_hint={"center_x": 0.5, "center_y": 0.5}
+                                 )
+            self.map.add_widget(marker_icon)
+
+    def on_map_move(self, *args):
+        """ Called when user pans the map. """
+        if self.mapview:
+            lat = self.mapview.lat
+            lon = self.mapview.lon 
+            print(f"📍 Map center updated → Lat: {lat}, Lon: {lon}")
+            lat = f"{round(lat, 10)}.." if len(str(lat)) > 10 else lat
+            lon = f"{round(lon, 10)}.." if len(str(lon)) > 10 else lon
+            self.lat = f"[font=roboto_semibold]Latitude :[/font] [font=roboto_light]{lat}[/font]"
+            self.lon = f"[font=roboto_semibold]Longitude :[/font] [font=roboto_light]{lon}[/font]"
+            
+    def get_center_coords(self):
+        """ Call this when you want to access the map center directly. """
+        if self.mapview:
+            return self.mapview.lat, self.mapview.lon
+        return None, None
+
+    def go_to_location(self , new_lat , new_lon): 
+        self.mapview.center_on(new_lat, new_lon)
+        self.mapview.zoom = 16  # Optional: adjust zoom for better clarity
+    
 
 
- 
 class GeolocationStepLayout(MDBoxLayout):
     is_not_done : bool = BooleanProperty(True)
     step_text : str = StringProperty('Step 3: Geo-Mapping Submission')
+    set_location_button : Button = ObjectProperty(None)
+    next_step_button : Button = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    
+    
+
+
 
 class Step1Layout(MDBoxLayout):
     old_account : bool = BooleanProperty(False)

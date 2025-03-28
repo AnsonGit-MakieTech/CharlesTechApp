@@ -311,8 +311,8 @@
                 valign: 'center'
                 halign: 'center' 
                 color: chex("#014367") 
-                size_hint: 1, 0.1
-            
+                size_hint: 1, 0.1   
+        
             FloatLayout:
                 size_hint: 1, 0.9  # Full size for the map view
                 id: map
@@ -323,15 +323,29 @@
                 height: sp(25)
 
                 Label:
-                    text: '[font=roboto_semibold]Latitude :[/font] [font=roboto_light]12.8797324332424[/font]'
-                    size_hint_x: 1  # ✅ Take remaining space
+                    text: root.lat
+                    size_hint_x: 0.5   
                     size_hint_y: 1
                     text_size: self.size
                     valign: 'center'
                     halign: 'left'
                     font_name: 'roboto_light'
-                    font_size: sp(11)
+                    font_size: sp(9)
                     color: chex("#014367")    
+                    markup: True
+
+                Label:
+                    text: root.lon
+                    size_hint_x: 0.5   
+                    size_hint_y: 1
+                    text_size: self.size
+                    valign: 'center'
+                    halign: 'left'
+                    font_name: 'roboto_light'
+                    font_size: sp(9)
+                    color: chex("#014367")    
+                    markup: True
+                    
                         
                     
 
@@ -353,6 +367,8 @@
                             pos: self.pos
                             size: self.size
                             radius: [4]
+                    on_release:
+                        root.dismiss()
                 
                 Widget:
                     size_hint: 1, None 
@@ -382,6 +398,9 @@
     orientation: 'vertical'
     adaptive_height: True
     padding: ( 0 , dp(20), 0, 0)
+
+    set_location_button : set_location_button
+    next_step_button : next_step_button
 
 
     BoxLayout:
@@ -540,8 +559,29 @@
         padding: (0 , dp(30) , dp(20), 0)
 
         Widget:
+            
+            
+        Button:
+            id: set_location_button
+            text: "SET LOCATION" 
+            font_name: "roboto_semibold"
+            size_hint: None , None
+            background_color: (0, 0 , 0, 0)
+            width: sp(130) 
+            height: sp(25)
+            font_size: sp(12)
+            color: chex("#F7EEDD")
+            canvas.before:
+                Color:
+                    rgba: chex("#014367")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
+
     
         Button:
+            id: next_step_button
             text: "NEXT STEP" 
             font_name: "roboto_semibold"
             size_hint: None , None

@@ -11,6 +11,7 @@ from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 
 from variables import *
+from .dashboard import Dashboard
 from .ticket_list import TicketListScreen
 from .ticket_transact import TicketTransactionScreeen
 from .home_component import ProcessingLayout
@@ -25,7 +26,7 @@ class HomeScreenManager(ScreenManager):
         
         self.transition = SlideTransition(duration=0.3)  # ✅ Set here!
 
-        home = Screen(name=HOME_SCREEN_DASHBOARD_SCREEN)
+        home = Dashboard(name=HOME_SCREEN_DASHBOARD_SCREEN)
         self.add_widget(home)
 
         ticket_list = TicketListScreen(name=HOME_SCREEN_TICKETLIST_SCREEN)

@@ -26,18 +26,21 @@ class ClickableLabel(Label):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind(size=self.update_font_safely)
-        Clock.schedule_once(self.update_font_safely, 0)
+        # self.bind(size=self.update_font_safely) # To much iterations remove soon
+        # Clock.schedule_once(self.update_font_safely, 0)
+    
+    # def on_parent(self, *args):
+    #     self.update_font_safely()
 
-    def update_font_safely(self, *args):
-        """Update font and height with debounce"""
-        self.font_size = self.width * 0.08
-        Clock.schedule_once(self.set_height_from_texture, 0)
+    # def update_font_safely(self, *args):
+    #     """Update font and height with debounce"""
+    #     # self.font_size = self.width * 0.08
+    #     Clock.schedule_once(self.set_height_from_texture, 0)
 
-    def set_height_from_texture(self, *args):
-        new_height = self.texture_size[1] + dp(20)
-        if self.height != new_height:
-            self.height = new_height
+    # def set_height_from_texture(self, *args):
+    #     new_height = self.texture_size[1] + dp(20)
+    #     if self.height != new_height:
+    #         self.height = new_height
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):

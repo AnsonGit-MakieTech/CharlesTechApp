@@ -75,24 +75,26 @@ class TechnicalApp(MDApp):
         
         # Load login screen
         login_component_kv_path = os.path.join(os.path.dirname(__file__), 'login', "login_design.kv")
-        # login_kv_path = os.path.join(os.path.dirname(__file__), 'login', "main_login_screen.kv") 
-        # login_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "pinlogin.kv")
-        # register_account_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registeraccount.kv")
-        # register_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registerpin.kv")
+        login_kv_path = os.path.join(os.path.dirname(__file__), 'login', "main_login_screen.kv") 
+        login_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "pinlogin.kv")
+        register_account_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registeraccount.kv")
+        register_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registerpin.kv")
         Builder.load_file(login_component_kv_path)
-        # Builder.load_file(login_kv_path)
-        # Builder.load_file(login_pin_kv_path)
-        # Builder.load_file(register_account_kv_path)
-        # Builder.load_file(register_pin_kv_path)
-        # login_screen = main_login_screen.LoginScreen(name=LOGIN_SCREEN)
-        # self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
+        Builder.load_file(login_kv_path)
+        Builder.load_file(login_pin_kv_path)
+        Builder.load_file(register_account_kv_path)
+        Builder.load_file(register_pin_kv_path)
+        login_screen = main_login_screen.LoginScreen(name=LOGIN_SCREEN)
+        self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
         
         # Load home screen
+        dashboard_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'dashboard.kv')
         home_component_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'home_component.kv')
         ticket_transaction_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'ticket_transact.kv')
         ticket_list_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'ticket_list.kv')    
         home_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'home.kv')
         
+        Builder.load_file(dashboard_kv_path)
         Builder.load_file(home_component_kv_path)   
         Builder.load_file(ticket_transaction_kv_path)
         Builder.load_file(ticket_list_kv_path) 
