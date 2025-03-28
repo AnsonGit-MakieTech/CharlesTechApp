@@ -1,3 +1,4 @@
+from kivymd.uix.chip.chip import MDIcon
 from kivy.uix.accordion import ListProperty
 from kivy.uix.accordion import BooleanProperty
 from kivy.uix.accordion import ObjectProperty
@@ -23,11 +24,26 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.modalview import ModalView
 from kivy.uix.scrollview import ScrollView
+from kivy_garden.mapview import MapView
+import os
+from kivy.clock import Clock
+from kivy.uix.modalview import ModalView
+from kivy_garden.mapview import MapView, MapSource
+from kivy.uix.image import Image
+from kivy.properties import ObjectProperty, NumericProperty
 
 
 
+# TODO: Use web view to access the google maps and display the map in the modal view
+class GeolocationModalView(ModalView):
+    map = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 
+
+ 
 class GeolocationStepLayout(MDBoxLayout):
     is_not_done : bool = BooleanProperty(True)
     step_text : str = StringProperty('Step 3: Geo-Mapping Submission')
@@ -148,6 +164,7 @@ class TicketTransactionScreeen(Screen):
         
         self.remarks_input = RemarksInputLayout()
         self.remarks_list = RemarksListViewer()
+        self.geolocation_modal = GeolocationModalView()
         
         
          
@@ -175,6 +192,8 @@ class TicketTransactionScreeen(Screen):
     
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
+
+        self.geolocation_modal.open()
         
         # self.manager.proccess_layout.open() # Use it only if when proccessing a layout
         

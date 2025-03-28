@@ -36,3 +36,7 @@ dist/
 settings.ini
 config.json
 credentials.json
+
+
+# Ignore all files in the data folder
+cache/

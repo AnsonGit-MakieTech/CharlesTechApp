@@ -9,7 +9,7 @@ from kivy.graphics import Color, RoundedRectangle, Ellipse
 from kivy.properties import ListProperty, BooleanProperty, NumericProperty  
 from kivy.utils import get_color_from_hex as chex
 from kivy.clock import Clock
-
+from kivy.metrics import dp
 class PinButton(Button):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -22,24 +22,31 @@ class PinButton(Button):
         
         
 class ClickableLabel(Label):
-    
-    label_event : callable = ObjectProperty(None)
-    
+    label_event: callable = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.font_size = self.width * 0.08  # ✅ Initial font size
-        self.bind(size=self.update_font_size)  # ✅ Only recalculate on resize
+        self.bind(size=self.update_font_safely)
+        Clock.schedule_once(self.update_font_safely, 0)
 
-    def update_font_size(self, *args):
-        """ Update font size only when button size changes """
-        self.font_size = self.width * 0.08   # ✅ Update only when resized
-        
+    def update_font_safely(self, *args):
+        """Update font and height with debounce"""
+        self.font_size = self.width * 0.08
+        Clock.schedule_once(self.set_height_from_texture, 0)
+
+    def set_height_from_texture(self, *args):
+        new_height = self.texture_size[1] + dp(20)
+        if self.height != new_height:
+            self.height = new_height
+
     def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):  # ✅ Detect if clicked inside the label
+        if self.collide_point(*touch.pos):
             if self.label_event:
                 self.label_event()
             return True
         return super().on_touch_down(touch)
+    
+    
      
 class PinWidget(Widget):
     default_color = ListProperty([0.254, 0.788, 0.886, 1])  # ✅ "41C9E2" converted to RGBA
