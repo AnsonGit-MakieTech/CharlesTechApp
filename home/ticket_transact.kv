@@ -24,6 +24,8 @@
     refresh_layout : refresh_layout
 
     geolocation_step_layout : geolocation_step_layout
+    fiber_connection_step_layout : fiber_connection_step_layout
+    poc_layout : poc_layout
 
     BoxLayout:
         id:main_parent
@@ -184,6 +186,496 @@
 
                 GeolocationStepLayout:
                     id: geolocation_step_layout
+
+
+                FiberConnectionStepLayout:
+                    id: fiber_connection_step_layout
+
+                POCLayout:
+                    id: poc_layout
+
+
+
+<POCLayout>:
+    orientation: 'vertical'
+    adaptive_height: True
+    padding: ( 0 , dp(20), 0, dp(20))
+    size_hint: 1, None 
+    
+    BoxLayout:
+        orientation:'horizontal'
+        size_hint: 1, None
+        height: dp(30)
+        padding: (dp(20), 0 ,dp(20) , 0)
+
+        Label:
+            text: root.step_text
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_extrabold'
+            font_size: sp(15)
+            color: chex("#014367")
+        
+        MDIcon: 
+            icon: "check-decagram"
+            font_size: sp(20)
+            color: chex("#ACE2E1") if root.is_not_done else chex("#5CBA45")
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        adaptive_height: True 
+        padding: (dp(40), dp(10) , dp(20), 0)
+        spacing:dp(10)
+        
+        Label:
+            text:'Instructions :'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(13)
+            color: chex("#014367")
+
+
+        Label:
+            text:'1. Click Submit POC to upload proof of job completion.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'2. Ensure that the provided proof is clear and meets all requirements.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'3. Once uploaded, confirm submission to proceed to the next step.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+
+
+
+
+
+
+
+
+<FiberConnectionModalView>:
+    size_hint: 1, 1
+    auto_dismiss: True
+    background: ""  # Removes default dim background
+    background_color: 0, 0, 0, 0
+    
+    rx : rx
+    tx : tx
+    
+    BoxLayout:
+        orientation:'vertical' 
+        spacing: sp(10)
+        size_hint: 0.85 , 0.9
+        pos_hint: { 'center_x': 0.5 , 'center_y': 0.5 }  
+         
+        
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            adaptive_height: True
+            padding: (dp(10 ), dp(10) ,dp(10) , dp(10))
+            spacing: dp(15)
+
+            canvas.before:
+                Color:
+                    rgba: chex("#F7EEDD")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
+                Color:
+                    rgba: chex("#014367")
+                Line:
+                    rounded_rectangle: [self.x, self.y, self.width, self.height, 4]
+                    width: 2
+
+            Label:
+                text: 'TX Level (Transmit Power) ;'
+                font_name: 'roboto_extrabold'
+                font_size: sp(12)
+                text_size: self.width, None   
+                valign: 'top'
+                halign: 'left'
+                font_name: 'roboto_semibold' 
+                color: chex("#014367") 
+                size_hint: 1, None
+                height: sp(30)
+
+
+                
+            TextInput: 
+                id: tx
+                hint_text: "Enter the measured transmit power level."
+                background_color: 0,0,0,0 # Makes the background transparent
+                background_normal: '' # Removes default background
+                padding: [0, dp(10), 0, dp(5)] # Adds some padding above and below text
+                cursor_color: chex("#014367")
+                multiline: False
+                size_hint: 1, None
+                height: sp(30)
+                font_name: 'roboto_light'
+                foreground_color: chex("#014367")
+                font_size: sp(13)
+                
+                canvas.after:
+                    Color:
+                        rgba: chex("#014367")
+                    Line:
+                        points: [self.x, self.y, self.x + self.width, self.y]
+                        width: 1.3
+                    Color:
+                        rgba: chex("#014367") 
+            
+            Label:
+                text: 'RX Level (Receive Power) ;'
+                font_name: 'roboto_extrabold'
+                font_size: sp(12)
+                text_size: self.width, None   
+                valign: 'top'
+                halign: 'left'
+                font_name: 'roboto_semibold' 
+                color: chex("#014367") 
+                size_hint: 1, None
+                height: sp(30)
+
+
+                
+            TextInput: 
+                id: rx
+                hint_text: "Enter the measured receive power level."
+                background_color: 0,0,0,0 # Makes the background transparent
+                background_normal: '' # Removes default background
+                padding: [0, dp(10), 0, dp(5)] # Adds some padding above and below text
+                cursor_color: chex("#014367")
+                multiline: False
+                size_hint: 1, None
+                height: sp(30)
+                font_name: 'roboto_light'
+                foreground_color: chex("#014367")
+                font_size: sp(13)
+                
+                canvas.after:
+                    Color:
+                        rgba: chex("#014367")
+                    Line:
+                        points: [self.x, self.y, self.x + self.width, self.y]
+                        width: 1.3
+                    Color:
+                        rgba: chex("#014367") 
+ 
+
+            BoxLayout:
+                orientation: 'horizontal' 
+                size_hint: 1, None 
+                height: sp(24)
+                padding: (0, 0,  0, 0) 
+
+                Widget:
+                    size_hint: 1, None
+
+                Button:
+                    size_hint: None, 1 
+                    width: sp(100)
+                    text: "SUBMIT"
+                    background_color: (0, 0, 0, 0)
+                    background_down: ''
+                    font_name: 'roboto_semibold'
+                    font_size: sp(13)
+                    color: chex("#F7EEDD")
+                    canvas.before:
+                        Color:
+                            rgba: chex("#5CBA45") 
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [4]
+                    opacity: 1 
+                    on_release:
+                        root.dismiss()
+
+
+        Widget: 
+            size_hint: (1 , 1)
+
+            
+
+
+
+
+
+
+<FiberConnectionStepLayout>:
+    orientation: 'vertical'
+    # adaptive_height: True
+    padding: ( 0 , dp(20), 0, 0)
+    size_hint: 1, None
+    height: dp(root.original_height)
+    
+
+    set_fiber_button : set_fiber_button
+    next_step_button : next_step_button 
+
+
+    BoxLayout:
+        orientation:'horizontal'
+        size_hint: 1, None
+        height: dp(30)
+        padding: (dp(20), 0 ,dp(20) , 0)
+
+        Label:
+            text: root.step_text
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_extrabold'
+            font_size: sp(15)
+            color: chex("#014367")
+        
+        MDIcon: 
+            icon: "check-decagram"
+            font_size: sp(20)
+            color: chex("#ACE2E1") if root.is_not_done else chex("#5CBA45")
+
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        adaptive_height: True 
+        padding: (dp(40), dp(10) , dp(20), 0)
+        spacing:dp(10)
+        
+        Label:
+            text:'Instructions :'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(13)
+            color: chex("#014367")
+
+
+        Label:
+            text:'1. Check the TX (Transmit) and RX (Receive) levels of the fiber connection.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'2. Ensure that the signal levels meet the required standards.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'3. If any issues are detected, document them and escalate if necessary.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+        Label:
+            text:'3. Click Next Step to proceed after completing the verification.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+        
+    BoxLayout: 
+        orientation: 'horizontal'
+        size_hint: 1, None
+        height: sp(30)
+        padding: (dp(40), dp(40), 0, 0)
+
+        MDIcon: 
+            icon: "router-wireless"
+            font_size: sp(20)
+            color: chex("#014367")
+            size_hint: None, 1
+            width: sp(50)
+
+        Label:
+            text: 'RX : '
+            size_hint: None, 1
+            width: sp(80)
+            text_size: self.size
+            valign: 'center'
+            halign: 'right'
+            font_name: 'roboto_semibold'
+            font_size: sp(11)
+            color: chex("#014367")
+
+        Label:
+            text: root.rx_level
+            size_hint_x: 1  # ✅ Take remaining space
+            size_hint_y: 1
+            text_size: self.size
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+             
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, None
+        height: sp(30)
+        padding: (dp(40), dp(40), 0, 0)
+
+        
+        MDIcon: 
+            icon: "router-wireless"
+            font_size: sp(20)
+            color: chex("#014367")
+            size_hint: None, 1
+            width: sp(50)
+            opacity: 0
+
+        Label:
+            text: 'TX : '
+            size_hint: None, 1
+            width: sp(80)
+            text_size: self.size
+            valign: 'center'
+            halign: 'right'
+            font_name: 'roboto_semibold'
+            font_size: sp(11)
+            color: chex("#014367")
+
+        Label:
+            text: root.tx_level
+            size_hint_x: 1  # ✅ Take remaining space
+            size_hint_y: 1
+            text_size: self.size
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+    MDBoxLayout:
+        orientation: 'horizontal'
+        adaptive_height: True
+        padding: (0 , dp(30) , dp(20), 0)
+        spacing: dp(10)
+
+        Widget:
+            
+            
+        Button:
+            id: set_fiber_button
+            text: "SET FIBER" 
+            font_name: "roboto_semibold"
+            size_hint: None , None
+            background_color: (0, 0 , 0, 0)
+            width: sp(100) 
+            height: sp(25)
+            font_size: sp(12)
+            color: chex("#F7EEDD")
+            canvas.before:
+                Color:
+                    rgba: chex("#014367")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
+            on_release:
+                root.parent_event() if root.parent_event else None
+
+    
+        Button:
+            id: next_step_button
+            text: "NEXT STEP" 
+            font_name: "roboto_semibold"
+            size_hint: None , None
+            background_color: (0, 0 , 0, 0)
+            width: sp(100) 
+            height: sp(25)
+            font_size: sp(12)
+            color: chex("#F7EEDD")
+            opacity: 1 if root.is_valid_level else 0.5
+            canvas.before:
+                Color:
+                    rgba: chex("#5CBA45")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -403,9 +895,9 @@
 <GeolocationStepLayout>:
     orientation: 'vertical'
     # adaptive_height: True
-    padding: ( 0 , dp(20), 0, 0)
+    padding: ( 0 , dp(20), 0, dp(20))
     size_hint: 1, None
-    height: dp(300)
+    height: dp(root.original_height)
     
 
     set_location_button : set_location_button

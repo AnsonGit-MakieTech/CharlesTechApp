@@ -50,6 +50,95 @@ map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
                        tile_size=256,
                        image_ext="png")
 
+
+
+
+
+
+
+
+class POCLayout(MDBoxLayout):
+    is_not_done : bool = BooleanProperty(True)
+    step_text : str = StringProperty('Step 4: Submit Proof of Completion')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class FiberConnectionModalView(ModalView):
+    rx : TextInput = ObjectProperty(None)
+    tx : TextInput = ObjectProperty(None)
+    parent_event : object = ObjectProperty(None)
+    rx_level : str = StringProperty('Not yet documented')
+    tx_level : str = StringProperty('Not yet documented')
+
+    def on_kv_post(self, base_widget):
+        self.rx.bind(text=self.on_rx_change)
+        self.tx.bind(text=self.on_tx_change)
+    
+    def on_rx_change(self, instance, value):
+        self.rx_level = value
+        self.parent_event(rx = self.rx_level, tx = self.tx_level)
+    
+    def on_tx_change(self, instance, value):
+        self.tx_level = value
+        self.parent_event(rx = self.rx_level, tx = self.tx_level)
+
+
+class FiberConnectionStepLayout(MDBoxLayout): 
+    is_not_done : bool = BooleanProperty(True)
+    step_text : str = StringProperty('Step 3: Fiber Connection Check')
+    is_valid_level : bool = BooleanProperty(False)
+    set_fiber_button : Button = ObjectProperty(None)
+    next_step_button : Button = ObjectProperty(None) 
+    is_accessible : bool = BooleanProperty(False)
+
+    tx_level : str = StringProperty('Not yet documented')
+    rx_level : str = StringProperty('Not yet documented')
+
+    original_height = NumericProperty(320)
+
+    parent_event : object = ObjectProperty(None)
+
+    def update_level(self, tx, rx):
+        self.tx_level = tx
+        self.rx_level = rx
+        if str(tx).isdigit() and str(rx).isdigit():
+            self.is_valid_level = True
+        else:
+            self.is_valid_level = False
+
+
+    def display_none(self, *args):
+        self.is_accessible = False
+        self.next_step_button.disabled = True
+        self.set_fiber_button.disabled = True
+
+        # Just fade out and make invisible
+        Animation(opacity=0, duration=0.3 , height=0).start(self)
+
+
+    def display_block(self, *args):
+        self.is_accessible = True
+        self.next_step_button.disabled = False
+        self.set_fiber_button.disabled = False
+
+        # Restore opacity
+        Animation(opacity=1, duration=0.3, height=dp(self.original_height)).start(self)
+
+ 
+
 class GeolocationModalView(ModalView):
     map = ObjectProperty(None)
     lat : str = StringProperty('[font=roboto_semibold]Latitude :[/font] [font=roboto_light]0[/font]')
@@ -157,7 +246,7 @@ class GeolocationModalView(ModalView):
 
 class GeolocationStepLayout(MDBoxLayout):
     is_not_done : bool = BooleanProperty(True)
-    step_text : str = StringProperty('Step 3: Geo-Mapping Submission')
+    step_text : str = StringProperty('Step 2: Geo-Mapping Submission')
     set_location_button : Button = ObjectProperty(None)
     next_step_button : Button = ObjectProperty(None)
     longitude : str = StringProperty('0')
@@ -165,7 +254,7 @@ class GeolocationStepLayout(MDBoxLayout):
     location_info : BoxLayout = ObjectProperty(None)
     is_accessible : bool = BooleanProperty(False)
 
-    original_height = NumericProperty(0)
+    original_height = NumericProperty(320)
 
     parent_event : object = ObjectProperty(None)
 
@@ -189,7 +278,7 @@ class GeolocationStepLayout(MDBoxLayout):
         self.set_location_button.disabled = False
 
         # Restore opacity
-        Animation(opacity=1, duration=0.3, height=dp(300)).start(self)
+        Animation(opacity=1, duration=0.3, height=dp(self.original_height)).start(self)
 
 
     def update_location(self, lat_data, lon_data):
@@ -317,7 +406,8 @@ class TicketTransactionScreeen(Screen):
     refresh_layout : CustomScrollView = ObjectProperty(None)
 
     geolocation_step_layout : GeolocationStepLayout = ObjectProperty(None)
-    
+    fiber_connection_step_layout : FiberConnectionStepLayout = ObjectProperty(None)
+    poc_layout : POCLayout = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -332,6 +422,7 @@ class TicketTransactionScreeen(Screen):
         self.remarks_input = RemarksInputLayout()
         self.remarks_list = RemarksListViewer()
         self.geolocation_modal = GeolocationModalView()
+        self.fiber_connection_modal = FiberConnectionModalView()
         
     
     def on_parent(self, *args):
@@ -362,6 +453,9 @@ class TicketTransactionScreeen(Screen):
 
         self.geolocation_step_layout.parent_event = self.geolocation_modal.open
         self.geolocation_modal.parent_event = self.geolocation_step_layout.update_location
+
+        self.fiber_connection_step_layout.parent_event = self.fiber_connection_modal.open
+        self.fiber_connection_modal.parent_event = self.fiber_connection_step_layout.update_level
 
 
         # self.geolocation_modal.open()
