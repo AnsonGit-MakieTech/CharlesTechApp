@@ -194,7 +194,8 @@
     background_color: 0, 0, 0, 0
 
     map : map
- 
+    location_input : location_input
+    
     BoxLayout:
         orientation:'vertical' 
         spacing: sp(10)
@@ -284,7 +285,9 @@
                             pos: self.pos
                             size: self.size
                             radius: [4]
-                            
+                    opacity: 1 if root.is_valid_location else 0.5
+                    on_release:
+                        if root.is_valid_location: root.dismiss()
 
 
         MDBoxLayout:

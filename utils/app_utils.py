@@ -17,3 +17,14 @@ def get_android_keyboard_height():
         view.getWindowVisibleDisplayFrame(r)
         return Window.height - (r.bottom - r.top)
     return 0  # Default for non-Android platforms
+
+
+def is_valid_latlon(text):
+    try:
+        lat_str, lon_str = text.split(",")
+        lat = float(lat_str.strip())
+        lon = float(lon_str.strip())
+        return -90 <= lat <= 90 and -180 <= lon <= 180
+    except (ValueError, AttributeError):
+        return False
+ 

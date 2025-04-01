@@ -35,6 +35,7 @@ from kivy.properties import ObjectProperty, NumericProperty
 from kivy.utils import get_color_from_hex as chex
 from kivy.core.clipboard import Clipboard
 from kivy.utils import platform
+from utils.app_utils import is_valid_latlon
 
 if platform == "android":
     from plyer import gps
@@ -49,14 +50,14 @@ map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
                        tile_size=256,
                        image_ext="png")
 
-
- 
 class GeolocationModalView(ModalView):
     map = ObjectProperty(None)
     lat : str = StringProperty('[font=roboto_semibold]Latitude :[/font] [font=roboto_light]0[/font]')
     lon : str = StringProperty('[font=roboto_semibold]Longitude :[/font] [font=roboto_light]0[/font]')
     lon_data : float = NumericProperty(0)
     lat_data : float = NumericProperty(0)
+    location_input : TextInput = ObjectProperty(None)
+    is_valid_location : bool = BooleanProperty(False)
 
     parent_event : object = ObjectProperty(None)
 
@@ -66,6 +67,23 @@ class GeolocationModalView(ModalView):
     
     def on_parent(self, *args):
         Clock.schedule_once(self.load_map, 0.3)
+
+    def on_kv_post(self, base_widget):
+        # Ensure location_input is set and bind an event
+        if self.location_input:
+            self.location_input.bind(text=self.on_location_change)
+
+
+    def on_location_change(self, instance, value):
+        print(f"📍 Location input changed to: {value}")
+        if is_valid_latlon(value):
+            self.is_valid_location = True 
+            lat_str, lon_str = value.split(",")
+            lat = float(lat_str.strip())
+            lon = float(lon_str.strip())
+            self.go_to_location(lat, lon)
+        else:
+            self.is_valid_location = False
 
     def on_open(self, *args):
         if self.lat_data == 0 or self.lon_data == 0:
@@ -133,6 +151,8 @@ class GeolocationModalView(ModalView):
         else:
             Clock.schedule_once(self.load_map, 0.3)
             Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)
+    
+
 
 
 class GeolocationStepLayout(MDBoxLayout):
