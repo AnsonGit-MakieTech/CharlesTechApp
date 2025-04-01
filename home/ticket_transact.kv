@@ -195,11 +195,114 @@
                     id: poc_layout
 
 
+                POCUploaderLayout:
+                    id: poc_uploader_layout_1
+
+
+
+<POCUploaderLayout>:
+    orientation: 'vertical' 
+    padding: ( dp(20) , 0, dp(20), dp(20))
+    size_hint: 1, None
+    height: dp(root.original_height)
+    spacing: dp(10)
+    # adaptive_height: True
+
+    canvas.before:
+        Color:
+            rgba : chex("#ACE2E1")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: root.step_text
+        text_size: self.width, None 
+        size_hint_y: None
+        height: self.texture_size[1]
+        valign: 'center'
+        halign: 'left'
+        font_name: 'roboto_extrabold'
+        font_size: sp(13)
+        color: chex("#014367")
+        
+        
+    Label:
+        padding: (dp(20), 0, 0, 0)
+        text: root.step_instruction
+        text_size: self.width, None 
+        size_hint_y: None
+        height: self.texture_size[1]
+        valign: 'center'
+        halign: 'left'
+        font_name: 'roboto_light'
+        font_size: sp(12)
+        color: chex("#014367")
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, None
+        height: dp(40)
+        padding: (dp(20), dp(10),dp(20) , 0)
+        
+        FloatLayout:
+            size_hint: None, None
+            width: sp(40)
+            height: sp(40)
+            
+            canvas.before:
+                Color:
+                    rgba : chex("#D9D9D9")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: (4, 4 ,4 ,4)
+            
+            MDIcon:
+                icon: "plus"
+                font_size: sp(20)
+                color: chex("#014367")
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+ 
+            
+        ScrollView:
+            id: poc_image_scroll_view
+            size_hint: 1, None
+            height: dp(100)
+            do_scroll_x: True
+            do_scroll_y: False
+            bar_width: dp(2)  # optional: makes scroll bar slimmer
+
+            BoxLayout:
+                id: poc_images_container
+                orientation: 'horizontal'
+                size_hint_y: 1
+                size_hint_x: None
+                height: dp(100)
+                spacing: dp(10)
+                padding: dp(10), 0 
+                # Make the layout wider than the ScrollView to enable scroll
+                width: self.minimum_width
+                    
+            
+            
+            
+        
+    
+
+
+
+
+
+
+
+
+
 
 <POCLayout>:
     orientation: 'vertical'
     adaptive_height: True
-    padding: ( 0 , dp(20), 0, dp(20))
+    padding: ( 0 , dp(20), 0, 0)
     size_hint: 1, None 
     
     BoxLayout:

@@ -102,7 +102,7 @@ class TechnicalApp(MDApp):
         
         home_screen = home.HomeScreen(name=HOME_SCREEN)
         self.root_screen_manager.add_widget(home_screen)  # ✅ Add screens via Python
-        # self.root_screen_manager.current = HOME_SCREEN
+        self.root_screen_manager.current = HOME_SCREEN
         
         
         

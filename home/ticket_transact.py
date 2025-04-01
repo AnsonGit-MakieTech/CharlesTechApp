@@ -55,21 +55,19 @@ map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
 
 
 
+class POCUploaderLayout(MDBoxLayout):
+    original_height : int = NumericProperty(200)
+    step_text : str = StringProperty('1. Costumer Proof Signature.')
+    step_instruction : str = StringProperty("Instructions : Upload an image of the customer's signed proof of service completion.")
+    
+
+
+
 
 
 class POCLayout(MDBoxLayout):
     is_not_done : bool = BooleanProperty(True)
     step_text : str = StringProperty('Step 4: Submit Proof of Completion')
-
-
-
-
-
-
-
-
-
-
 
 
 
