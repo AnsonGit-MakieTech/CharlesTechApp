@@ -34,7 +34,11 @@ from kivy.properties import ObjectProperty, NumericProperty
 
 from kivy.utils import get_color_from_hex as chex
 from kivy.core.clipboard import Clipboard
+from kivy.utils import platform
 
+if platform == "android":
+    from plyer import gps
+    from kivymd.toast import toast
 
 
 from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
@@ -46,15 +50,15 @@ map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
                        image_ext="png")
 
 
-
-# TODO: Use web view to access the google maps and display the map in the modal view
+ 
 class GeolocationModalView(ModalView):
     map = ObjectProperty(None)
     lat : str = StringProperty('[font=roboto_semibold]Latitude :[/font] [font=roboto_light]0[/font]')
     lon : str = StringProperty('[font=roboto_semibold]Longitude :[/font] [font=roboto_light]0[/font]')
+    lon_data : float = NumericProperty(0)
+    lat_data : float = NumericProperty(0)
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    parent_event : object = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -63,14 +67,30 @@ class GeolocationModalView(ModalView):
     def on_parent(self, *args):
         Clock.schedule_once(self.load_map, 0.3)
 
-    def on_open(self):
-        def test_location(*args):
-            self.go_to_location(12.375534281221226, 123.63250384550383)
-        Clock.schedule_once(test_location, 1)
+    def on_open(self, *args):
+        if self.lat_data == 0 or self.lon_data == 0:
+            if platform == "android":
+                try:
+                    gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
+                    gps.start(minTime=1000, minDistance=1)
+                except NotImplementedError:
+                    print("GPS not implemented on this platform")
+            else:
+                self.go_to_location(12.375466976256769, 123.63299577874449)  # fallback
+
+    def gps_status(self, status_type, status):
+        print(f"GPS Status → {status_type}: {status}")
+    
+    def gps_callback(self, **kwargs):
+        self.lat_data = float(kwargs.get('lat', 0))
+        self.lon_data = float(kwargs.get('lon', 0))
+        print(f"📡 GPS location received → Lat: {self.lat_data}, Lon: {self.lon_data}")
+        self.go_to_location(self.lat_data, self.lon_data)
+        gps.stop()  # Stop after getting one location fix
 
     def load_map(self, *args):
         if not self.ids.map.children:
-            self.mapview = MapView(lat=14.375534281221226, lon=123.63250384550383, zoom=25,
+            self.mapview = MapView(lat=12.375466976256769, lon=123.63299577874449, zoom=25,
                               map_source=map_source,
                               size_hint=(1, 1),
                               pos_hint={"center_x": 0.5, "center_y": 0.5})
@@ -89,11 +109,12 @@ class GeolocationModalView(ModalView):
     def on_map_move(self, *args):
         """ Called when user pans the map. """
         if self.mapview:
-            lat = self.mapview.lat
-            lon = self.mapview.lon 
-            print(f"📍 Map center updated → Lat: {lat}, Lon: {lon}")
-            lat = f"{round(lat, 10)}.." if len(str(lat)) > 10 else lat
-            lon = f"{round(lon, 10)}.." if len(str(lon)) > 10 else lon
+            self.lat_data = self.mapview.lat
+            self.lon_data = self.mapview.lon 
+            print(f"📍 Map center updated → Lat: {self.lat_data}, Lon: {self.lon_data}")
+            self.parent_event(lat_data = self.lat_data, lon_data = self.lon_data)
+            lat = f"{round(self.lat_data, 10)}.." if len(str(self.lat_data)) > 10 else self.lat_data
+            lon = f"{round(self.lon_data, 10)}.." if len(str(self.lon_data)) > 10 else self.lon_data
             self.lat = f"[font=roboto_semibold]Latitude :[/font] [font=roboto_light]{lat}[/font]"
             self.lon = f"[font=roboto_semibold]Longitude :[/font] [font=roboto_light]{lon}[/font]"
             
@@ -104,9 +125,14 @@ class GeolocationModalView(ModalView):
         return None, None
 
     def go_to_location(self , new_lat , new_lon): 
-        self.mapview.center_on(new_lat, new_lon)
-        self.mapview.zoom = 16  # Optional: adjust zoom for better clarity
-    
+        self.lat_data = new_lat
+        self.lon_data = new_lon
+        if self.mapview:
+            self.mapview.center_on(new_lat, new_lon)
+            self.mapview.zoom = 25  # Optional: adjust zoom for better clarity
+        else:
+            Clock.schedule_once(self.load_map, 0.3)
+            Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)
 
 
 class GeolocationStepLayout(MDBoxLayout):
@@ -114,11 +140,55 @@ class GeolocationStepLayout(MDBoxLayout):
     step_text : str = StringProperty('Step 3: Geo-Mapping Submission')
     set_location_button : Button = ObjectProperty(None)
     next_step_button : Button = ObjectProperty(None)
+    longitude : str = StringProperty('0')
+    latitude : str = StringProperty('0')
+    location_info : BoxLayout = ObjectProperty(None)
+    is_accessible : bool = BooleanProperty(False)
+
+    original_height = NumericProperty(0)
+
+    parent_event : object = ObjectProperty(None)
+
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(**kwargs) 
 
-    
+        
+    def display_none(self, *args):
+        self.is_accessible = False
+        self.next_step_button.disabled = True
+        self.set_location_button.disabled = True
+
+        # Just fade out and make invisible
+        Animation(opacity=0, duration=0.3 , height=0).start(self)
+
+
+    def display_block(self, *args):
+        self.is_accessible = True
+        self.next_step_button.disabled = False
+        self.set_location_button.disabled = False
+
+        # Restore opacity
+        Animation(opacity=1, duration=0.3, height=dp(300)).start(self)
+
+
+    def update_location(self, lat_data, lon_data):
+        self.longitude = str(lon_data)
+        self.latitude = str(lat_data)
+ 
+     
+
+    def on_touch_down(self, touch):
+        # Check if the touch was inside location_info
+        if self.location_info and self.location_info.collide_point(*touch.pos):
+            Clipboard.copy(f"{self.latitude}, {self.longitude}")
+            print(f"📋 Copied to clipboard: {self.latitude}, {self.longitude}")
+            if platform == "android": 
+                toast("📍 Coordinates copied to clipboard!")
+            else:
+                print("📍 Coordinates copied to clipboard!")  # fallback on desktop
+            return True  # Swallow the touch event
+        return super().on_touch_down(touch)
     
 
 
@@ -225,6 +295,8 @@ class TicketTransactionScreeen(Screen):
     
     
     refresh_layout : CustomScrollView = ObjectProperty(None)
+
+    geolocation_step_layout : GeolocationStepLayout = ObjectProperty(None)
     
     
     def __init__(self, **kwargs):
@@ -241,8 +313,6 @@ class TicketTransactionScreeen(Screen):
         self.remarks_list = RemarksListViewer()
         self.geolocation_modal = GeolocationModalView()
         
-        
-         
     
     def on_parent(self, *args):
         if self.parent:
@@ -268,7 +338,13 @@ class TicketTransactionScreeen(Screen):
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
 
-        self.geolocation_modal.open()
+
+
+        self.geolocation_step_layout.parent_event = self.geolocation_modal.open
+        self.geolocation_modal.parent_event = self.geolocation_step_layout.update_location
+
+
+        # self.geolocation_modal.open()
         
         # self.manager.proccess_layout.open() # Use it only if when proccessing a layout
         
