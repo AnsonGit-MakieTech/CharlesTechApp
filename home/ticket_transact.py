@@ -36,6 +36,7 @@ from kivy.utils import get_color_from_hex as chex
 from kivy.core.clipboard import Clipboard
 from kivy.utils import platform
 from utils.app_utils import is_valid_latlon
+from kivy.uix.image import Image
 
 if platform == "android":
     from plyer import gps
@@ -53,14 +54,31 @@ map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
 
 
 
+class POCImageLayout(Image):
+    image_path : str = StringProperty('') 
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+    
+    def on_parent(self, *args):
+        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        self.image_path = os.path.join(parent_dir, 'assets', 'app_logo.png')
+        print("image_path", self.image_path)
+
+    
+    
+    
+
 
 
 class POCUploaderLayout(MDBoxLayout):
-    original_height : int = NumericProperty(200)
+    original_height : int = NumericProperty(140)
     step_text : str = StringProperty('1. Costumer Proof Signature.')
     step_instruction : str = StringProperty("Instructions : Upload an image of the customer's signed proof of service completion.")
     
-
+    def setup_poc_uploader_layout(self, step_text, step_instruction):
+        self.step_text = step_text
+        self.step_instruction = step_instruction
 
 
 
@@ -406,6 +424,22 @@ class TicketTransactionScreeen(Screen):
     geolocation_step_layout : GeolocationStepLayout = ObjectProperty(None)
     fiber_connection_step_layout : FiberConnectionStepLayout = ObjectProperty(None)
     poc_layout : POCLayout = ObjectProperty(None)
+
+    
+    poc_uploader_layout_1 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_2 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_3 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_4 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_5 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_6 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_7 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_8 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_9 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_10 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_11 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_12 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_13 : POCUploaderLayout = ObjectProperty(None)
+    poc_uploader_layout_14 : POCUploaderLayout = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -440,6 +474,8 @@ class TicketTransactionScreeen(Screen):
         self.go_back_screen_font_size = min(Window.width, Window.height) * 0.04
         print("update_size : ", self.text_input_font_size)
 
+        
+
     def on_leave(self, *args):
         Animation(opacity=0, duration=0.5).start(self)
         return super().on_leave(*args)
@@ -455,8 +491,8 @@ class TicketTransactionScreeen(Screen):
         self.fiber_connection_step_layout.parent_event = self.fiber_connection_modal.open
         self.fiber_connection_modal.parent_event = self.fiber_connection_step_layout.update_level
 
-
-        # self.geolocation_modal.open()
+        self.setup_poc_uploader_layout()
+ 
         
         # self.manager.proccess_layout.open() # Use it only if when proccessing a layout
         
@@ -504,4 +540,65 @@ class TicketTransactionScreeen(Screen):
         """ Opens Google Maps with directions from current location to a given destination. """
         url = f"https://www.google.com/maps/dir/?api=1&origin=current+location&destination={destination_lat},{destination_lon}"
         webbrowser.open(url)
+    
+
+    def setup_poc_uploader_layout(self, *args):
+        self.poc_uploader_layout_1.setup_poc_uploader_layout(
+            step_text="1. Costumer Proof Signature",
+            step_instruction="Instructions : Upload an image of the customer's signed proof of service completion."
+        )
+        self.poc_uploader_layout_2.setup_poc_uploader_layout(
+            step_text="2. Terminal Box",
+            step_instruction="Instructions : Provide a clear image of the installed terminal box."
+        )
+        self.poc_uploader_layout_3.setup_poc_uploader_layout(
+            step_text="3. Terminal Box Fiber Tag/Labe",
+            step_instruction="Instructions :Capture the fiber tag or labeling on the terminal box."
+        )
+        self.poc_uploader_layout_4.setup_poc_uploader_layout(
+            step_text="4. Serial Number of Modem/Device",
+            step_instruction="Instructions : Upload an image showing the serial number of the modem or device."
+        )
+        self.poc_uploader_layout_5.setup_poc_uploader_layout(
+            step_text="5. Modem Setup",
+            step_instruction="Instructions : Take a picture of the properly installed modem."
+        )
+        self.poc_uploader_layout_6.setup_poc_uploader_layout(
+            step_text="6. Modem/Device Configuration",
+            step_instruction="Instructions : Provide a screenshot or image of the configured modem settings."
+        )
+        self.poc_uploader_layout_7.setup_poc_uploader_layout(
+            step_text="7. RX and TX Signal Levels",
+            step_instruction="Instructions : Upload an image displaying the RX and TX signal levels."
+        )
+        self.poc_uploader_layout_8.setup_poc_uploader_layout(
+            step_text="8. Signal PON Meter Reading",
+            step_instruction="Instructions : Capture the PON meter reading for verification."
+        )
+        self.poc_uploader_layout_9.setup_poc_uploader_layout(
+            step_text="9. Speed Test (2G Network)",
+            step_instruction="Instructions : Upload a screenshot of the speed test results on a 2G network."
+        )
+        self.poc_uploader_layout_10.setup_poc_uploader_layout(
+            step_text="10. Speed Test (5G Network)",
+            step_instruction="Instructions : Upload a screenshot of the speed test results on a 5G network."
+        )
+        self.poc_uploader_layout_11.setup_poc_uploader_layout(
+            step_text="11. WiFi Analyzer (2G Network)",
+            step_instruction="Instructions : Provide a screenshot of the WiFi analyzer results for the 2G network."
+        )
+        self.poc_uploader_layout_12.setup_poc_uploader_layout(
+            step_text="12. WiFi Analyzer (5G Network)",
+            step_instruction="Instructions : Provide a screenshot of the WiFi analyzer results for the 5G network."
+        )
+        self.poc_uploader_layout_13.setup_poc_uploader_layout(
+            step_text="13. Geolocation Upload",
+            step_instruction="Instructions : Upload a screenshot of the geolocation coordinates for the installation site."
+        )
+        self.poc_uploader_layout_14.setup_poc_uploader_layout(
+            step_text="14. Upload Completed Ticket Form",
+            step_instruction="Instructions : Submit a scanned copy or image of the completed ticket form."
+        )
+        
+        
         

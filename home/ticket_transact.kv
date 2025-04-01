@@ -27,6 +27,21 @@
     fiber_connection_step_layout : fiber_connection_step_layout
     poc_layout : poc_layout
 
+    poc_uploader_layout_1 : poc_uploader_layout_1
+    poc_uploader_layout_2 : poc_uploader_layout_2
+    poc_uploader_layout_3 : poc_uploader_layout_3
+    poc_uploader_layout_4 : poc_uploader_layout_4
+    poc_uploader_layout_5 : poc_uploader_layout_5
+    poc_uploader_layout_6 : poc_uploader_layout_6
+    poc_uploader_layout_7 : poc_uploader_layout_7
+    poc_uploader_layout_8 : poc_uploader_layout_8
+    poc_uploader_layout_9 : poc_uploader_layout_9
+    poc_uploader_layout_10 : poc_uploader_layout_10
+    poc_uploader_layout_11 : poc_uploader_layout_11
+    poc_uploader_layout_12 : poc_uploader_layout_12
+    poc_uploader_layout_13 : poc_uploader_layout_13
+    poc_uploader_layout_14 : poc_uploader_layout_14
+
     BoxLayout:
         id:main_parent
         pos_hint: {'center_x': 0.5,'top': 1}
@@ -198,6 +213,49 @@
                 POCUploaderLayout:
                     id: poc_uploader_layout_1
 
+                
+                POCUploaderLayout:
+                    id: poc_uploader_layout_2
+
+                POCUploaderLayout:
+                    id: poc_uploader_layout_3
+                
+                POCUploaderLayout:
+                    id: poc_uploader_layout_4
+                
+                POCUploaderLayout:
+                    id: poc_uploader_layout_5
+
+                POCUploaderLayout:
+                    id: poc_uploader_layout_6
+
+                
+                POCUploaderLayout:
+                    id: poc_uploader_layout_7
+
+                POCUploaderLayout:
+                    id: poc_uploader_layout_8
+                
+                POCUploaderLayout:
+                    id: poc_uploader_layout_9
+                
+                POCUploaderLayout:
+                    id: poc_uploader_layout_10
+
+                POCUploaderLayout:
+                    id: poc_uploader_layout_11
+
+                
+                POCUploaderLayout:
+                    id: poc_uploader_layout_12
+
+                POCUploaderLayout:
+                    id: poc_uploader_layout_13
+                
+                POCUploaderLayout:
+                    id: poc_uploader_layout_14
+                 
+
 
 
 <POCUploaderLayout>:
@@ -206,14 +264,9 @@
     size_hint: 1, None
     height: dp(root.original_height)
     spacing: dp(10)
-    # adaptive_height: True
+    # adaptive_height: True 
 
-    canvas.before:
-        Color:
-            rgba : chex("#ACE2E1")
-        Rectangle:
-            pos: self.pos
-            size: self.size
+    poc_images_container : poc_images_container
 
     Label:
         text: root.step_text
@@ -268,7 +321,7 @@
         ScrollView:
             id: poc_image_scroll_view
             size_hint: 1, None
-            height: dp(100)
+            height: sp(40)
             do_scroll_x: True
             do_scroll_y: False
             bar_width: dp(2)  # optional: makes scroll bar slimmer
@@ -278,17 +331,28 @@
                 orientation: 'horizontal'
                 size_hint_y: 1
                 size_hint_x: None
-                height: dp(100)
                 spacing: dp(10)
                 padding: dp(10), 0 
                 # Make the layout wider than the ScrollView to enable scroll
                 width: self.minimum_width
+                
+                POCImageLayout:
                     
-            
-            
-            
-        
-    
+                POCImageLayout:
+
+
+
+<POCImageLayout>:
+    size_hint: None , None
+    width: sp(40) 
+    height: sp(40)
+    source: root.image_path
+    allow_stretch: True
+    keep_ratio: True
+
+
+
+
 
 
 
