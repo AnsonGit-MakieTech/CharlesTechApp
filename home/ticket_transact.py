@@ -52,6 +52,22 @@ map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
                        image_ext="png")
 
 
+class ForReviewLayout(MDBoxLayout):
+    step_text : str = StringProperty('Step 5: Submit for Review') 
+    is_not_done : bool = BooleanProperty(True) 
+
+
+
+
+
+class POCFileUploaderModalView(ModalView):
+    file_image_path : str = StringProperty('')
+
+    def on_parent(self, *args):
+        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        self.file_image_path = os.path.join(parent_dir, 'assets', 'upload_image.png')
+        print("file_image_path", self.file_image_path)
+
 
 
 class POCImageLayout(Image):
@@ -65,6 +81,13 @@ class POCImageLayout(Image):
         self.image_path = os.path.join(parent_dir, 'assets', 'app_logo.png')
         print("image_path", self.image_path)
 
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            Animation(opacity=0, duration=0.3).start(self)
+            Clock.schedule_once(lambda dt: self.parent.remove_widget(self), 0.3)
+            return True
+        return super().on_touch_down(touch)
     
     
     
@@ -455,6 +478,7 @@ class TicketTransactionScreeen(Screen):
         self.remarks_list = RemarksListViewer()
         self.geolocation_modal = GeolocationModalView()
         self.fiber_connection_modal = FiberConnectionModalView()
+        self.poc_file_uploader_modal = POCFileUploaderModalView()
         
     
     def on_parent(self, *args):
@@ -483,6 +507,7 @@ class TicketTransactionScreeen(Screen):
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
 
+        self.poc_file_uploader_modal.open()
 
 
         self.geolocation_step_layout.parent_event = self.geolocation_modal.open

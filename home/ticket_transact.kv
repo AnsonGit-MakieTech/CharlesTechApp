@@ -41,6 +41,7 @@
     poc_uploader_layout_12 : poc_uploader_layout_12
     poc_uploader_layout_13 : poc_uploader_layout_13
     poc_uploader_layout_14 : poc_uploader_layout_14
+    for_review_layout : for_review_layout
 
     BoxLayout:
         id:main_parent
@@ -254,9 +255,312 @@
                 
                 POCUploaderLayout:
                     id: poc_uploader_layout_14
+
+                ForReviewLayout:
+                    id: for_review_layout
                  
 
 
+
+
+<POCFileUploaderModalView>: 
+    size_hint: 1, 1
+    auto_dismiss: True
+    background: ""  # Removes default dim background
+    background_color: 0, 0, 0, 0
+
+
+    BoxLayout:
+        orientation:'vertical' 
+        spacing: sp(10)
+        size_hint: 0.85 , 0.6
+        pos_hint: { 'center_x': 0.5 , 'center_y': 0.5 }  
+         
+        
+
+
+        FloatLayout:
+            orientation: 'horizontal'
+            size_hint: 1, 0.15
+
+            canvas.before:
+                Color:
+                    rgba: chex("#F7EEDD")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
+                Color:
+                    rgba: chex("#014367")
+                Line:
+                    width: 2
+                    rounded_rectangle: (*self.pos, *self.size, 4)
+
+            TextInput:
+                id: poc_file_input
+                hint_text: "Enter File Name"
+                size_hint: 0.9, None
+                height: sp(33)
+                background_color: 0,0,0,0 # Makes the background transparent
+                background_normal: '' # Removes default background
+                padding: [0, dp(10), 0, dp(5)] # Adds some padding above and below text
+                cursor_color: chex("#014367")
+                multiline: False 
+                font_name: 'roboto_light'
+                foreground_color: chex("#014367")
+                font_size: sp(13)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                halign: 'center'
+                valign: 'center'
+                
+                canvas.after:
+                    Color:
+                        rgba: chex("#014367")
+                    Line:
+                        points: [self.x, self.y, self.x + self.width, self.y]
+                        width: 1
+                    Color:
+                        rgba: chex("#014367") 
+            
+
+
+        BoxLayout:
+            orientation: 'vertical' 
+            padding: (dp(5 ), dp(10) ,dp(5) , dp(10)) 
+            size_hint: (1 , 0.85)
+
+            canvas.before:
+                Color:
+                    rgba: chex("#F7EEDD")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
+                Color:
+                    rgba: chex("#014367")
+                Line:
+                    rounded_rectangle: [self.x, self.y, self.width, self.height, 4]
+                    width: 2
+
+
+            Label:
+                text: 'Preview of your file'
+                font_name: 'roboto_extrabold'
+                font_size: sp(12)
+                text_size: self.width, None   
+                valign: 'center'
+                halign: 'center' 
+                color: chex("#014367") 
+                size_hint: 1, 0.1   
+        
+            FloatLayout:
+                size_hint: 1, 0.9  # Full size for the map view
+
+                Image:
+                    source: root.file_image_path
+                    size_hint: 0.9, 0.9
+                    allow_stretch: True
+                    keep_ratio: False
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    
+                    canvas.before:
+                        Color:
+                            rgba: chex("#D9D9D9")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [4]
+                
+ 
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                spacing: sp(5)
+                height: sp(30)
+
+                Button:
+                    text: 'CANCEL' 
+                    font_name: "roboto_semibold" 
+                    background_color: (0, 0 , 0, 0)
+                    size_hint: None, None
+                    width: sp(80)
+                    height: sp(25)
+                    font_size: sp(12)
+                    color: chex("#F7EEDD")
+                    canvas.before:
+                        Color:
+                            rgba: chex("#B71E1E")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [4]
+                    on_release:
+                        root.dismiss()
+                
+                Widget:
+                    size_hint: 1, None
+
+                Button:
+                    text: 'SELECT FILE' 
+                    font_name: "roboto_semibold" 
+                    background_color: (0, 0 , 0, 0)
+                    size_hint: None, None
+                    width: sp(80)
+                    height: sp(25)
+                    font_size: sp(12)
+                    color: chex("#F7EEDD")
+                    canvas.before:
+                        Color:
+                            rgba: chex("#014367")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [4]
+                    on_release:
+                        
+                
+                Widget:
+                    size_hint: 1, None
+
+                Button:
+                    text: 'SUBMIT' 
+                    font_name: "roboto_semibold" 
+                    background_color: (0, 0 , 0, 0)
+                    size_hint: None, None
+                    width: sp(80)
+                    height: sp(25)
+                    font_size: sp(12)
+                    color: chex("#F7EEDD")
+                    canvas.before:
+                        Color:
+                            rgba: chex("#5CBA45")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [4]
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ForReviewLayout>:
+    orientation: 'vertical'
+    adaptive_height: True
+    padding: ( 0 , dp(20), 0, 0)
+
+    BoxLayout:
+        orientation:'horizontal'
+        size_hint: 1, None
+        height: dp(30)
+        padding: (dp(20), 0 ,dp(20) , 0)
+
+        Label:
+            text:root.step_text
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_extrabold'
+            font_size: sp(15)
+            color: chex("#014367")
+        
+        MDIcon: 
+            icon: "check-decagram"
+            font_size: sp(20)
+            color: chex("#ACE2E1") if root.is_not_done else chex("#5CBA45")
+        
+ 
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        adaptive_height: True 
+        padding: (dp(40), dp(10) , dp(20), 0)
+        spacing:dp(10)
+        
+        Label:
+            text:'Instructions :'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(13)
+            color: chex("#014367")
+
+
+        Label:
+            text:'1. Click Submit for Review to finalize the ticket.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'2. Ensure that all previous steps have been completed successfully.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+            
+        Label:
+            text:'3. The ticket will now be sent for verification and approval.'
+            text_size: self.width, None 
+            size_hint_y: None
+            height: self.texture_size[1]
+            valign: 'center'
+            halign: 'left'
+            font_name: 'roboto_light'
+            font_size: sp(11)
+            color: chex("#014367")
+
+
+    MDBoxLayout:
+        orientation: 'horizontal'
+        adaptive_height: True
+        padding: (0 , dp(20) , dp(20), 0)
+
+        Widget:
+    
+        Button:
+            text: "SUBMIT"
+            font_name: "roboto_semibold"
+            size_hint: None , None
+            background_color: (0, 0 , 0, 0)
+            width: sp(130) 
+            height: sp(25)
+            font_size: sp(12)
+            color: chex("#F7EEDD")
+            opacity: 0.5 if root.is_not_done else 1
+            canvas.before:
+                Color:
+                    rgba: chex("#5CBA45")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [4]
 
 <POCUploaderLayout>:
     orientation: 'vertical' 
