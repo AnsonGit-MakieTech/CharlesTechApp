@@ -60,14 +60,6 @@ class ForReviewLayout(MDBoxLayout):
 
 
 
-class POCFileUploaderModalView(ModalView):
-    file_image_path : str = StringProperty('')
-
-    def on_parent(self, *args):
-        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
-        self.file_image_path = os.path.join(parent_dir, 'assets', 'upload_image.png')
-        print("file_image_path", self.file_image_path)
-
 
 
 class POCImageLayout(Image):
@@ -93,17 +85,31 @@ class POCImageLayout(Image):
     
 
 
-
+# TODO: Add event to the add_poc_image_button
 class POCUploaderLayout(MDBoxLayout):
     original_height : int = NumericProperty(140)
     step_text : str = StringProperty('1. Costumer Proof Signature.')
     step_instruction : str = StringProperty("Instructions : Upload an image of the customer's signed proof of service completion.")
+    add_poc_image_button : FloatLayout = ObjectProperty(None)
     
     def setup_poc_uploader_layout(self, step_text, step_instruction):
         self.step_text = step_text
         self.step_instruction = step_instruction
 
 
+class POCFileUploaderModalView(ModalView):
+    file_image_path : str = StringProperty('')
+    temp_parent : POCUploaderLayout = ObjectProperty(None)
+
+    def on_parent(self, *args):
+        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        self.file_image_path = os.path.join(parent_dir, 'assets', 'upload_image.png')
+        print("file_image_path", self.file_image_path)
+
+
+    def activate_account(self, temp_parent : POCUploaderLayout):
+        self.temp_parent = temp_parent
+        self.open()
 
 
 class POCLayout(MDBoxLayout):
