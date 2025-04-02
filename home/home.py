@@ -15,6 +15,7 @@ from .dashboard import Dashboard
 from .ticket_list import TicketListScreen
 from .ticket_transact import TicketTransactionScreeen
 from .home_component import ProcessingLayout
+from .account import AccountScreen
 
 class HomeScreenManager(ScreenManager):
      
@@ -32,7 +33,7 @@ class HomeScreenManager(ScreenManager):
         ticket_list = TicketListScreen(name=HOME_SCREEN_TICKETLIST_SCREEN)
         self.add_widget(ticket_list)
 
-        account = Screen(name=HOME_SCREEN_ACCOUNT_SCREEN)
+        account = AccountScreen(name=HOME_SCREEN_ACCOUNT_SCREEN)
         self.add_widget(account)
         
         transact = TicketTransactionScreeen(name=HOME_SCREEN_TRANSACT_SCREEN)

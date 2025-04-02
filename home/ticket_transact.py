@@ -242,10 +242,12 @@ class GeolocationModalView(ModalView):
         self.go_to_location(self.lat_data, self.lon_data)
         gps.stop()  # Stop after getting one location fix
 
-    def load_map(self, *args):
-        if not has_internet():
-            return
+    def load_map(self, *args): 
         if not self.ids.map.children:
+            
+            if not has_internet():
+                return
+            
             self.mapview = MapView(lat=12.375466976256769, lon=123.63299577874449, zoom=25,
                               map_source=map_source,
                               size_hint=(1, 1),

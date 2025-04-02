@@ -110,7 +110,8 @@ class TechnicalApp(MDApp):
 
 if __name__ == '__main__':
     LabelBase.register(name="roboto_extrabolditalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBoldItalic.ttf'))
-    
+    LabelBase.register(name="roboto_extralightitalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraLightItalic.ttf'))
+    LabelBase.register(name="roboto_extralight", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraLight.ttf'))
     LabelBase.register(name="roboto_semibold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-SemiBold.ttf'))
     LabelBase.register(name="roboto_extrabold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBold.ttf'))
     LabelBase.register(name="roboto_light", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-Light.ttf'))
