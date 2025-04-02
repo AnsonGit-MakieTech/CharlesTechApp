@@ -1,0 +1,177 @@
+
+
+<AccountScreen>:
+    opacity:0
+    size_hint: 1,1
+    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+ 
+
+    ScrollView: 
+        size_hint: 1, 1
+
+            
+        MDGridLayout:
+            id: ticket_list
+            cols: 1
+            adaptive_height: True
+            padding: [dp(15), 0, dp(15), dp(100)]
+            spacing: dp(0)
+            size_hint_y: None  
+
+            Widget:
+                size_hint: 1, None
+                height: sp(70)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                height: sp(90)
+
+                Widget:
+                    size_hint: 1, 1
+
+                Image:
+                    source: root.no_image_path
+                    size_hint: None, 1
+                    width: sp(120)
+                    allow_stretch: True
+                    keep_ratio: False
+
+                Widget:
+                    size_hint: 1, 1
+
+            Widget:
+                size_hint: 1, None
+                height: sp(20)
+
+            Label:
+                text: 'Staff Access Group'
+                size_hint: 1, None
+                height: sp(16)
+                font_name: 'roboto_extrabold'
+                font_size: sp(16)
+                color: chex("#01334F")
+
+            Widget:
+                size_hint: 1, None
+                height: sp(15)
+
+            Label:
+                text: 'Ericson Mark Abayon Guanzon'
+                size_hint: 1, None
+                height: sp(12)
+                font_name: 'roboto_light'
+                font_size: sp(12)
+                color: chex("#01334F")
+            Widget:
+                size_hint: 1, None
+                height: sp(4)
+
+            Label:
+                text: '@username'
+                size_hint: 1, None
+                height: sp(12)
+                font_name: 'roboto_light'
+                font_size: sp(12)
+                color: chex("#01334F")
+
+
+            Widget:
+                size_hint: 1, None
+                height: sp(50)
+
+            Label:
+                text: 'Account Information'
+                size_hint: 1, None
+                height: sp(10)
+                font_name: 'roboto_semibold'
+                font_size: sp(10)
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+            
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, None
+                height: sp(55)
+                padding: [dp(15), dp(10), dp(15), dp(10)]
+
+                canvas.before:
+                    Color:
+                        rgba: chex("#ACE2E1")
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [4]
+                
+                Label:
+                    text: '[font=roboto_semibold]Email :[/font]    [font=roboto_light]techmakie@gmail.com[/font]'
+                    size_hint: 1, 0.5 
+                    font_size: sp(10)
+                    color: chex("#01334F")
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'left'
+                    markup: True
+
+                Label:
+                    text: '[font=roboto_semibold]Phone Number : [/font]    [font=roboto_light]0951 221 3007[/font]'
+                    size_hint: 1, 0.5 
+                    font_size: sp(10)
+                    color: chex("#01334F")
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'left'
+                    markup: True
+
+
+            Widget:
+                size_hint: 1, None
+                height: sp(30)
+
+            Label:
+                text: 'General Settings'
+                size_hint: 1, None
+                height: sp(10)
+                font_name: 'roboto_semibold'
+                font_size: sp(10)
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+            
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: 1, None
+                height: sp(155)
+                padding: [dp(15), dp(10), dp(15), dp(10)]
+ 
+
+                canvas.before:
+                    Color:
+                        rgba: chex("#ACE2E1")
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [4]
+
+
+
+
+
+
+
+
+
+
+
+
