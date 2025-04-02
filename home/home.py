@@ -89,7 +89,7 @@ class NavigationBar(BoxLayout):
         else:
             print("❌ No transition set")
 
-        # self.parent.home_screen_manager.transition.direction = 'right'
+        self.parent.home_screen_manager.transition.direction = 'left'
         self.parent.home_screen_manager.current = HOME_SCREEN_DASHBOARD_SCREEN
         
 

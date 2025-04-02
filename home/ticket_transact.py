@@ -37,6 +37,8 @@ from kivy.core.clipboard import Clipboard
 from kivy.utils import platform
 from utils.app_utils import is_valid_latlon
 from kivy.uix.image import Image
+from utils.app_utils import has_internet
+
 
 if platform == "android":
     from plyer import gps
@@ -241,6 +243,8 @@ class GeolocationModalView(ModalView):
         gps.stop()  # Stop after getting one location fix
 
     def load_map(self, *args):
+        if not has_internet():
+            return
         if not self.ids.map.children:
             self.mapview = MapView(lat=12.375466976256769, lon=123.63299577874449, zoom=25,
                               map_source=map_source,

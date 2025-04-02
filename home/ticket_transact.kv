@@ -1288,6 +1288,14 @@
                 size_hint: 1, 0.9  # Full size for the map view
                 id: map
 
+                canvas.before:
+                    Color:
+                        rgba: chex("#014367")
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [4]
+
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint: 1, None

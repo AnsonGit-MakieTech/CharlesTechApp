@@ -1,6 +1,7 @@
  
 from kivy.core.window import Window 
 from kivy.utils import platform 
+import socket
 
 if platform == 'android':
     from jnius import autoclass, cast
@@ -28,3 +29,12 @@ def is_valid_latlon(text):
     except (ValueError, AttributeError):
         return False
  
+
+def has_internet():
+    try:
+        socket.create_connection(("8.8.8.8", 53), timeout=3)
+        return True
+    except OSError:
+        return False
+
+
