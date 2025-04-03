@@ -17,8 +17,12 @@ if platform == "android":
     from plyer.platforms.android.sms import Sms
     from android.permissions import request_permissions, Permission, check_permission  # pylint: disable=import-error
 
+if platform == "ios":
+    pass
 
-# Set Window Size Before App Starts
+
+
+# Set Window Size Before App Starts if platform is 
 Window.size = (320, 568)
 
 
@@ -104,7 +108,7 @@ class TechnicalApp(MDApp):
 
         home_screen = home.HomeScreen(name=HOME_SCREEN)
         self.root_screen_manager.add_widget(home_screen)  # ✅ Add screens via Python
-        self.root_screen_manager.current = HOME_SCREEN
+        # self.root_screen_manager.current = HOME_SCREEN
         
         
         

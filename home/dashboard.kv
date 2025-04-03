@@ -3,8 +3,45 @@
 
 
 <Dashboard>:
-    BoxLayout:
-        orientation: 'vertical'
-        id: map_container
+    opacity:0
+    size_hint: 1,1
+    pos_hint: {'center_x': 0.5,'center_y': 0.5}
+    map_container : map_container
 
-        
+    ScrollView: 
+        scroll_type: ['bars'] 
+        size_hint: 1, 1 
+        do_scroll_x: False
+        do_scroll_y: True
+        bar_width: 0  # optional: hide scroll bar
+
+
+            
+        MDGridLayout:
+            id: ticket_list
+            cols: 1
+            adaptive_height: True
+            padding: [dp(15), 0, dp(15), dp(100)]
+            spacing: dp(0)
+            size_hint_y: None  
+
+            Widget:
+                size_hint: 1, None
+                height: sp(30)
+
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                height: sp(190)
+                id: map_container
+
+                canvas.before:
+                    Color:
+                        rgba: chex("#ACE2E1")
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [4]
+            
+
