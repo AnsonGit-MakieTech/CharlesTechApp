@@ -1,10 +1,10 @@
 import requests
 
-lat1 = 12.377903
-lon1 = 123.620358
+lat1 = 12.376257300431687
+lon1 = 123.63006700549158
 
-lat2 = 12.376908
-lon2 = 123.627723
+lat2 = 12.375397979169215
+lon2 = 123.63353241958295
 
 def get_osrm_route(lat1, lon1, lat2, lon2):
     url = f"http://router.project-osrm.org/route/v1/driving/{lon1},{lat1};{lon2},{lat2}"
