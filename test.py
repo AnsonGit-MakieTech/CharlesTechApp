@@ -1,62 +1,46 @@
-from kivy.lang import Builder
-from kivy.clock import Clock
-from kivy.uix.boxlayout import BoxLayout
-from kivy.app import App
-from kivy.core.window import Window
+import requests
 
-kv_code = '''
-#:import utils kivy.utils
+lat1 = 12.377903
+lon1 = 123.620358
 
-<DelayedWidget@BoxLayout>:
-    orientation: 'vertical'
-    padding: 20
-    spacing: 15
-    canvas.before:
-        Color:
-            rgba: utils.get_color_from_hex('#f0f0f0')
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    
-    Label:
-        text: "I'm loaded later!"
-        font_size: '24sp'
-        color: utils.get_color_from_hex('#333333')
-        bold: True
-        size_hint_y: None
-        height: '50dp'
-    
-    BoxLayout:
-        orientation: 'horizontal'
-        spacing: 10
-        size_hint_y: None
-        height: '40dp'
-        
-        Button:
-            text: 'Click Me!'
-            background_color: utils.get_color_from_hex('#4CAF50')
-            color: 1, 1, 1, 1
-            size_hint_x: 0.5
-            font_size: '16sp'
-            
-        Button:
-            text: 'Settings'
-            background_color: utils.get_color_from_hex('#2196F3')
-            color: 1, 1, 1, 1
-            size_hint_x: 0.5
-            font_size: '16sp'
-'''
+lat2 = 12.376908
+lon2 = 123.627723
 
-class MyApp(App):
-    def build(self):
-        Window.clearcolor = (0.95, 0.95, 0.95, 1)  # Light gray background
-        root = BoxLayout()
-        Clock.schedule_once(lambda dt: self.load_ui(root), 2)  # Delay 2 seconds
-        return root
+def get_osrm_route(lat1, lon1, lat2, lon2):
+    url = f"http://router.project-osrm.org/route/v1/driving/{lon1},{lat1};{lon2},{lat2}"
+    params = {
+        'overview': 'full',
+        'geometries': 'geojson'
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        return data['routes'][0]['geometry']['coordinates']  # List of [lon, lat]
+    else:
+        print("❌ OSRM API Error:", response.status_code)
+        return []
 
-    def load_ui(self, root):
-        Builder.load_string(kv_code)
-        from kivy.factory import Factory
-        root.add_widget(Factory.DelayedWidget())
+route = get_osrm_route(lat1, lon1, lat2, lon2)
+print(route)
 
-MyApp().run()
+
+def get_osrm_eta(lat1, lon1, lat2, lon2):
+    url = f"http://router.project-osrm.org/route/v1/driving/{lon1},{lat1};{lon2},{lat2}"
+    params = {
+        'overview': 'false'  # We don’t need full coordinates here
+    }
+    res = requests.get(url, params=params)
+    if res.status_code == 200:
+        data = res.json()
+        route = data['routes'][0]
+        distance_km = route['distance'] / 1000
+        duration_min = route['duration'] / 60
+        return round(distance_km, 2), round(duration_min, 2)
+    else:
+        print("❌ API Error:", res.status_code)
+        return None, None
+
+# Example usage
+distance, duration = get_osrm_eta(lat1, lon1, lat2, lon2)
+print(f"📍 Distance: {distance} km | 🕐 Duration: {duration} mins")
+
