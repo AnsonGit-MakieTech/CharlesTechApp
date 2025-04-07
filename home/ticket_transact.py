@@ -48,10 +48,17 @@ if platform == "android":
 from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
 
 # Optional: Custom tile server or use default
-map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                       cache_key="osm",
-                       tile_size=256,
-                       image_ext="png")
+# map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+#                        cache_key="osm",
+#                        tile_size=256,
+#                        image_ext="png")
+map_source = MapSource(
+    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    cache_key="satellite",
+    tile_size=256,
+    image_ext="jpg",  # Esri tiles are usually JPG
+    attribution="Tiles © Esri — Source: Esri, Earthstar Geographics"
+)
 
 
 class ForReviewLayout(MDBoxLayout):
@@ -287,7 +294,9 @@ class GeolocationModalView(ModalView):
         self.lon_data = new_lon
         if self.mapview:
             self.mapview.center_on(new_lat, new_lon)
-            self.mapview.zoom = 25  # Optional: adjust zoom for better clarity
+            self.mapview.zoom = 16  # Optional: adjust zoom for better clarity
+            self.mapview.min_zoom = 1
+            self.mapview.max_zoom = 17
         else:
             Clock.schedule_once(self.load_map, 0.3)
             Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)
