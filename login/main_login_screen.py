@@ -36,6 +36,9 @@ class RegisterPinScreen(Screen):
     
     keyboard_open = False  # ✅ Track if keyboard is open
     move_y = NumericProperty(0)  # ✅ Track screen shift
+
+    pin_input = ObjectProperty(None)
+    pin_input_2 = ObjectProperty(None)
  
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -105,6 +108,25 @@ class RegisterPinScreen(Screen):
             self.manager.transition.direction = 'left'
         self.manager.current =  LOGIN_SCREEN_REGISTER_ACCOUNT_SCREEN
 
+    def register_pin(self, *args):
+        if len(self.pin_input.text) > 4:
+            print("Pin is too long")
+            return
+        if self.pin_input.text != self.pin_input_2.text:
+            print("Pins do not match")
+            return
+        
+        register_screen = self.manager.get_screen(LOGIN_SCREEN_REGISTER_ACCOUNT_SCREEN)
+        username = register_screen.username_input.text
+        password = register_screen.password_input.text
+        pin = self.pin_input.text
+        app = MDApp.get_running_app()
+        if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
+            app.communications.register_app(username, password, pin)
+        else:
+            print("Forgot Pin")
+        self.manager.popup.open()
+
 
 
 
@@ -122,6 +144,9 @@ class RegisterAccountScreen(Screen):
     
     keyboard_open = False  # ✅ Track if keyboard is open
     move_y = NumericProperty(0)  # ✅ Track screen shift
+
+    username_input = ObjectProperty(None)
+    password_input = ObjectProperty(None)
  
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -162,7 +187,10 @@ class RegisterAccountScreen(Screen):
 
     def on_enter(self, *args):
         self.back_text.on_press=self.go_back
+        print("helllo ====" ,self.manager.parent.user_screen_action)
         if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
+            self.login_button_text = 'Register'
+        elif self.manager.parent.user_screen_action == LOGIN_SCREEN_FIRST_ACTION:
             self.login_button_text = 'Register'
         else:
             self.login_button_text = 'Update'
@@ -196,6 +224,41 @@ class RegisterAccountScreen(Screen):
         self.manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN
 
     def register_account(self, *args):
+        app = MDApp.get_running_app()
+        if self.valid_inputs():
+            if self.manager.parent.user_screen_action == LOGIN_SCREEN_FIRST_ACTION:
+                if app.communications.is_login:
+                    return
+                
+                print("Logging in")
+                app.communications.create_session(self.username_input.text, self.password_input.text)
+                self.manager.popup.open()
+
+                def done_registering(*args):
+                    self.manager.custom_popup.dismiss()
+                
+                def communication_event(*args):
+                    data = app.communications.data.get("CHECK_PIN", None)
+                    if data:
+                        self.manager.popup.dismiss()
+                        with_pin = data.get("data", {}).get("with_pin", False)
+                        if with_pin:
+                            self.manager.custom_popup.my_text = "Verified Users!"
+                            app.user_app_data['username'] = self.username_input.text
+                            app.user_app_data['password'] = self.password_input.text 
+                            self.manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN
+                            
+                        else:
+                            self.manager.custom_popup.my_text = "Not Verified Users!"
+                        self.manager.custom_popup.open()
+                        Clock.schedule_once(done_registering, 0.1)
+                        return False
+                
+                Clock.schedule_interval(communication_event, 1)
+                return
+                
+
+            
         if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER: 
             self.manager.transition.direction = 'left'
         else:
@@ -203,6 +266,14 @@ class RegisterAccountScreen(Screen):
         
         self.manager.current = LOGIN_SCREEN_REGISTER_PIN_SCREEN
 
+    def valid_inputs(self):
+        if not self.username_input.text:
+            self.username_input.error = True
+            return False
+        if not self.password_input.text:
+            self.password_input.error = True
+            return False
+        return True
 
 
 class PinHolder(BoxLayout):
@@ -251,19 +322,44 @@ class PinKeyboard(BoxLayout):
             
     def validate_pin(self):
         print('validate_pin : ', self.log_pin)
-        app = MDApp.get_running_app()
-        user_data = app.user_app_data
-        if user_data.get('pin', None) != self.log_pin: 
-            self.parent.parent.parent.pinholder.shake()
-            self.parent.parent.parent.pinholder.reset()
-            self.log_pin = '' 
-            return
-            
-        self.parent.parent.parent.manager.parent.manager.current = HOME_SCREEN
-        self.log_pin = ''
+        app = MDApp.get_running_app() 
+ 
+        
+        app.communications.open_by_pin(self.username_input.text, self.password_input.text)
+        self.manager.popup.open()
+
+        def done_registering(*args):
+            self.manager.custom_popup.dismiss() 
+        
+        def communication_event(*args):
+            data = app.communications.data.get("CHECK_PIN", None)
+            if data:
+                self.manager.popup.dismiss()
+                if data.get("data", {}).get("is_login", False):
+                    self.manager.custom_popup.my_text = "Verified Users!"
+                    app.user_app_data['username'] = self.username_input.text
+                    app.user_app_data['password'] = self.password_input.text
+                    app.communications.is_login = True
+                    self.manager.current = HOME_SCREEN
+                    
+                else:
+                    self.manager.custom_popup.my_text = "Not Verified Users!" 
+                    self.parent.parent.parent.pinholder.shake()
+                    self.parent.parent.parent.pinholder.reset()
+                    self.log_pin = '' 
+
+                self.manager.custom_popup.open()
+                Clock.schedule_once(done_registering, 0.1)
+                return False
+        
+        Clock.schedule_interval(communication_event, 1)
+        return
+
+
 
 class PinLoginScreen(Screen):
     circle_size = NumericProperty(min(Window.width * 0.9, Window.height * 0.5))
+    icon_size = NumericProperty(min(Window.width * 0.9, Window.height * 0.5))
     never_forget_pin_font_size = NumericProperty(0)
     
     pinholder : PinHolder = ObjectProperty(None)
@@ -285,7 +381,6 @@ class PinLoginScreen(Screen):
         return super().on_enter(*args)
 
     def forgot_pin_event(self): 
-        
         print('forgot_pin') 
         self.manager.parent.user_screen_action = LOGIN_SCREEN_ACTION_FORGOT_PIN
         self.manager.transition.direction = 'right'
@@ -300,7 +395,7 @@ class PinLoginScreen(Screen):
     def update_size(self, *args):
         """ Update circle size dynamically when window size changes """
         self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
-        self.never_forget_pin_font_size = min(Window.width, Window.height) * 0.02
+        self.never_forget_pin_font_size = min(Window.width, Window.height) * 0.025
         
 
 
@@ -356,16 +451,19 @@ class LoginScreen(Screen):
             print(self.login_screen_manager.current)
 
             
-            if user_data.get('pin', None) is not None:
-                # User has a PIN, show the PIN login screen
+            if user_data.get('username', None) is not None:
+                # User has a PIN, show the PIN login screen 
                 self.login_screen_manager.add_widget(pinlogin)
                 self.login_screen_manager.add_widget(register_account)
             else:
                 # User does not have a PIN, show the register account screen
-                self.user_screen_action = LOGIN_SCREEN_ACTION_REGISTER
+                self.user_screen_action = LOGIN_SCREEN_FIRST_ACTION
                 self.login_screen_manager.add_widget(register_account)
                 self.login_screen_manager.add_widget(pinlogin)
                 
             self.login_screen_manager.add_widget(register_pin)
 
 
+    def on_enter(self, *args):
+        return super().on_enter(*args)
+    

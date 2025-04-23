@@ -12,6 +12,9 @@ import json
 
 from kivy.config import Config
 from kivy.core.window import Window
+from kivy.clock import Clock
+
+from communications  import Communications
 
 if platform == "android":
     from plyer.platforms.android.sms import Sms
@@ -26,17 +29,17 @@ if platform == "ios":
 Window.size = (320, 568)
 
 
-
-
 class MainApp(MDScreenManager):  # Acts as ScreenManager
     pass
 
 class TechnicalApp(MDApp): 
     
     user_app_data : dict = None
+    communications : Communications = None
     
     def on_start(self):
         """ Check and request storage permission on Android """
+
         if platform == "android":
             if self.check_permissions():
                 print("✅ Storage permission already granted.")
@@ -56,6 +59,19 @@ class TechnicalApp(MDApp):
             has_write = check_permission(Permission.WRITE_EXTERNAL_STORAGE)
             return has_read and has_write
         return True  # ✅ Assume granted on other platforms
+    
+
+    def on_stop(self):
+        try:
+            # Save user app data
+            with open("user_data.json", "w") as f:
+                json.dump(self.user_app_data, f)
+                
+            # Close communications
+            self.communications.kill_all_threads()
+        except Exception as e:
+            print(f"Error saving user data: {e}")
+
 
             
     def build(self):
@@ -67,11 +83,17 @@ class TechnicalApp(MDApp):
             with open("user_data.json", "r") as f:
                 self.user_app_data = json.load(f)
         except:
-            self.user_app_data = {}
+            self.user_app_data = {
+                "username": None,
+                "password": None
+            }
         
         # Set App Icon
         self.icon = os.path.join(os.path.dirname(__file__), 'assets', 'app_logo.png')
         
+        # Set App Communications
+        self.communications = Communications()
+
         # Load Application 
         Builder.load_file('main.kv')  # ✅ Load only UI, not screens
         self.root_screen_manager = MainApp()  # ✅ Initialize empty ScreenManager

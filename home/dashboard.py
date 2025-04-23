@@ -12,6 +12,8 @@ import random
 from kivy import platform
 from plyer import gps
 
+from kivymd.app import MDApp
+
 
 # Optional: Custom tile server or use default
 # map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -87,9 +89,12 @@ class Dashboard(Screen):
             Clock.schedule_once(self.load_map, 1)
 
     def on_enter(self, *args):
-        Animation(opacity=1, duration=0.5).start(self)  
+        Animation(opacity=1, duration=0.5).start(self) 
+        
+        app = MDApp.get_running_app()
+        print(app.communications.data)
         Clock.schedule_once(self.load_map, 1) 
-        return super().on_enter(*args) 
+        return super().on_enter(*args)
    
 
 
@@ -112,16 +117,15 @@ class Dashboard(Screen):
             self.mapview.max_zoom = 17
 
 
+            self.truck_marker = MapMarker(
+                lat=12.376211,
+                lon=123.63004,
+                source=self.truck_image_path
+            )
 
-            # self.truck_marker = MapMarker(
-            #     lat=12.375466976,
-            #     lon=123.63299577,
-            #     source=self.truck_image_path
-            # )
+            self.truck_marker.size = (dp(30), dp(30))
 
-            # self.truck_marker.size = (dp(30), dp(30))
-
-            # self.mapview.add_marker(self.truck_marker)
+            self.mapview.add_marker(self.truck_marker)
             # for i in range(10):
             #     location_marker = MapMarker(
             #         lat=12.375466976 + random.uniform(-0.01, 0.01),

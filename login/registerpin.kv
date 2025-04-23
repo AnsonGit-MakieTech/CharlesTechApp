@@ -1,6 +1,8 @@
 <RegisterPinScreen>: 
     back_image: back_image
     back_text: back_text
+    pin_input : pin_input
+    pin_input_2 : pin_input_2
 
 
     FloatLayout:
@@ -73,6 +75,7 @@
  
 
                 LoginTextInput:
+                    id: pin_input
                     size_hint: 1, 0.2 
                     hint_text: "Provide Your 4 Pins . . ."
                     font_size: root.text_input_font_size
@@ -86,6 +89,7 @@
                     size_hint: 1, 0.2 
 
                 LoginTextInput:
+                    id: pin_input_2
                     size_hint: 1, 0.2 
                     hint_text: "Re-Enter Your 4 Pins . . ."
                     font_size: root.text_input_font_size
@@ -100,6 +104,8 @@
                     size_hint: 0.35, 0.15
                     pos_hint: {'right': 1 , 'center_y': 0.5}
                     font_size: root.text_input_font_size
+                    on_press:
+                        root.register_pin()
 
 
             BoxLayout:

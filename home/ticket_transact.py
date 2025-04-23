@@ -80,7 +80,7 @@ class POCImageLayout(Image):
     def on_parent(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__)) 
         self.image_path = os.path.join(parent_dir, 'assets', 'app_logo.png')
-        print("image_path", self.image_path)
+        # print("image_path", self.image_path)
 
 
     def on_touch_down(self, touch):
@@ -113,7 +113,7 @@ class POCFileUploaderModalView(ModalView):
     def on_parent(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__)) 
         self.file_image_path = os.path.join(parent_dir, 'assets', 'upload_image.png')
-        print("file_image_path", self.file_image_path)
+        # print("file_image_path", self.file_image_path)
 
 
     def activate_account(self, temp_parent : POCUploaderLayout):
