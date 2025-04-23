@@ -122,7 +122,33 @@ class RegisterPinScreen(Screen):
         pin = self.pin_input.text
         app = MDApp.get_running_app()
         if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
-            app.communications.register_app(username, password, pin)
+            app.communications.register_pin(username, password, pin)
+            self.manager.popup.open()
+
+            def done_registering(*args):
+                self.manager.custom_popup.dismiss()
+                
+            
+            def continue_registering(*args):
+                self.manager.custom_popup.dismiss()
+                self.manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN
+            
+            def communication_event(*args):
+                data = app.communications.data.get("REGISTER_PIN", None)
+                if data:
+                    self.manager.popup.dismiss() 
+                    if data.get("result", False):
+                        self.manager.custom_popup.my_text = "Successfully registered"
+                        self.manager.custom_popup.auto_dismiss = False 
+                        Clock.schedule_once(continue_registering, 2) 
+                    else:
+                        self.manager.custom_popup.my_text = "Pin is incorrect"
+                        Clock.schedule_once(done_registering, 2)
+                    self.manager.custom_popup.open()
+                    return False
+            
+            Clock.schedule_interval(communication_event, 1)
+            return
         else:
             print("Forgot Pin")
         self.manager.popup.open()
@@ -187,7 +213,7 @@ class RegisterAccountScreen(Screen):
 
     def on_enter(self, *args):
         self.back_text.on_press=self.go_back
-        print("helllo ====" ,self.manager.parent.user_screen_action)
+        self.manager.custom_popup.auto_dismiss = True 
         if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
             self.login_button_text = 'Register'
         elif self.manager.parent.user_screen_action == LOGIN_SCREEN_FIRST_ACTION:
@@ -236,22 +262,35 @@ class RegisterAccountScreen(Screen):
 
                 def done_registering(*args):
                     self.manager.custom_popup.dismiss()
+                    
+                
+                def continue_registering(*args):
+                    self.manager.custom_popup.dismiss()
+                    self.manager.parent.user_screen_action = LOGIN_SCREEN_ACTION_REGISTER
+                    self.manager.current = LOGIN_SCREEN_REGISTER_PIN_SCREEN
                 
                 def communication_event(*args):
                     data = app.communications.data.get("CHECK_PIN", None)
                     if data:
                         self.manager.popup.dismiss()
-                        with_pin = data.get("data", {}).get("with_pin", False)
-                        if with_pin:
+                        result = data.get("data", {})
+                        if result.get("with_pin", False):
                             self.manager.custom_popup.my_text = "Verified Users!"
                             app.user_app_data['username'] = self.username_input.text
                             app.user_app_data['password'] = self.password_input.text 
                             self.manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN
-                            
+                            self.manager.custom_popup.auto_dismiss = False
+                            return False
+                        elif result.get("with_pin", None) == False:
+                            self.manager.custom_popup.my_text = "No Pin Found! Please Register!"
+                            self.manager.custom_popup.open()
+                            self.manager.custom_popup.auto_dismiss = False
+                            Clock.schedule_once(continue_registering, 2)
+                            return False
                         else:
                             self.manager.custom_popup.my_text = "Not Verified Users!"
+                            Clock.schedule_once(done_registering, 0.1)
                         self.manager.custom_popup.open()
-                        Clock.schedule_once(done_registering, 0.1)
                         return False
                 
                 Clock.schedule_interval(communication_event, 1)
@@ -323,32 +362,40 @@ class PinKeyboard(BoxLayout):
     def validate_pin(self):
         print('validate_pin : ', self.log_pin)
         app = MDApp.get_running_app() 
- 
+        if app.communications.is_login:
+            return
+
+        username = app.user_app_data['username']
+        password = app.user_app_data['password']
+
+        if not username or not password:
+            self.parent.parent.parent.pinholder.shake()
+            self.parent.parent.parent.pinholder.reset()
+            self.log_pin = '' 
+            return
         
-        app.communications.open_by_pin(self.username_input.text, self.password_input.text)
-        self.manager.popup.open()
+        app.communications.open_by_pin(username, password, self.log_pin)
+        self.parent.parent.parent.manager.popup.open()
 
         def done_registering(*args):
-            self.manager.custom_popup.dismiss() 
+            self.parent.parent.parent.manager.custom_popup.dismiss() 
         
         def communication_event(*args):
-            data = app.communications.data.get("CHECK_PIN", None)
+            data = app.communications.data.get("LOGIN_PIN", None)
             if data:
-                self.manager.popup.dismiss()
+                self.parent.parent.parent.manager.popup.dismiss()
                 if data.get("data", {}).get("is_login", False):
-                    self.manager.custom_popup.my_text = "Verified Users!"
-                    app.user_app_data['username'] = self.username_input.text
-                    app.user_app_data['password'] = self.password_input.text
+                    self.parent.parent.parent.manager.custom_popup.my_text = "Logging In!"
                     app.communications.is_login = True
-                    self.manager.current = HOME_SCREEN
+                    self.parent.parent.parent.manager.parent.manager.current = HOME_SCREEN
                     
                 else:
-                    self.manager.custom_popup.my_text = "Not Verified Users!" 
+                    self.parent.parent.parent.manager.custom_popup.my_text = "Incorrect Pin!" 
                     self.parent.parent.parent.pinholder.shake()
                     self.parent.parent.parent.pinholder.reset()
                     self.log_pin = '' 
 
-                self.manager.custom_popup.open()
+                self.parent.parent.parent.manager.custom_popup.open()
                 Clock.schedule_once(done_registering, 0.1)
                 return False
         

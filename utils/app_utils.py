@@ -5,7 +5,17 @@ import socket
 
 if platform == 'android':
     from jnius import autoclass, cast
+ 
+def get_android_id():
+    SettingsSecure = autoclass("android.provider.Settings$Secure")
+    PythonActivity = autoclass("org.kivy.android.PythonActivity")
+    context = PythonActivity.mActivity
 
+    android_id = SettingsSecure.getString(
+        context.getContentResolver(),
+        SettingsSecure.ANDROID_ID
+    )
+    return android_id
 def get_android_keyboard_height():
     """ Get keyboard height on Android using pyjnius """
     if platform == 'android':

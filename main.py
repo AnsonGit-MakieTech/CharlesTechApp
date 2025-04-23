@@ -66,12 +66,19 @@ class TechnicalApp(MDApp):
             # Save user app data
             with open("user_data.json", "w") as f:
                 json.dump(self.user_app_data, f)
-                
             # Close communications
             self.communications.kill_all_threads()
         except Exception as e:
             print(f"Error saving user data: {e}")
 
+    def on_pause(self):
+        # Save user app data
+        try:
+            with open("user_data.json", "w") as f:
+                json.dump(self.user_app_data, f)
+        except Exception as e:
+            print(f"Error saving user data: {e}")
+        return super().on_pause()
 
             
     def build(self):

@@ -41,8 +41,7 @@ class Communications:
             try:
                 response = self.session.post(url, headers=headers, json=json_data)
                 if response.ok:
-                    data = response.json()
-                    print(data)
+                    data = response.json() 
                     self.data[key] = {"result" : True, "message" : "Pin exists" , "data" : data}
                 else:
                     print(response.text)
@@ -69,7 +68,48 @@ class Communications:
                 "username": username,
                 "password": password,
                 "pin": pin,
-                "action": "technical_register_system_user"
+                "action": "verify_pin"
+            }            
+            url = self.server + "technical_unauthenticated_api"
+            headers = {
+                "Content-Type": "application/json",
+                # "X-CSRFToken": csrf_token,
+                # "Referer": url,  # important if Django checks referer
+                # "Origin": self.server,
+                "User-Agent": "KivyApp/1.0.0",
+            }
+            try:
+                response = self.session.post(url, headers=headers, json=json_data)
+                if response.ok:
+                    data = response.json()
+                    print(data)
+                    self.data[key] = {"result" : True, "message" : "Registration successful" , "data" : data}
+                else:
+                    self.data[key] = {"result" : False, "message" : "Registration failed"}
+            except Exception as e:
+                self.data[key] = {"result" : False, "message" : str(e)}
+
+            self.has_thread_running = False
+        
+
+        thread = threading.Thread(target=event)
+        self.threads.append(thread)
+        thread.start()
+        
+    
+    def register_pin(self, username : str , password : str , pin : str):
+        key = "REGISTER_PIN"
+        
+        def event():
+            while self.has_thread_running:
+                time.sleep(0.5)
+
+            self.has_thread_running = True
+            json_data = {
+                "username": username,
+                "password": password,
+                "new_pin": pin,
+                "action": "register_new_pin"
             }            
             url = self.server + "technical_unauthenticated_api"
             headers = {
@@ -85,6 +125,7 @@ class Communications:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : "Registration successful" , "data" : data}
                 else:
+                    print(response.text)
                     self.data[key] = {"result" : False, "message" : "Registration failed"}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
@@ -95,8 +136,6 @@ class Communications:
         thread = threading.Thread(target=event)
         self.threads.append(thread)
         thread.start()
-        
-        
 
 
         
