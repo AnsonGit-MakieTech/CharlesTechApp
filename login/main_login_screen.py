@@ -379,6 +379,9 @@ class PinKeyboard(BoxLayout):
 
         def done_registering(*args):
             self.parent.parent.parent.manager.custom_popup.dismiss() 
+            self.parent.parent.parent.pinholder.shake()
+            self.parent.parent.parent.pinholder.reset()
+            self.log_pin = '' 
         
         def communication_event(*args):
             data = app.communications.data.get("LOGIN_PIN", None)
@@ -387,13 +390,9 @@ class PinKeyboard(BoxLayout):
                 if data.get("data", {}).get("is_login", False):
                     self.parent.parent.parent.manager.custom_popup.my_text = "Logging In!"
                     app.communications.is_login = True
-                    self.parent.parent.parent.manager.parent.manager.current = HOME_SCREEN
-                    
+                    self.parent.parent.parent.manager.parent.manager.current = HOME_SCREEN 
                 else:
                     self.parent.parent.parent.manager.custom_popup.my_text = "Incorrect Pin!" 
-                    self.parent.parent.parent.pinholder.shake()
-                    self.parent.parent.parent.pinholder.reset()
-                    self.log_pin = '' 
 
                 self.parent.parent.parent.manager.custom_popup.open()
                 Clock.schedule_once(done_registering, 0.1)

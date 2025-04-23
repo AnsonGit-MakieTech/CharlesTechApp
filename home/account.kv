@@ -45,7 +45,7 @@
                 height: sp(20)
 
             Label:
-                text: 'Staff Access Group'
+                text: root.team_name
                 size_hint: 1, None
                 height: sp(16)
                 font_name: 'roboto_extrabold'
@@ -57,7 +57,7 @@
                 height: sp(15)
 
             Label:
-                text: 'Ericson Mark Abayon Guanzon'
+                text: root.fullname
                 size_hint: 1, None
                 height: sp(12)
                 font_name: 'roboto_light'
@@ -68,7 +68,7 @@
                 height: sp(4)
 
             Label:
-                text: '@username'
+                text: root.username
                 size_hint: 1, None
                 height: sp(12)
                 font_name: 'roboto_light'
@@ -110,7 +110,7 @@
                         radius: [4]
                 
                 Label:
-                    text: '[font=roboto_semibold]Email :[/font]    [font=roboto_light]techmakie@gmail.com[/font]'
+                    text: root.email
                     size_hint: 1, 0.5 
                     font_size: sp(10)
                     color: chex("#01334F")
@@ -120,7 +120,7 @@
                     markup: True
 
                 Label:
-                    text: '[font=roboto_semibold]Phone Number : [/font]    [font=roboto_light]0951 221 3007[/font]'
+                    text: root.phone
                     size_hint: 1, 0.5 
                     font_size: sp(10)
                     color: chex("#01334F")

@@ -71,6 +71,8 @@ class Dashboard(Screen):
     truck_image_path : str = StringProperty('')
     location_image_path : str = StringProperty('')
 
+    dashboard_server_data : dict = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -89,14 +91,25 @@ class Dashboard(Screen):
             Clock.schedule_once(self.load_map, 1)
 
     def on_enter(self, *args):
-        Animation(opacity=1, duration=0.5).start(self) 
-        
-        app = MDApp.get_running_app()
-        print(app.communications.data)
+        Animation(opacity=1, duration=0.5).start(self)  
+        app = MDApp.get_running_app()  
+        key = "GET_USER_TECH_INFO"
+        print(f'keys : {app.communications.key_running}')
+        if key not in app.communications.key_running:
+            app.communications.get_user_tech_info()
+            def communication_event(*args):
+                data = app.communications.data.get(key, None)
+                if data: 
+                    if data.get("result", False):
+                        self.dashboard_server_data = data.get("data", {})
+                        print(self.dashboard_server_data)
+                return False
+            
+            Clock.schedule_interval(communication_event, 1)
+
+
         Clock.schedule_once(self.load_map, 1) 
         return super().on_enter(*args)
-   
-
 
     def load_map(self, *args):
 

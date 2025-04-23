@@ -17,6 +17,8 @@ from .ticket_transact import TicketTransactionScreeen
 from .home_component import ProcessingLayout
 from .account import AccountScreen
 
+from kivymd.app import MDApp
+
 class HomeScreenManager(ScreenManager):
      
     proccess_layout : ProcessingLayout = ObjectProperty(None)
@@ -77,6 +79,9 @@ class NavigationBar(BoxLayout):
         
         
     def on_dashboard_button_release(self, *args):
+        if self.parent.home_screen_manager.current == HOME_SCREEN_TRANSACT_SCREEN:
+            return
+        
         # self.user_screen_action = 'dashboard'
         if self.dashboard_button.font_size <= sp(self.minimum_icon_font_size):
             self.anim_button_selected.start(self.dashboard_button)
@@ -96,6 +101,8 @@ class NavigationBar(BoxLayout):
 
     
     def on_ticket_button_release(self, *args):
+        if self.parent.home_screen_manager.current == HOME_SCREEN_TRANSACT_SCREEN:
+            return
         # self.user_screen_action = 'ticket'
         if self.dashboard_button.font_size >= sp(self.maximum_icon_font_size):
             self.anim_button.start(self.dashboard_button)
@@ -110,6 +117,8 @@ class NavigationBar(BoxLayout):
         
     
     def on_settings_button_release(self, *args):
+        if self.parent.home_screen_manager.current == HOME_SCREEN_TRANSACT_SCREEN:
+            return
         # self.user_screen_action = 'settings'
         if self.dashboard_button.font_size >= sp(self.maximum_icon_font_size):
             self.anim_button.start(self.dashboard_button)
@@ -191,6 +200,22 @@ class HomeScreen(Screen):
         return super().on_pre_enter(*args)
     
     
+    def on_enter(self, *args):
+        app = MDApp.get_running_app()  
+        key = "DASHBOARD"
+        print(f'keys : {app.communications.key_running}')
+        if key not in app.communications.key_running:
+            app.communications.grab_dashboard()
+            def communication_event(*args):
+                data = app.communications.data.get(key, None)
+                if data: 
+                    if data.get("result", False):
+                        dashboard = self.home_screen_manager.get_screen(HOME_SCREEN_DASHBOARD_SCREEN)
+                        dashboard.dashboard_server_data = data.get("data", {})
+                return False
+            Clock.schedule_interval(communication_event, 1)
+
+        return super().on_enter(*args)
             
             
             
