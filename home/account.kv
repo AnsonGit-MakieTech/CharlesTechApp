@@ -292,8 +292,7 @@
                 
                 Widget:
                     
-                Button:
-                    id: view_remarks_button
+                Button: 
                     text: "Update Profile"
                     size_hint: None , None
                     size: sp(120) , sp(30) 
@@ -301,6 +300,8 @@
                     color: chex("#F7EEDD")
                     font_name: 'roboto_semibold'
                     background_color: (0 , 0, 0 ,0)
+                    on_release:
+                        root.update_techinfo()
 
                     canvas.before:
                         Color:

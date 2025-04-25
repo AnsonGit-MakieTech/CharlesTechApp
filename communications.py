@@ -2,6 +2,8 @@
 import requests
 import threading
 import time
+import os
+import base64
 
 from utils.app_utils import has_internet
 
@@ -325,6 +327,60 @@ class Communications:
         thread.start()
 
 
+    def update_user_tech_info(self, email = None , phone = None , profile = None):
+        key = "UPDATE_USER_TECH_INFO"
+        def event(self_thread):
+            while self.has_thread_running:
+                time.sleep(0.5)
+            self.has_thread_running = True
+            self.key_running.append(key)
+
+            json_data = {
+                "action": "update_technical_settings"
+            }
+            if email:
+                json_data["email"] = email
+            if phone:
+                json_data["phone"] = phone
+
+            if profile: 
+                if profile or os.path.exists(profile):
+                    with open(profile, "rb") as f:
+                        encoded_image = base64.b64encode(f.read()).decode("utf-8")
+
+                    # You can also extract the file extension if needed
+                    file_ext = os.path.splitext(profile)[1].replace('.', '')  # jpg, png, etc.
+
+                    json_data["profile"] = encoded_image
+                    json_data["profile_ext"] = file_ext  
+
+            url = self.server + "technical_center_api"
+            headers = {
+                "Content-Type": "application/json",
+                # "X-CSRFToken": csrf_token,
+                # "Referer": url,  # important if Django checks referer
+                # "Origin": self.server,
+                "User-Agent": "KivyApp/1.0.0",
+            }
+            try:
+                response = self.session.post(url, headers=headers, json=json_data)
+                if response.ok:
+                    data = response.json()
+                    self.data[key] = {"result" : True, "message" : "" , "data" : data}
+                else:
+                    print(response.text)
+                    self.data[key] = {"result" : False, "message" : ""}
+            except Exception as e:
+                self.data[key] = {"result" : False, "message" : str(e)}
+            self.has_thread_running = False
+            self.key_running.remove(key)
+            if self_thread in self.threads:
+                self.threads.remove(self_thread)
+
+        
+        thread = threading.Thread(target=lambda: event(thread))
+        self.threads.append(thread)
+        thread.start()
 
 
 

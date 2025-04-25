@@ -152,6 +152,7 @@ class ProcessingLayout(ModalView):
         self.spinner.source = os.path.join(parent_dir, 'assets', 'loading_image.png')
         return super().on_pre_open()
     def on_open(self):
+        self.auto_dismiss = False
         self.spinner.start_spinner()
         self.proccess_text = "Please wait while we complete the process. Do not close the application until it is finished."
         
@@ -159,14 +160,14 @@ class ProcessingLayout(ModalView):
         
         return super().on_open()
 
-    def display_success(self, *args):
+    def display_success(self, message = None):
         self.spinner.stop_success_spinner()
-        self.proccess_text = "Process completed successfully!"
+        self.proccess_text = "Process completed successfully!" if not message else message
         Clock.schedule_once(self.dismiss, 2) 
     
-    def display_error(self, *args):
+    def display_error(self, message = None):
         self.spinner.stop_error_spinner()
-        self.proccess_text = "An error occurred while processing the data."
+        self.proccess_text = "An error occurred while processing the data." if not message else message
         self.auto_dismiss = True
     
 

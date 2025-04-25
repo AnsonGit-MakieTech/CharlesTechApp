@@ -11,7 +11,6 @@ if platform == "win":
     from plyer import filechooser
 if platform == "android":
     from androidstorage4kivy import SharedStorage
-    from android.storage import app_storage_path
 
 class AccountScreen(Screen):
     no_image_path: str = StringProperty('')
@@ -42,7 +41,7 @@ class AccountScreen(Screen):
                 app.communications.get_user_tech_info()
 
                 def communication_event(*args):
-                    data = app.communications.data.get(key, None)
+                    data = app.communications.get_and_remove(key)
                     if data and data.get("result", False):
                         self.is_loaded = True
                         tect_server_data = data.get("data", {})
@@ -63,6 +62,35 @@ class AccountScreen(Screen):
 
         Animation(opacity=1, duration=0.5).start(self)
         return super().on_enter(*args)
+    
+    def update_techinfo(self, *args):
+        app = MDApp.get_running_app()
+        key = "UPDATE_USER_TECH_INFO"
+        if key not in app.communications.key_running:
+            email = self.email_editor.text
+            phone = self.phone_number_editor.text 
+            
+            if self.no_image_path != self.default_image_path:
+                image = self.no_image_path
+            else:
+                image = None
+
+            app.communications.update_user_tech_info(email = email , phone = phone , profile = image)
+            self.manager.proccess_layout.open() 
+            def communication_event(*args):
+                data = app.communications.get_and_remove(key)
+                if data:
+                    if data.get("result", False): 
+                        self.manager.proccess_layout.display_success("User tech info updated successfully")
+                    else:
+                        self.manager.proccess_layout.display_error("Failed to update user tech info")
+
+                    return False   
+
+            Clock.schedule_interval(communication_event, 1)  
+
+
+
 
     def upload_image(self):
         if platform == "win":
@@ -95,7 +123,7 @@ class AccountScreen(Screen):
 
     def get_save_path(self):
         # Return a writable path depending on the platform
-        if platform == "android":
+        if platform == "android": 
             return app_storage_path()
         else:
             return os.path.expanduser("~")
