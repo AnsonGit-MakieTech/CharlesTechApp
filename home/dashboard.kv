@@ -6,7 +6,8 @@
     opacity:0
     size_hint: 1,1
     pos_hint: {'center_x': 0.5,'center_y': 0.5}
-    map_container : map_container
+    # map_container : map_container
+    team_member_container : team_member_container
 
     ScrollView: 
         scroll_type: ['bars'] 
@@ -29,19 +30,166 @@
                 size_hint: 1, None
                 height: sp(30)
 
+            Label:
+                text: root.team_name
+                font_name: 'roboto_extrabold'
+                font_size: root.team_name_font_size
+                color: chex("01334F")
+                size_hint: (1 , None)
+                height: dp(35)
+                
+
+            # BoxLayout:
+            #     orientation: 'horizontal'
+            #     size_hint: 1, None
+            #     height: sp(190)
+            #     id: map_container
+
+            #     canvas.before:
+            #         Color:
+            #             rgba: chex("#ACE2E1")
+            #         RoundedRectangle:
+            #             pos: self.pos
+            #             size: self.size
+            #             radius: [4]
+            
+            Widget:
+                size_hint: 1, None
+                height: sp(30)
 
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint: 1, None
-                height: sp(190)
-                id: map_container
+                height: sp(150) 
+                spacing: dp(10)
+
+                LabelBox: 
+                    orientation: 'vertical'
+                    size_hint: 1, 1 
+
+                    Label:
+                        text: 'Total Ticket Assigned'
+                        size_hint: (1, 0.15)
+                        font_size: root.title_anl_font_size
+                        font_name: 'roboto_extrabold'
+                        color: chex("01334F")
+                        halign: 'left'
+                        
+                    
+                    Label:
+                        text: root.total_ticket_assigned
+                        size_hint: (1, 0.85)
+                        font_size: root.body_anl_font_size
+                        font_name: 'roboto_light'
+                        color: chex("01334F")
+
+
+                    
+                
+                LabelBox:
+                    orientation: 'vertical'
+                    size_hint: 1, 1
+                
+                    
+                    Label:
+                        text: 'Open Ticket Counts'
+                        size_hint: (1, 0.15)
+                        font_size: root.title_anl_font_size
+                        font_name: 'roboto_extrabold'
+                        color: chex("01334F")
+                        halign: 'left'
+                    
+                    Label:
+                        text: root.open_ticket_count
+                        size_hint: (1, 0.85)
+                        font_size: root.body_anl_font_size
+                        font_name: 'roboto_light'
+                        color: chex("01334F")
+
+
+            Widget:
+                size_hint: (1 , None)
+                height: dp(10)
+            
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                height: sp(150) 
+                spacing: dp(10)
+
+                LabelBox: 
+                    orientation: 'vertical'
+                    size_hint: 1, 1 
+
+                    Label:
+                        text: 'Ticket Close Today'
+                        size_hint: (1, 0.15)
+                        font_size: root.title_anl_font_size
+                        font_name: 'roboto_extrabold'
+                        color: chex("01334F")
+                        halign: 'left'
+                        
+                    
+                    Label:
+                        text: root.ticket_close_today
+                        size_hint: (1, 0.85)
+                        font_size: root.body_anl_font_size
+                        font_name: 'roboto_light'
+                        color: chex("01334F")
+
+
+                    
+                
+                LabelBox:
+                    orientation: 'vertical'
+                    size_hint: 1, 1
+                
+                    
+                    Label:
+                        text: 'Team Member Counts'
+                        size_hint: (1, 0.15)
+                        font_size: root.title_anl_font_size
+                        font_name: 'roboto_extrabold'
+                        color: chex("01334F")
+                        halign: 'left'
+                    
+                    Label:
+                        text: root.team_member_count
+                        size_hint: (1, 0.85)
+                        font_size: root.body_anl_font_size
+                        font_name: 'roboto_light'
+                        color: chex("01334F")
+
+
+
+            Widget:
+                size_hint: 1, None
+                height: dp(30)
+
+            
+            MDBoxLayout:
+                id: team_member_container
+                orientation: 'vertical'
+                size_hint: 1, None
+                adaptive_height: True
+                spacing: dp(10)
 
                 canvas.before:
                     Color:
-                        rgba: chex("#ACE2E1")
+                        rgba: chex("ACE2E1")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
                         radius: [4]
-            
+        
 
+<LabelBox@BoxLayout>:
+    
+    canvas.before:
+        Color:
+            rgba: chex("ACE2E1")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [4]
+        

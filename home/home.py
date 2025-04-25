@@ -207,11 +207,18 @@ class HomeScreen(Screen):
         if key not in app.communications.key_running:
             app.communications.grab_dashboard()
             def communication_event(*args):
-                data = app.communications.data.get(key, None)
+                data = app.communications.get_and_remove(key)
                 if data: 
-                    if data.get("result", False):
+                    if data.get("result", False) == True:
+                        dashboard_server_data = data.get("data", {})
+                        print(f'dashboard_server_data : {dashboard_server_data}') 
                         dashboard = self.home_screen_manager.get_screen(HOME_SCREEN_DASHBOARD_SCREEN)
-                        dashboard.dashboard_server_data = data.get("data", {})
+                        dashboard.team_name = str(dashboard_server_data.get("team_name", "TEAM NAME"))
+                        dashboard.team_member_count = str(dashboard_server_data.get("team_member_count", "0"))
+                        dashboard.ticket_close_today = str(dashboard_server_data.get("ticket_close_today", "0"))
+                        dashboard.open_ticket_count = str(dashboard_server_data.get("open_ticket_count", "0"))
+                        dashboard.total_ticket_assigned = str(dashboard_server_data.get("ticket_assinged_total", "0"))
+                        
                 return False
             Clock.schedule_interval(communication_event, 1)
 

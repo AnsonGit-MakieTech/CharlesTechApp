@@ -200,7 +200,7 @@ class Communications:
                 self.has_thread_running = False
                 self.key_running.remove(key) 
                 if self_thread in self.threads:
-                    self.threads.remove(self_thread) 
+                    self.threads.remove(self_thread)
                 return
 
             self.has_thread_running = True
