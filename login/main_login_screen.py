@@ -134,9 +134,14 @@ class RegisterPinScreen(Screen):
                 self.manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN
             
             def communication_event(*args):
-                data = app.communications.data.get("REGISTER_PIN", None)
+                data = app.communications.get_and_remove("REGISTER_PIN")
                 if data:
                     self.manager.popup.dismiss() 
+                    if data.get("result", None) == "NA":
+                        self.manager.custom_popup.my_text = data.get("message", "No Internet Connection")
+                        Clock.schedule_once(done_registering, 1)
+                        return False
+                    
                     if data.get("result", False):
                         self.manager.custom_popup.my_text = "Successfully registered"
                         self.manager.custom_popup.auto_dismiss = False 
@@ -146,6 +151,7 @@ class RegisterPinScreen(Screen):
                         Clock.schedule_once(done_registering, 2)
                     self.manager.custom_popup.open()
                     return False
+                
             
             Clock.schedule_interval(communication_event, 1)
             return
@@ -256,7 +262,6 @@ class RegisterAccountScreen(Screen):
                 if app.communications.is_login:
                     return
                 
-                print("Logging in")
                 app.communications.create_session(self.username_input.text, self.password_input.text)
                 self.manager.popup.open()
 
@@ -270,9 +275,15 @@ class RegisterAccountScreen(Screen):
                     self.manager.current = LOGIN_SCREEN_REGISTER_PIN_SCREEN
                 
                 def communication_event(*args):
-                    data = app.communications.data.get("CHECK_PIN", None)
+                    data = app.communications.get_and_remove("CHECK_PIN")
                     if data:
                         self.manager.popup.dismiss()
+
+                        if data.get("result", None) == "NA":
+                            self.manager.custom_popup.my_text = data.get("message", "No Internet Connection")
+                            Clock.schedule_once(done_registering, 0.1)
+                            return False
+
                         result = data.get("data", {})
                         if result.get("with_pin", False):
                             self.manager.custom_popup.my_text = "Verified Users!"
@@ -384,9 +395,15 @@ class PinKeyboard(BoxLayout):
             self.log_pin = '' 
         
         def communication_event(*args):
-            data = app.communications.data.get("LOGIN_PIN", None)
+            data = app.communications.get_and_remove("LOGIN_PIN")
             if data:
                 self.parent.parent.parent.manager.popup.dismiss()
+
+                if data.get("result", None) == "NA":
+                    self.manager.custom_popup.my_text = data.get("message", "No Internet Connection")
+                    Clock.schedule_once(done_registering, 0.1)
+                    return False
+                
                 if data.get("data", {}).get("is_login", False):
                     self.parent.parent.parent.manager.custom_popup.my_text = "Logging In!"
                     app.communications.is_login = True

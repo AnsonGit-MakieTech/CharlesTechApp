@@ -151,4 +151,10 @@ if __name__ == '__main__':
     LabelBase.register(name="roboto_extrabold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBold.ttf'))
     LabelBase.register(name="roboto_light", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-Light.ttf'))
     LabelBase.register(name="roboto_lightitalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-LightItalic.ttf'))
-    TechnicalApp().run()
+    try:
+        TechnicalApp().run()
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt detected. Exiting...")
+    except Exception as e:
+        print(f"Error: {e}")
+    

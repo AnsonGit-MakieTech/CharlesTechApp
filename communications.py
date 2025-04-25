@@ -3,6 +3,8 @@ import requests
 import threading
 import time
 
+from utils.app_utils import has_internet
+
 class Communications:
     server = "https://alpha.billingko.com/api/"
     token = None
@@ -23,6 +25,12 @@ class Communications:
             thread.join()
         self.threads.clear()
 
+    def get_and_remove(self, key : str):
+        if key in self.data:
+            value = self.data[key]
+            del self.data[key]
+            return value
+        return None
 
     def create_session(self, username : str, password : str):
         key = "CHECK_PIN"
@@ -31,6 +39,15 @@ class Communications:
                 time.sleep(0.5)
             self.has_thread_running = True
             self.key_running.append(key)
+
+            if not has_internet():
+                self.data[key] = {"result" : "NA", "message" : "No Internet Connection"}
+                self.has_thread_running = False
+                self.key_running.remove(key) 
+                if self_thread in self.threads:
+                    self.threads.remove(self_thread) 
+                return
+
             json_data = {"username": username, "password": password, "action": "technical_register_system_user"}
             # csrf_token = self.session.cookies.get('csrftoken')  # Django sets this
             url = self.server + "technical_unauthenticated_api"
@@ -45,10 +62,10 @@ class Communications:
                 response = self.session.post(url, headers=headers, json=json_data)
                 if response.ok:
                     data = response.json() 
-                    self.data[key] = {"result" : True, "message" : "Pin exists" , "data" : data}
+                    self.data[key] = {"result" : True, "message" : "Verified Users!" , "data" : data}
                 else:
                     print(response.text)
-                    self.data[key] = {"result" : False, "message" : "Pin does not exist"}
+                    self.data[key] = {"result" : False, "message" : "No Pin Found! Please Register!"}
                 
             except Exception as e:
                     self.data[key] = {"result" : False, "message" : "Error: " + str(e)}
@@ -65,11 +82,19 @@ class Communications:
 
 
     def open_by_pin(self, username : str , password : str , pin : str):
-        key = "LOGIN_PIN"
+        key = "LOGIN_PIN" 
         
         def event(self_thread):
             while self.has_thread_running:
                 time.sleep(0.5)
+            
+            if not has_internet():
+                self.data[key] = {"result" : "NA", "message" : "No Internet Connection"}
+                self.has_thread_running = False
+                self.key_running.remove(key) 
+                if self_thread in self.threads:
+                    self.threads.remove(self_thread) 
+                return
 
             self.has_thread_running = True
             self.key_running.append(key)
@@ -88,15 +113,15 @@ class Communications:
                 "User-Agent": "KivyApp/1.0.0",
             }
             try:
-                response = self.session.post(url, headers=headers, json=json_data)
+                response = self.session.post(url, headers=headers, json=json_data , timeout=(3, 5)) 
                 if response.ok:
                     data = response.json()
                     print(data)
-                    self.data[key] = {"result" : True, "message" : "Registration successful" , "data" : data}
+                    self.data[key] = {"result" : True, "message" : "Logging In!" , "data" : data}
                 else:
-                    self.data[key] = {"result" : False, "message" : "Registration failed"}
+                    self.data[key] = {"result" : False, "message" : "Incorrect Pin!"}
             except Exception as e:
-                self.data[key] = {"result" : False, "message" : str(e)}
+                self.data[key] = {"result" : False, "message" : "Server Is Down" } 
 
             self.has_thread_running = False
             self.key_running.remove(key)
@@ -115,6 +140,14 @@ class Communications:
         def event(self_thread):
             while self.has_thread_running:
                 time.sleep(0.5)
+
+            if not has_internet():
+                self.data[key] = {"result" : "NA", "message" : "No Internet Connection"}
+                self.has_thread_running = False
+                self.key_running.remove(key) 
+                if self_thread in self.threads:
+                    self.threads.remove(self_thread) 
+                return
 
             self.has_thread_running = True
             self.key_running.append(key)
