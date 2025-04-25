@@ -16,8 +16,7 @@ from kivy.clock import Clock
 
 from communications  import Communications
 
-if platform == "android":
-    from plyer.platforms.android.sms import Sms
+if platform == "android": 
     from android.permissions import request_permissions, Permission, check_permission  # pylint: disable=import-error
 
 if platform == "ios":

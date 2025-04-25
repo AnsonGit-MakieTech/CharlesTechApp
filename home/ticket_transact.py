@@ -38,7 +38,7 @@ from kivy.utils import platform
 from utils.app_utils import is_valid_latlon
 from kivy.uix.image import Image
 from utils.app_utils import has_internet
-
+from kivymd.app import MDApp
 
 if platform == "android":
     from plyer import gps
@@ -500,14 +500,41 @@ class TicketTransactionScreeen(Screen):
         self.geolocation_modal = GeolocationModalView()
         self.fiber_connection_modal = FiberConnectionModalView()
         self.poc_file_uploader_modal = POCFileUploaderModalView()
-        
-    
+
+        Window.bind(on_keyboard=self.on_back_key)
+
+    def on_back_key(self, window, key, *args):
+        if key != 27:
+            return False
+
+
+        if self.manager.current == HOME_SCREEN_TRANSACT_SCREEN:
+            self.go_back()
+            return True
+        else: 
+            if not self.back_pressed_once:
+                self.back_pressed_once = True
+                toast("Press back again to exit")
+                Clock.schedule_once(self.reset_back_state, 2)
+                return True
+            else:
+                self.stop_app()
+                return True
+
+        return False  # allow default behavior otherwise
+
+    def reset_back_state(self, dt):
+        self.back_pressed_once = False
+
+    def stop_app(self):
+        MDApp.get_running_app().stop()
+
     def on_parent(self, *args):
         if self.parent:
             self.refresh_layout.setup_effect_callback(self.refresh_callback) 
             self.view_remarks_button.on_release= self.remarks_list.open
             self.add_remarks_button.on_release= self.remarks_input.open
-            self.main_parent.height = self.parent.height - dp(65)
+            # self.main_parent.height = self.parent.height - dp(65)
       
     def refresh_callback(self, *args):
         print("refresh_callback : Ticket Transact")
@@ -522,13 +549,16 @@ class TicketTransactionScreeen(Screen):
         
 
     def on_leave(self, *args):
+        Animation(height=dp(60), opacity = 1, duration=0.5).start(self.manager.parent.navigation_bar)
         Animation(opacity=0, duration=0.5).start(self)
         return super().on_leave(*args)
     
     def on_enter(self, *args):
+        
+        Animation(height=dp(-10), opacity = 0, duration=0.5).start(self.manager.parent.navigation_bar)
         Animation(opacity=1, duration=0.5).start(self)
 
-        self.poc_file_uploader_modal.open()
+        # self.poc_file_uploader_modal.open()
 
 
         self.geolocation_step_layout.parent_event = self.geolocation_modal.open

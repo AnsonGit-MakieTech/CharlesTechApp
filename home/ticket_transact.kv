@@ -46,7 +46,7 @@
     BoxLayout:
         id:main_parent
         pos_hint: {'center_x': 0.5,'top': 1}
-        size_hint: 1,None
+        size_hint: 1,1
         orientation: 'vertical' 
 
         BoxLayout:
@@ -85,7 +85,7 @@
                 id: ticket_list
                 cols: 1
                 adaptive_height: True
-                padding: dp(0)
+                padding: [dp(0), dp(0), dp(0), dp(30)]
                 spacing: dp(0)
                 size_hint_y: None  
 
@@ -1698,7 +1698,7 @@
 
 <RemarksListViewer>: 
     size_hint: 1, 1
-    auto_dismiss: False
+    auto_dismiss: True
     background: ""  # Removes default dim background
     background_color: 0, 0, 0, 0
  
@@ -1799,7 +1799,7 @@
 
 <RemarksInputLayout>:
     size_hint: 1, 1
-    auto_dismiss: False
+    auto_dismiss: True
     background: ""  # Removes default dim background
     background_color: 0, 0, 0, 0
 
