@@ -48,6 +48,9 @@ class AccountScreen(Screen):
                             self.username = tect_server_data.get("username", "") 
                             self.email = f'[font=roboto_semibold]Email :[/font]    [font=roboto_light]{tect_server_data.get("email", "")}[/font]'
                             self.phone = f'[font=roboto_semibold]Phone Number : [/font]    [font=roboto_light]{tect_server_data.get("phone", "")}[/font]'
+                            url_image = tect_server_data.get("profilepic", None)
+                            if url_image:
+                                self.no_image_path = url_image
                             
                     return False
                 
