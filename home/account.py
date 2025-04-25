@@ -1,82 +1,101 @@
-
-
 from kivy.uix.screenmanager import Screen
-from kivy.properties import StringProperty
-import os
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.textinput import TextInput
 from kivy.animation import Animation
 from kivymd.app import MDApp
 from kivy.clock import Clock
-from kivy.properties import ObjectProperty
 from kivy import platform
-from kivy.uix.textinput import TextInput
+import os
 
-if platform in ["android", "win"]:
+if platform == "win":
     from plyer import filechooser
-
+if platform == "android":
+    from androidstorage4kivy import SharedStorage
+    from android.storage import app_storage_path
 
 class AccountScreen(Screen):
-
-    no_image_path : str = StringProperty('')
-    team_name : str = StringProperty('')
-    fullname : str  = StringProperty('')
-    username : str = StringProperty('')
-    email : str = StringProperty('')
-    phone : str = StringProperty('')
-    phone_number_editor : TextInput = ObjectProperty()
-    email_editor : TextInput = ObjectProperty()
-    is_loaded : bool = False
-    
+    no_image_path: str = StringProperty('')
+    team_name: str = StringProperty('')
+    fullname: str = StringProperty('')
+    username: str = StringProperty('')
+    email: str = StringProperty('')
+    phone: str = StringProperty('')
+    phone_number_editor: TextInput = ObjectProperty()
+    email_editor: TextInput = ObjectProperty()
+    is_loaded: bool = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
-        self.no_image_path = os.path.join(parent_dir, 'assets', 'profile_no_image.png')
+        self.default_image_path = os.path.join(parent_dir, 'assets', 'profile_no_image.png')
+        self.no_image_path = self.default_image_path
 
-    
     def on_leave(self, *args):
         Animation(opacity=0, duration=0.5).start(self)
         return super().on_leave(*args)
-    
-    def on_enter(self, *args):  
+
+    def on_enter(self, *args):
         if not self.is_loaded:
-            app = MDApp.get_running_app()  
-            key = "GET_USER_TECH_INFO" 
+            app = MDApp.get_running_app()
+            key = "GET_USER_TECH_INFO"
             if key not in app.communications.key_running:
                 app.communications.get_user_tech_info()
+
                 def communication_event(*args):
-                    
                     data = app.communications.data.get(key, None)
-                    if data: 
-                        if data.get("result", False) == True:
-                            self.is_loaded = True
-                            tect_server_data = data.get("data", {}) 
-                            self.team_name = tect_server_data.get("team_name", "")
-                            self.fullname = f'{tect_server_data.get("fname", "")} {tect_server_data.get("lname", "")}'
-                            self.username = tect_server_data.get("username", "") 
-                            self.email_editor.text = tect_server_data.get("email", "")
-                            self.phone_number_editor.text = tect_server_data.get("phone", "")
-                            self.email = f'[font=roboto_semibold]Email :[/font]    [font=roboto_light]{tect_server_data.get("email", "")}[/font]'
-                            self.phone = f'[font=roboto_semibold]Phone Number : [/font]    [font=roboto_light]{tect_server_data.get("phone", "")}[/font]'
-                            url_image = tect_server_data.get("profilepic", None)
-                            if url_image:
-                                self.no_image_path = url_image
-                            
+                    if data and data.get("result", False):
+                        self.is_loaded = True
+                        tect_server_data = data.get("data", {})
+                        self.team_name = tect_server_data.get("team_name", "")
+                        self.fullname = f'{tect_server_data.get("fname", "")} {tect_server_data.get("lname", "")}'
+                        self.username = tect_server_data.get("username", "")
+                        self.email_editor.text = tect_server_data.get("email", "")
+                        self.phone_number_editor.text = tect_server_data.get("phone", "")
+                        self.email = f'[font=roboto_semibold]Email :[/font]    [font=roboto_light]{tect_server_data.get("email", "")}[/font]'
+                        self.phone = f'[font=roboto_semibold]Phone Number : [/font]    [font=roboto_light]{tect_server_data.get("phone", "")}[/font]'
+                        url_image = tect_server_data.get("profilepic", None)
+                        if url_image:
+                            self.no_image_path = url_image
+
                     return False
-                
+
                 Clock.schedule_interval(communication_event, 1)
 
-        Animation(opacity=1, duration=0.5).start(self)  
+        Animation(opacity=1, duration=0.5).start(self)
         return super().on_enter(*args)
 
-
-
     def upload_image(self):
-        if platform in ["android", "win"]:
+        if platform == "win":
             filechooser.open_file(on_selection=self.handle_selection)
+        elif platform == "android":
+            SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
 
     def handle_selection(self, selection):
         if selection:
-            self.selected_image = selection[0]
-            print(f"Selected image path: {self.selected_image}")
+            self.no_image_path = selection[0]  # Display the selected image
+            print(f"Selected image path (Windows): {self.no_image_path}")
 
-    
+    def on_image_selected(self, uri_list):
+        if uri_list:
+            uri = uri_list[0]
+            SharedStorage().read_file(uri, self.on_image_loaded)
+
+    def on_image_loaded(self, content, filename):
+        # Save to app cache or internal folder
+        save_dir = os.path.join(self.get_save_path(), "selected_images")
+        os.makedirs(save_dir, exist_ok=True)
+
+        image_path = os.path.join(save_dir, filename)
+        with open(image_path, "wb") as f:
+            f.write(content)
+
+        # Now update UI to show image
+        self.no_image_path = image_path
+        print(f"Saved and loaded image path (Android): {image_path}")
+
+    def get_save_path(self):
+        # Return a writable path depending on the platform
+        if platform == "android":
+            return app_storage_path()
+        else:
+            return os.path.expanduser("~")
