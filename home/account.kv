@@ -4,6 +4,9 @@
     opacity:0
     size_hint: 1,1
     pos_hint: {'center_x': 0.5,'center_y': 0.5}
+
+    phone_number_editor : phone_number_editor
+    email_editor : email_editor
  
 
     ScrollView: 
@@ -164,14 +167,146 @@
                         size: self.size
                         radius: [4]
 
+            Widget:
+                size_hint: 1, None
+                height: sp(30)
+
+            Label:
+                text: 'Account Editor'
+                size_hint: 1, None
+                height: sp(16)
+                font_name: 'roboto_extrabold'
+                font_size: sp(13)
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, None
+                height: sp(90)
+
+                Widget:
+                    size_hint: 1, 1
+                
+                FloatLayout:
+                    size_hint: None, 1
+                    width: sp(120)
+
+                    AsyncImage:
+                        source: root.no_image_path
+                        size_hint: 1, 1
+                        allow_stretch: True
+                        keep_ratio: False
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+
+                        canvas.after:
+                            Color: 
+                                rgba: (255 , 255 , 255, 0.5)
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+
+                    
+                    MDIconButton:
+                        icon: 'camera'
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        theme_icon_color: "Custom"
+                        icon_color: chex("#1C274C")
+                        on_release: 
+                            root.upload_image()
+
+                Widget:
+                    size_hint: (1 , 1)
+                        
+
+
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+
+            Label:
+                text: 'Email'
+                size_hint: 1, None
+                height: sp(10)
+                font_name: 'roboto_semibold'
+                font_size: sp(10)
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+
+            SearchBoxTicket:
+                id: email_editor
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                size_hint: 0.8, None
+                height: sp(30)
+                font_size: sp(10)
 
 
 
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
 
+            Label:
+                text: 'Phone Number'
+                size_hint: 1, None
+                height: sp(10)
+                font_name: 'roboto_semibold'
+                font_size: sp(10)
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
 
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+                
+            SearchBoxTicket:
+                id: phone_number_editor
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                size_hint: 0.8, None
+                height: sp(30)
+                font_size: sp(10)
 
+            Widget:
+                size_hint: 1, None
+                height: sp(30)
 
+            MDBoxLayout:
+                orientation:'horizontal' 
+                size_hint: 1, None
+                adaptive_height: True 
+                
+                
+                Widget:
+                    
+                Button:
+                    id: view_remarks_button
+                    text: "Update Profile"
+                    size_hint: None , None
+                    size: sp(120) , sp(30) 
+                    font_size: sp(14)
+                    color: chex("#F7EEDD")
+                    font_name: 'roboto_semibold'
+                    background_color: (0 , 0, 0 ,0)
 
-
-
+                    canvas.before:
+                        Color:
+                            rgba : chex("#008DDA")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: (4, 4 ,4 ,4)
 

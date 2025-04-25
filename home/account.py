@@ -7,6 +7,11 @@ from kivy.animation import Animation
 from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivy.properties import ObjectProperty
+from kivy import platform
+from kivy.uix.textinput import TextInput
+
+if platform in ["android", "win"]:
+    from plyer import filechooser
 
 
 class AccountScreen(Screen):
@@ -17,6 +22,8 @@ class AccountScreen(Screen):
     username : str = StringProperty('')
     email : str = StringProperty('')
     phone : str = StringProperty('')
+    phone_number_editor : TextInput = ObjectProperty()
+    email_editor : TextInput = ObjectProperty()
     is_loaded : bool = False
     
 
@@ -46,6 +53,8 @@ class AccountScreen(Screen):
                             self.team_name = tect_server_data.get("team_name", "")
                             self.fullname = f'{tect_server_data.get("fname", "")} {tect_server_data.get("lname", "")}'
                             self.username = tect_server_data.get("username", "") 
+                            self.email_editor.text = tect_server_data.get("email", "")
+                            self.phone_number_editor.text = tect_server_data.get("phone", "")
                             self.email = f'[font=roboto_semibold]Email :[/font]    [font=roboto_light]{tect_server_data.get("email", "")}[/font]'
                             self.phone = f'[font=roboto_semibold]Phone Number : [/font]    [font=roboto_light]{tect_server_data.get("phone", "")}[/font]'
                             url_image = tect_server_data.get("profilepic", None)
@@ -61,5 +70,13 @@ class AccountScreen(Screen):
 
 
 
+    def upload_image(self):
+        if platform in ["android", "win"]:
+            filechooser.open_file(on_selection=self.handle_selection)
 
+    def handle_selection(self, selection):
+        if selection:
+            self.selected_image = selection[0]
+            print(f"Selected image path: {self.selected_image}")
 
+    
