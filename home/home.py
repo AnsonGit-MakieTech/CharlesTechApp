@@ -11,7 +11,7 @@ from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 
 from variables import *
-from .dashboard import Dashboard
+from .dashboard import Dashboard, MemberDataWidget
 from .ticket_list import TicketListScreen
 from .ticket_transact import TicketTransactionScreeen
 from .home_component import ProcessingLayout
@@ -218,6 +218,13 @@ class HomeScreen(Screen):
                         dashboard.ticket_close_today = str(dashboard_server_data.get("ticket_close_today", "0"))
                         dashboard.open_ticket_count = str(dashboard_server_data.get("open_ticket_count", "0"))
                         dashboard.total_ticket_assigned = str(dashboard_server_data.get("ticket_assinged_total", "0"))
+                        dashboard.team_member_container.clear_widgets()
+                        for member in dashboard_server_data.get("members", []):
+                            print(f'member : {member}')
+                            member_widget = MemberDataWidget()
+                            member_widget.member_name = str(member.get("name", ""))
+                            member_widget.member_ticket = str(member.get("ticket", "None"))
+                            dashboard.team_member_container.add_widget(member_widget)
                         
                 return False
             Clock.schedule_interval(communication_event, 1)

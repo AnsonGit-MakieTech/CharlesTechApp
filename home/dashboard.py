@@ -1,17 +1,17 @@
 from kivy.uix.accordion import NumericProperty
 from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
-from kivy_garden.mapview import MapView, MapSource, MapMarker, MapLayer
+# from kivy_garden.mapview import MapView, MapSource, MapMarker, MapLayer
 from kivy.animation import Animation
 from kivy.properties import ObjectProperty, StringProperty
-from kivy.graphics import Line, Color
+# from kivy.graphics import Line, Color
 from kivy.uix.boxlayout import BoxLayout
-from utils.app_utils import has_internet
+# from utils.app_utils import has_internet
 from kivy.metrics import dp
 import os
-import random
-from kivy import platform
-from plyer import gps
+# import random
+# from kivy import platform
+# from plyer import gps
 
 from kivymd.app import MDApp
 
@@ -21,54 +21,62 @@ from kivymd.app import MDApp
 #                        cache_key="osm",
 #                        tile_size=256,
 #                        image_ext="png")
-map_source = MapSource(
-    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    cache_key="satellite",
-    tile_size=256,
-    image_ext="jpg",  # Esri tiles are usually JPG
-    attribution="Tiles © Esri — Source: Esri, Earthstar Geographics"
-)
+# map_source = MapSource(
+#     url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+#     cache_key="satellite",
+#     tile_size=256,
+#     image_ext="jpg",  # Esri tiles are usually JPG
+#     attribution="Tiles © Esri — Source: Esri, Earthstar Geographics"
+# )
  
-from kivy_garden.mapview import MapLayer
-from kivy.graphics import Line, Color
+# from kivy_garden.mapview import MapLayer
+# from kivy.graphics import Line, Color
 
-class RouteLineLayer(MapLayer):
-    def __init__(self, route_coords, **kwargs):
-        super().__init__(**kwargs)
-        self.route_coords = route_coords
+# class RouteLineLayer(MapLayer):
+#     def __init__(self, route_coords, **kwargs):
+#         super().__init__(**kwargs)
+#         self.route_coords = route_coords
 
-    def reposition(self, *args):
-        self.canvas.clear()
+#     def reposition(self, *args):
+#         self.canvas.clear()
 
-        mapview = self.get_map_view()
-        if not self.route_coords or not mapview:
-            return
+#         mapview = self.get_map_view()
+#         if not self.route_coords or not mapview:
+#             return
 
-        with self.canvas:
-            Color(0, 0.4, 1, 1)  # Optional: change line color
-            points = []
+#         with self.canvas:
+#             Color(0, 0.4, 1, 1)  # Optional: change line color
+#             points = []
 
-            for lon, lat in self.route_coords:
-                x, y = mapview.get_window_xy_from(lat, lon, mapview.zoom)
-                points.extend((x, y))
+#             for lon, lat in self.route_coords:
+#                 x, y = mapview.get_window_xy_from(lat, lon, mapview.zoom)
+#                 points.extend((x, y))
 
-            if points:
-                Line(points=points, width=2)
+#             if points:
+#                 Line(points=points, width=2)
 
-    def get_map_view(self):
-        parent = self.parent
-        while parent:
-            if isinstance(parent, MapView):
-                return parent
-            parent = parent.parent
-        return None
+#     def get_map_view(self):
+#         parent = self.parent
+#         while parent:
+#             if isinstance(parent, MapView):
+#                 return parent
+#             parent = parent.parent
+#         return None
 
+
+class MemberDataWidget(BoxLayout):
+    member_name : str = StringProperty('')
+    member_ticket : str = StringProperty('None')
+
+    def on_parent(self, *args): 
+        anim = Animation(opacity=1, duration=0.5)
+        anim.start(self)
 
 class Dashboard(Screen):
     # map_container : BoxLayout = ObjectProperty(None)
-    mapview : MapView = ObjectProperty(None)
+    # mapview : MapView = ObjectProperty(None)
     main_parent : BoxLayout = ObjectProperty(None)
-    truck_marker : MapMarker = ObjectProperty(None)
+    # truck_marker : MapMarker = ObjectProperty(None)
     truck_image_path : str = StringProperty('')
     location_image_path : str = StringProperty('')
 
@@ -87,9 +95,9 @@ class Dashboard(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
-        self.truck_image_path = os.path.join(parent_dir, 'assets', 'truck.png')
-        self.location_image_path = os.path.join(parent_dir, 'assets', 'location.png') 
+        # parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        # self.truck_image_path = os.path.join(parent_dir, 'assets', 'truck.png')
+        # self.location_image_path = os.path.join(parent_dir, 'assets', 'location.png') 
 
     
     def on_size(self, *args):
@@ -131,6 +139,14 @@ class Dashboard(Screen):
                         self.open_ticket_count = str(dashboard_server_data.get("open_ticket_count", "0"))
                         self.total_ticket_assigned = str(dashboard_server_data.get("ticket_assinged_total", "0"))
                         
+                        self.team_member_container.clear_widgets()
+                        for member in dashboard_server_data.get("members", []):
+                            print(f'member : {member}')
+                            member_widget = MemberDataWidget()
+                            member_widget.member_name = str(member.get("name", ""))
+                            member_widget.member_ticket = str(member.get("ticket", "None"))
+                            self.team_member_container.add_widget(member_widget)
+
                     return False
             
             Clock.schedule_interval(communication_event, 1)

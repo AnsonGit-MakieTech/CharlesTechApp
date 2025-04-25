@@ -10,11 +10,11 @@
     team_member_container : team_member_container
 
     ScrollView: 
-        scroll_type: ['bars'] 
+        # scroll_type: ['bars'] 
         size_hint: 1, 1 
         do_scroll_x: False
         do_scroll_y: True
-        bar_width: 0  # optional: hide scroll bar
+        # bar_width: 0  # optional: hide scroll bar
 
 
             
@@ -151,7 +151,7 @@
                         font_size: root.title_anl_font_size
                         font_name: 'roboto_extrabold'
                         color: chex("01334F")
-                        halign: 'left'
+                         
                     
                     Label:
                         text: root.team_member_count
@@ -167,12 +167,26 @@
                 height: dp(30)
 
             
+            Label:
+                padding: [dp(10), 0 , 0 , 0]
+                text: "List of Team Members"
+                size_hint: 0.5, None
+                height: dp(35)
+                font_size: root.title_anl_font_size
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+                markup: True
+                font_name: 'roboto_extrabold'
+
             MDBoxLayout:
                 id: team_member_container
                 orientation: 'vertical'
                 size_hint: 1, None
                 adaptive_height: True
                 spacing: dp(10)
+                padding: dp(10)
 
                 canvas.before:
                     Color:
@@ -192,4 +206,36 @@
             pos: self.pos
             size: self.size
             radius: [4]
-        
+
+
+<MemberDataWidget>:
+    orientation: 'horizontal'
+    height: dp(20)
+    size_hint: 1, None
+    spacing: dp(10)
+    opacity : 0
+
+    Label:
+        text: root.member_name
+        size_hint: 0.5, 1 
+        font_size: sp(10)
+        color: chex("#01334F")
+        text_size: self.size
+        valign: 'middle'
+        halign: 'left'
+        markup: True
+        font_name: 'roboto_light'
+
+    Label:
+        text: root.member_ticket
+        size_hint: 0.5, 1 
+        font_size: sp(10)
+        color: chex("#01334F")
+        text_size: self.size
+        valign: 'middle'
+        halign: 'right'
+        markup: True
+        font_name: 'roboto_semibold'
+
+
+
