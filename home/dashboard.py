@@ -100,9 +100,8 @@ class Dashboard(Screen):
             def communication_event(*args):
                 data = app.communications.data.get(key, None)
                 if data: 
-                    if data.get("result", False):
-                        self.dashboard_server_data = data.get("data", {})
-                        print(self.dashboard_server_data)
+                    if data.get("result", False) == True:
+                        self.dashboard_server_data = data.get("data", {}) 
                 return False
             
             Clock.schedule_interval(communication_event, 1)

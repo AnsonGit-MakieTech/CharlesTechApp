@@ -40,7 +40,7 @@ class AccountScreen(Screen):
                     
                     data = app.communications.data.get(key, None)
                     if data: 
-                        if data.get("result", False):
+                        if data.get("result", False) == True:
                             self.is_loaded = True
                             tect_server_data = data.get("data", {}) 
                             self.team_name = tect_server_data.get("team_name", "")

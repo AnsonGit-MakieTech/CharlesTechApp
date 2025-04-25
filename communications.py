@@ -195,6 +195,14 @@ class Communications:
             while self.has_thread_running:
                 time.sleep(0.5)
 
+            if not has_internet():
+                self.data[key] = {"result" : "NA", "message" : "No Internet Connection"}
+                self.has_thread_running = False
+                self.key_running.remove(key) 
+                if self_thread in self.threads:
+                    self.threads.remove(self_thread) 
+                return
+
             self.has_thread_running = True
             self.key_running.append(key)
             json_data = { 
@@ -211,8 +219,7 @@ class Communications:
             try:
                 response = self.session.post(url, headers=headers, json=json_data)
                 if response.ok:
-                    data = response.json()
-                    print("happen again \n")
+                    data = response.json() 
                     print(data)
                     self.data[key] = {"result" : True, "message" : "" , "data" : data}
                 else:
