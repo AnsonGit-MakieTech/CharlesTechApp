@@ -11,7 +11,7 @@ from kivy.animation import Animation
 from kivy.uix.floatlayout import FloatLayout 
 from kivy.properties import StringProperty
 import os
-
+from kivymd.app import MDApp
 
 from variables import *
 from .home_component import *
@@ -58,6 +58,8 @@ class TicketListScreen(Screen):
     search_box : SearchBoxTicket = ObjectProperty(None)
     refresh_layout : CustomScrollView = ObjectProperty(None)
     ticket_list : MDGridLayout = ObjectProperty(None)
+
+    tickets : list[dict] = []
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -68,8 +70,12 @@ class TicketListScreen(Screen):
         Animation(opacity=1, duration=0.5).start(self)
         # self.refresh_layout.on_pull_refresh()
         self.search_box.update_padding()
+
+        if len(self.tickets) == 0:
+            self.refresh_callback()
     
     def on_pre_leave(self, *args):
+        
         Animation(opacity=0, duration=0.5).start(self)
         return super().on_leave(*args)
 
@@ -87,21 +93,45 @@ class TicketListScreen(Screen):
 
 
     def refresh_callback(self, *args): 
-        print("happen 2")
-        
-        # ✅ Create a new ticket
-        new_ticket = Ticket()
-        def open_ticket( ):
-            print("Ticket Clicked!")  # Debugging
-            self.change_screen('ticket_id')
-        new_ticket.parent_event = open_ticket
+        app = MDApp.get_running_app()
+        key = "TICKET_LIST"
+        if key not in app.communications.key_running:
+            app.communications.get_ticket_list()
 
-        # ✅ Insert at the first position
-        self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
+            def communication_event(*args):
+                data = app.communications.get_and_remove(key)
+
+                if data.get("result", False):
+                    self.tickets = data.get("data", [])
+                    if len(self.tickets) > 0:
+                        self.ticket_list.clear_widgets()
+                        for ticket in self.tickets:
+                            new_ticket = Ticket()
+                            new_ticket.parent_event = lambda : self.change_screen(ticket)
+                            self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
+                            print("ticket : ", ticket)
+                            time.sleep(0.1)
+                    return False
+                elif data.get("result", False) == False:
+                    print("Error : ", data.get("message", ""))
+                    return False
+
+            Clock.schedule_interval(communication_event, 1)
+
+
+        # ✅ Create a new ticket
+        # new_ticket = Ticket()
+        # def open_ticket( ):
+        #     print("Ticket Clicked!")  # Debugging
+        #     self.change_screen({})
+        # new_ticket.parent_event = open_ticket
+
+        # # ✅ Insert at the first position
+        # self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
         
         # self.open_google_maps(14.5995, 120.9842)
     
-    def change_screen(self, ticket_id : str):
+    def change_screen(self, ticket : dict):
         self.manager.transition.duration= 0.5
         self.manager.transition.direction = "left"
         self.manager.current = HOME_SCREEN_TRANSACT_SCREEN
