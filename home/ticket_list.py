@@ -16,6 +16,8 @@ from kivymd.app import MDApp
 from variables import *
 from .home_component import *
 
+import time
+
 
 class Ticket(FloatLayout):
     
@@ -102,15 +104,16 @@ class TicketListScreen(Screen):
 
             def communication_event(*args):
                 data = app.communications.get_and_remove(key) 
+                print("data : ", data)
                 if data.get("result", None):
                     self.tickets = data.get("data", [])
                     if len(self.tickets) > 0:
                         self.ticket_list.clear_widgets()
                         for ticket in self.tickets:
                             new_ticket = Ticket()
-                            new_ticket.ticket_number = ticket.get("ticket_number", "N/A")
-                            new_ticket.ticket_type = ticket.get("ticket_type", "N/A")
-                            new_ticket.ticket_date = ticket.get("ticket_date", "N/A")
+                            new_ticket.ticket_number = ticket.get("ticketnumber", "N/A")
+                            new_ticket.ticket_type = ticket.get("tickettype", "N/A")
+                            new_ticket.ticket_date = ticket.get("opendate", "N/A")
                             new_ticket.parent_event = lambda : self.change_screen(ticket)
                             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
                             print("ticket : ", ticket)
@@ -126,18 +129,20 @@ class TicketListScreen(Screen):
 
 
         # ✅ Create a new ticket
-        new_ticket = Ticket()
-        def open_ticket( ):
-            print("Ticket Clicked!")  # Debugging
-            self.change_screen({})
-        new_ticket.parent_event = open_ticket
+        # new_ticket = Ticket()
+        # def open_ticket( ):
+        #     print("Ticket Clicked!")  # Debugging
+        #     self.change_screen({})
+        # new_ticket.parent_event = open_ticket
 
-        # ✅ Insert at the first position
-        self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
+        # # ✅ Insert at the first position
+        # self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
         
         # self.open_google_maps(14.5995, 120.9842)
     
     def change_screen(self, ticket : dict):
+        transact_screen = self.manager.get_screen(HOME_SCREEN_TRANSACT_SCREEN)
+        transact_screen.ticket = ticket
         self.manager.transition.duration= 0.5
         self.manager.transition.direction = "left"
         self.manager.current = HOME_SCREEN_TRANSACT_SCREEN

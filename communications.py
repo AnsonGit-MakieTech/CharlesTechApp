@@ -252,7 +252,7 @@ class Communications:
             self.key_running.append(key)
 
             json_data = {
-                "action": "get_ticket_list"
+                "action": "grab_all_open_tickets"
             }
             url = self.server + "technical_center_api"
             headers = {
@@ -266,9 +266,8 @@ class Communications:
                 response = self.session.post(url, headers=headers, json=json_data)
                 if response.ok:
                     data = response.json()
-                    self.data[key] = {"result" : True, "message" : "" , "data" : data}
+                    self.data[key] = {"result" : True, "message" : "" , "data" : data.get('tickets',[])}
                 else:
-                    print(response.text)
                     self.data[key] = {"result" : False, "message" : ""}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}

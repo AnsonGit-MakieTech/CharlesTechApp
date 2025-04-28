@@ -485,7 +485,8 @@ class TicketTransactionScreeen(Screen):
     poc_uploader_layout_13 : POCUploaderLayout = ObjectProperty(None)
     poc_uploader_layout_14 : POCUploaderLayout = ObjectProperty(None)
 
-    ticket : dict = None
+    ticket : dict = {}
+    back_pressed_once = False
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -516,14 +517,14 @@ class TicketTransactionScreeen(Screen):
         else: 
             if not self.back_pressed_once:
                 self.back_pressed_once = True
-                toast("Press back again to exit")
+                if platform == 'android':
+                    toast("Press back again to exit") 
                 Clock.schedule_once(self.reset_back_state, 2)
                 return True
             else:
                 self.stop_app()
                 return True
-
-        return False  # allow default behavior otherwise
+ 
 
     def reset_back_state(self, dt):
         self.back_pressed_once = False
@@ -556,13 +557,14 @@ class TicketTransactionScreeen(Screen):
         return super().on_leave(*args)
     
     def on_enter(self, *args):
-        
+        self.back_pressed_once = False
         Animation(height=dp(-10), opacity = 0, duration=0.5).start(self.manager.parent.navigation_bar)
         Animation(opacity=1, duration=0.5).start(self)
 
         # self.poc_file_uploader_modal.open()
-        if self.ticket is None:
-            self.ticket = {} # Should be go to the previous screen
+        print("on_enter : Ticket Transact" , self.ticket)
+        if not self.ticket:
+            self.go_back()
 
         self.geolocation_step_layout.parent_event = self.geolocation_modal.open
         self.geolocation_modal.parent_event = self.geolocation_step_layout.update_location
