@@ -80,7 +80,7 @@
             Widget:
                 size_hint: 0.1 , 1
             Label:
-                text:'VGTJ9WZN'
+                text: root.ticket_number
                 size_hint: 0.45 , 1
                 text_size: self.size
                 valign: 'middle'
@@ -88,7 +88,7 @@
                 font_name: "roboto_extrabold"
                 color: chex("#F7EEDD")
             Label:
-                text: 'Installation'
+                text: root.ticket_type
                 size_hint: 0.45 , 1
                 text_size: self.size
                 valign: 'middle'
@@ -100,7 +100,7 @@
             size_hint: 1, 0.5
 
             Label:
-                text:'July 15, 2024 - 10:00 PM'
+                text: root.ticket_date
                 size_hint: 1 , 1
                 text_size: self.size
                 valign: 'middle'

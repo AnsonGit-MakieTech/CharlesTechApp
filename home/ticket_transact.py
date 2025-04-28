@@ -484,6 +484,8 @@ class TicketTransactionScreeen(Screen):
     poc_uploader_layout_12 : POCUploaderLayout = ObjectProperty(None)
     poc_uploader_layout_13 : POCUploaderLayout = ObjectProperty(None)
     poc_uploader_layout_14 : POCUploaderLayout = ObjectProperty(None)
+
+    ticket : dict = None
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -21,6 +21,9 @@ class Ticket(FloatLayout):
     
     background_image = StringProperty('')
     parent_event : callable = ObjectProperty(None)
+    ticket_number = StringProperty('S234HSFJD')
+    ticket_type = StringProperty('Installation')
+    ticket_date = StringProperty('Jan 23, 2023')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -74,8 +77,7 @@ class TicketListScreen(Screen):
         if len(self.tickets) == 0:
             self.refresh_callback()
     
-    def on_pre_leave(self, *args):
-        
+    def on_pre_leave(self, *args): 
         Animation(opacity=0, duration=0.5).start(self)
         return super().on_leave(*args)
 
@@ -99,22 +101,26 @@ class TicketListScreen(Screen):
             app.communications.get_ticket_list()
 
             def communication_event(*args):
-                data = app.communications.get_and_remove(key)
-
-                if data.get("result", False):
+                data = app.communications.get_and_remove(key) 
+                if data.get("result", None):
                     self.tickets = data.get("data", [])
                     if len(self.tickets) > 0:
                         self.ticket_list.clear_widgets()
                         for ticket in self.tickets:
                             new_ticket = Ticket()
+                            new_ticket.ticket_number = ticket.get("ticket_number", "N/A")
+                            new_ticket.ticket_type = ticket.get("ticket_type", "N/A")
+                            new_ticket.ticket_date = ticket.get("ticket_date", "N/A")
                             new_ticket.parent_event = lambda : self.change_screen(ticket)
                             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
                             print("ticket : ", ticket)
                             time.sleep(0.1)
                     return False
-                elif data.get("result", False) == False:
-                    print("Error : ", data.get("message", ""))
+                elif data.get("result", False) == False: 
                     return False
+                elif data.get("result", False) == None:
+                    return False
+                    
 
             Clock.schedule_interval(communication_event, 1)
 

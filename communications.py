@@ -281,11 +281,7 @@ class Communications:
         thread = threading.Thread(target=lambda: event(thread))
         self.threads.append(thread)
         thread.start()
-
-
-
-
-
+ 
     def get_user_tech_info(self):
         key = "GET_USER_TECH_INFO"
 
@@ -383,5 +379,5 @@ class Communications:
         thread.start()
 
 
-
+    
 
