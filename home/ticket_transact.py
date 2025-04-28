@@ -561,7 +561,8 @@ class TicketTransactionScreeen(Screen):
         Animation(opacity=1, duration=0.5).start(self)
 
         # self.poc_file_uploader_modal.open()
-
+        if self.ticket is None:
+            self.ticket = {} # Should be go to the previous screen
 
         self.geolocation_step_layout.parent_event = self.geolocation_modal.open
         self.geolocation_modal.parent_event = self.geolocation_step_layout.update_location
@@ -574,22 +575,32 @@ class TicketTransactionScreeen(Screen):
         
         # self.manager.proccess_layout.open() # Use it only if when proccessing a layout
         
-        self.account_name_info.setup(icon_image='account-box' , account_info="Tech Makie Catamora")
-        self.account_email.setup(icon_image='email' , account_info="techmakie@gmail.com")
+        self.account_name_info.setup(icon_image='account-box' , account_info=self.ticket.get( "name" , "N/A"))
+        self.account_email.setup(icon_image='email' , account_info=self.ticket.get( "email" ,"N/A"))
         
         def setup_location_1():
+            lat, lng = self.ticket.get("lat_1", 14.5995), self.ticket.get("lng_1", 120.9842)
+            self.open_google_maps(14.5995, 120.9842)
+
+        def setup_location_2():
+            lat, lng = self.ticket.get("lat_2", 14.5995), self.ticket.get("lng_2", 120.9842)
             self.open_google_maps(14.5995, 120.9842)
             
-        self.account_loc1.setup(icon_image='google-maps' , account_info="123 Main St, San Francisco, CA" , click_event=setup_location_1)
+        def setup_location_3():
+            lat, lng = self.ticket.get("lat_3", 14.5995), self.ticket.get("lng_3", 120.9842)
+            self.open_google_maps(14.5995, 120.9842)
+
+
+        self.account_loc1.setup(icon_image='google-maps' , account_info=self.ticket.get( "loc1", "N/A") , click_event=setup_location_1)
         
-        self.account_loc2.setup( account_info="456 Elm St, San Francisco, CA", click_event=setup_location_1)
+        self.account_loc2.setup( account_info=self.ticket.get( "loc2", "N/A"), click_event=setup_location_2)
         
-        self.account_loc3.setup( account_info="789 Oak St, San Francisco, CA", click_event=setup_location_1)
+        self.account_loc3.setup( account_info=self.ticket.get( "loc3", "N/A"), click_event=setup_location_3)
         
         
-        self.account_phone1.setup(icon_image='phone' , account_info="123-456-7890")
-        self.account_phone2.setup(account_info="987-654-3210")
-        self.account_phone3.setup(account_info="098-765-4321")
+        self.account_phone1.setup(icon_image='phone' , account_info=self.ticket.get( "phone1", "N/A"))
+        self.account_phone2.setup(account_info=self.ticket.get( "phone2", "N/A"))
+        self.account_phone3.setup(account_info= self.ticket.get( "phone3", "N/A"))
         
         self.back_text.on_press=self.go_back
             

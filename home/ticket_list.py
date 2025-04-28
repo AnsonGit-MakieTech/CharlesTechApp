@@ -126,14 +126,14 @@ class TicketListScreen(Screen):
 
 
         # ✅ Create a new ticket
-        # new_ticket = Ticket()
-        # def open_ticket( ):
-        #     print("Ticket Clicked!")  # Debugging
-        #     self.change_screen({})
-        # new_ticket.parent_event = open_ticket
+        new_ticket = Ticket()
+        def open_ticket( ):
+            print("Ticket Clicked!")  # Debugging
+            self.change_screen({})
+        new_ticket.parent_event = open_ticket
 
-        # # ✅ Insert at the first position
-        # self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
+        # ✅ Insert at the first position
+        self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
         
         # self.open_google_maps(14.5995, 120.9842)
     
