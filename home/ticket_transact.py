@@ -1,3 +1,4 @@
+from kivy.uix.accordion import DictProperty
 from kivymd.uix.chip.chip import MDIcon
 from kivy.uix.accordion import ListProperty
 from kivy.uix.accordion import BooleanProperty
@@ -30,7 +31,7 @@ from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
 from kivy_garden.mapview import MapView, MapSource
 from kivy.uix.image import Image
-from kivy.properties import ObjectProperty, NumericProperty
+from kivy.properties import ObjectProperty, NumericProperty, DictProperty
 
 from kivy.utils import get_color_from_hex as chex
 from kivy.core.clipboard import Clipboard
@@ -63,10 +64,21 @@ map_source = MapSource(
 
 class ForReviewLayout(MDBoxLayout):
     step_text : str = StringProperty('Step 5: Submit for Review') 
-    is_not_done : bool = BooleanProperty(True) 
+    is_not_done : bool = BooleanProperty(True)  
+    is_accessible : bool = BooleanProperty(False)
+
+    def display_none(self, *args):
+        self.is_accessible = False 
+
+        # Just fade out and make invisible
+        Animation(opacity=0, duration=0.3 ).start(self)
 
 
+    def display_block(self, *args):
+        self.is_accessible = True 
 
+        # Restore opacity
+        Animation(opacity=1, duration=0.3).start(self)
 
 
 
@@ -100,11 +112,25 @@ class POCUploaderLayout(MDBoxLayout):
     step_text : str = StringProperty('1. Costumer Proof Signature.')
     step_instruction : str = StringProperty("Instructions : Upload an image of the customer's signed proof of service completion.")
     add_poc_image_button : FloatLayout = ObjectProperty(None)
+    is_accessible : bool = BooleanProperty(False)
     
     def setup_poc_uploader_layout(self, step_text, step_instruction):
         self.step_text = step_text
         self.step_instruction = step_instruction
 
+
+    def display_none(self, *args):
+        self.is_accessible = False 
+
+        # Just fade out and make invisible
+        Animation(opacity=0, duration=0.3 , height=0).start(self)
+
+
+    def display_block(self, *args):
+        self.is_accessible = True 
+
+        # Restore opacity
+        Animation(opacity=1, duration=0.3, height=dp(self.original_height)).start(self)
 
 class POCFileUploaderModalView(ModalView):
     file_image_path : str = StringProperty('')
@@ -126,6 +152,15 @@ class POCLayout(MDBoxLayout):
     step_text : str = StringProperty('Step 4: Submit Proof of Completion')
 
 
+
+    def display_none(self, *args):
+        # Just fade out and make invisible
+        Animation(opacity=0, duration=0.3 ).start(self)
+
+
+    def display_block(self, *args):
+        # Restore opacity
+        Animation(opacity=1, duration=0.3 ).start(self)
 
 
 
@@ -365,7 +400,26 @@ class GeolocationStepLayout(MDBoxLayout):
 class Step1Layout(MDBoxLayout):
     old_account : bool = BooleanProperty(False)
     is_not_done : bool = BooleanProperty(True)
+    
+    parent_event : object = ObjectProperty(None)
+    next_step_button : Button = ObjectProperty(None)
+    
+    def on_touch_down(self, touch):
+        if self.next_step_button and self.next_step_button.collide_point(*touch.pos): 
+            # You can manually call its on_release or do any action
+            if self.parent_event:
+                self.parent_event()
+            # self.next_step_button.dispatch('on_release')  # Optional: simulate normal click
+            return True  # Stop the touch here if needed (so it doesn't pass through)
 
+        return super().on_touch_down(touch)
+
+        
+    def close(self):
+        pass
+
+    def open(self):
+        pass
 
 
 
@@ -475,7 +529,7 @@ class TicketTransactionScreeen(Screen):
     fiber_connection_step_layout : FiberConnectionStepLayout = ObjectProperty(None)
     poc_layout : POCLayout = ObjectProperty(None)
 
-    
+    step1_layout : Step1Layout = ObjectProperty(None)
     poc_uploader_layout_1 : POCUploaderLayout = ObjectProperty(None)
     poc_uploader_layout_2 : POCUploaderLayout = ObjectProperty(None)
     poc_uploader_layout_3 : POCUploaderLayout = ObjectProperty(None)
@@ -490,8 +544,9 @@ class TicketTransactionScreeen(Screen):
     poc_uploader_layout_12 : POCUploaderLayout = ObjectProperty(None)
     poc_uploader_layout_13 : POCUploaderLayout = ObjectProperty(None)
     poc_uploader_layout_14 : POCUploaderLayout = ObjectProperty(None)
+    for_review_layout : ForReviewLayout = ObjectProperty(None)
 
-    ticket : dict = {}
+    ticket : dict = DictProperty({})
     back_pressed_once = False
     
     def __init__(self, **kwargs):
@@ -516,6 +571,8 @@ class TicketTransactionScreeen(Screen):
         if key != 27:
             return False
 
+        if self.manager.proccess_layout.is_open:
+            return True
 
         if self.manager.current == HOME_SCREEN_TRANSACT_SCREEN:
             self.go_back()
@@ -630,9 +687,15 @@ class TicketTransactionScreeen(Screen):
         
         self.account_name.setup_image()  # ✅ Set the background image path before adding widgets
         
+
+        self.display_by_step(self.ticket.get("step", 1))
         
         return super().on_enter(*args)
     
+
+
+
+
     def go_back(self, *args): 
         self.manager.transition.duration= 0.5
         self.manager.transition.direction = "right"
@@ -704,4 +767,57 @@ class TicketTransactionScreeen(Screen):
         )
         
         
+    
+    def display_by_step(self , step : int):
+        if step == 1:
+            self.step1_layout.is_not_done = True
+            self.step1_layout.parent_event = self.next_step_1
+            self.geolocation_step_layout.display_none()
+            self.fiber_connection_step_layout.display_none()
+            self.poc_layout.display_none()
+            self.poc_uploader_layout_1.display_none()
+            self.poc_uploader_layout_2.display_none()
+            self.poc_uploader_layout_3.display_none()
+            self.poc_uploader_layout_4.display_none()
+            self.poc_uploader_layout_5.display_none()
+            self.poc_uploader_layout_6.display_none()
+            self.poc_uploader_layout_7.display_none()
+            self.poc_uploader_layout_8.display_none()
+            self.poc_uploader_layout_9.display_none()
+            self.poc_uploader_layout_10.display_none()
+            self.poc_uploader_layout_11.display_none()
+            self.poc_uploader_layout_12.display_none()
+            self.poc_uploader_layout_13.display_none()
+            self.poc_uploader_layout_14.display_none()
+            self.for_review_layout.display_none()
+            print("step 1")
+        elif step == 2:
+            self.step2_layout.is_not_done = False
+            self.geolocation_step_layout.display_block()
+            self.fiber_connection_step_layout.display_none()
         
+
+
+    def next_step_1(self):
+        key = "TICKET_NEXT_STEP"
+        print("next step 1", key)
+        app = MDApp.get_running_app()
+        if key in app.communications.key_running:
+            return 
+        self.manager.proccess_layout.open() 
+        app.communications.ticket_next_step(ticket_id=self.ticket.get('ticket_id'))
+        def communication_event(*args):
+            data = app.communications.get_and_remove(key) 
+            print("data : ", data)
+            if data.get("result", None): 
+                self.manager.proccess_layout.display_success(data.get("message"))
+                return False
+            elif data.get("result", False) == False: 
+                self.manager.proccess_layout.display_error(data.get("message"))
+                return False
+            elif data.get("result", False) == None:
+                self.manager.proccess_layout.display_error(data.get("message"))
+                return False
+                
+
+        Clock.schedule_interval(communication_event, 1)

@@ -27,6 +27,7 @@
     fiber_connection_step_layout : fiber_connection_step_layout
     poc_layout : poc_layout
 
+    step1_layout : step1_layout
     poc_uploader_layout_1 : poc_uploader_layout_1
     poc_uploader_layout_2 : poc_uploader_layout_2
     poc_uploader_layout_3 : poc_uploader_layout_3
@@ -207,6 +208,7 @@
                 
                 
                 Step1Layout:
+                    id: step1_layout
                         
 
                 GeolocationStepLayout:
@@ -562,7 +564,7 @@
             height: sp(25)
             font_size: sp(12)
             color: chex("#F7EEDD")
-            opacity: 0.5 if root.is_not_done else 1
+            opacity: 0.5 if root.is_accessible else 1
             canvas.before:
                 Color:
                     rgba: chex("#5CBA45")
@@ -664,14 +666,6 @@
     source: root.image_path
     allow_stretch: True
     keep_ratio: True
-
-
-
-
-
-
-
-
 
 
 
@@ -1601,6 +1595,8 @@
     adaptive_height: True
     padding: ( 0 , dp(20), 0, 0)
 
+    next_step_button : next_step_button
+
     BoxLayout:
         orientation:'horizontal'
         size_hint: 1, None
@@ -1628,7 +1624,7 @@
     MDBoxLayout:
         orientation: 'vertical'
         adaptive_height: True 
-        padding: (dp(40), dp(10) , dp(20), 0)
+        padding: (dp(40), dp(10) , dp(20), dp(10))
         spacing:dp(10)
         
         Label:
@@ -1679,20 +1675,23 @@
             color: chex("#014367")
 
 
-    MDBoxLayout:
-        orientation: 'horizontal'
+    AnchorLayout:
+        anchor_x: 'right'
+        anchor_y: 'center'
+        padding: (0, 0, dp(10), 0) 
+        size_hint: (1, None)
         adaptive_height: True
-        padding: (0 , dp(20) , dp(20), 0)
 
-        Widget:
-    
+        # Widget:
+
         Button:
+            id: next_step_button
             text: "NEXT STEP" if root.old_account else "ACTIVATE ACCOUNT"
+            size_hint: None, None
+            height: dp(33)
+            width: dp(130)
+            background_color: (0, 0, 0, 0)
             font_name: "roboto_semibold"
-            size_hint: None , None
-            background_color: (0, 0 , 0, 0)
-            width: sp(130) 
-            height: sp(25)
             font_size: sp(12)
             color: chex("#F7EEDD")
             canvas.before:
@@ -1702,6 +1701,7 @@
                     pos: self.pos
                     size: self.size
                     radius: [4]
+
 
 
 

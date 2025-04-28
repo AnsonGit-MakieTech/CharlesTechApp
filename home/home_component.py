@@ -1,4 +1,4 @@
-from kivy.uix.accordion import ObjectProperty
+from kivy.uix.accordion import ObjectProperty, BooleanProperty
 
 from kivy.uix.scrollview import ScrollView 
 from kivy.effects.dampedscroll import DampedScrollEffect
@@ -145,6 +145,7 @@ class ProcessingLayout(ModalView):
     
     spinner : CustomSpinner = ObjectProperty(None)
     proccess_text : str = StringProperty('')
+    is_open : bool = BooleanProperty(False)
     
     def on_pre_open(self):
         self.auto_dismiss = False
@@ -155,6 +156,7 @@ class ProcessingLayout(ModalView):
         self.auto_dismiss = False
         self.spinner.start_spinner()
         self.proccess_text = "Please wait while we complete the process. Do not close the application until it is finished."
+        self.is_open = True
         
         # Clock.schedule_once(self.display_success , 2)
         
@@ -164,13 +166,14 @@ class ProcessingLayout(ModalView):
         self.spinner.stop_success_spinner()
         self.proccess_text = "Process completed successfully!" if not message else message
         Clock.schedule_once(self.dismiss, 2) 
+        self.is_open = False
     
     def display_error(self, message = None):
         self.spinner.stop_error_spinner()
         self.proccess_text = "An error occurred while processing the data." if not message else message
         self.auto_dismiss = True
+        self.is_open = False
     
-
 
         
         

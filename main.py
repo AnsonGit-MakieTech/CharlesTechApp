@@ -22,6 +22,8 @@ if platform == "android":
 if platform == "ios":
     pass
 
+from kivy.core.window import Window
+Window.show_cursor = True
 
 
 # Set Window Size Before App Starts if platform is 

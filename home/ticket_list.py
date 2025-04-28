@@ -113,12 +113,18 @@ class TicketListScreen(Screen):
                     self.tickets = data.get("data", [])
                     if len(self.tickets) > 0:
                         self.ticket_list.clear_widgets()
-
+                        
                         for ticket in self.tickets:
                             new_ticket = Ticket()
-                            new_ticket.ticket_number = ticket.get("ticketnumber", "N/A")
-                            new_ticket.ticket_type = ticket.get("tickettype", "N/A")
-                            new_ticket.ticket_date = ticket.get("ticket_open_date", "N/A")
+                            try:
+                                new_ticket.ticket_number = ticket.get("ticketnumber", "N/A")
+                                new_ticket.ticket_type = ticket.get("tickettype", "N/A")
+                                new_ticket.ticket_date = ticket.get("ticket_open_date", "N/A")
+                            except Exception as e:
+                                print("Error : ", e)
+                                new_ticket.ticket_number = "N/A"
+                                new_ticket.ticket_type = "N/A"
+                                new_ticket.ticket_date = "N/A"
 
                             new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
                             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
