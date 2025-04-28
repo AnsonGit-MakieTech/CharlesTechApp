@@ -1,6 +1,13 @@
 
 
 
+data = {
+    'text' : 'fdsfds',
+    'data' : {}
+}
+
+for i in range(10):
+    data['data'][i] = {}
 
 
 import requests

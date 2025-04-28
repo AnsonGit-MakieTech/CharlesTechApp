@@ -102,7 +102,7 @@ class CustomSpinner(Image):
         # Update the image to success icon
         parent_dir = os.path.dirname(os.path.dirname(__file__)) 
         self.source = os.path.join(parent_dir, 'assets', 'checked_success.png')
-        
+        self.angle = 0 
         # Animate grow and fade out sequentially
         anim = (
             Animation(size_hint_x=0.5, size_hint_y=0.5, duration=0.5, t='out_back') 

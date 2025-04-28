@@ -352,6 +352,7 @@ class GeolocationStepLayout(MDBoxLayout):
     original_height = NumericProperty(320)
 
     parent_event : object = ObjectProperty(None)
+    procced_event : object = ObjectProperty(None)
 
 
     def __init__(self, **kwargs):
@@ -370,16 +371,30 @@ class GeolocationStepLayout(MDBoxLayout):
     def display_block(self, *args):
         self.is_accessible = True
         self.next_step_button.disabled = False
-        self.set_location_button.disabled = False
+        self.set_location_button.disabled = False 
 
         # Restore opacity
         Animation(opacity=1, duration=0.3, height=dp(self.original_height)).start(self)
 
+    def is_okey_to_proceed(self, *args):
+        if not self.is_accessible:
+            return False
+        if not self.latitude or not self.longitude:
+            return False
+        if self.latitude == '0' or self.longitude == '0':
+            return False
+        
+        return True
 
     def update_location(self, lat_data, lon_data):
         self.longitude = str(lon_data)
         self.latitude = str(lat_data)
- 
+    
+    def get_data(self):
+        if self.latitude and self.longitude:
+            return float(self.latitude), float(self.longitude)
+        else:
+            return None
      
 
     def on_touch_down(self, touch):
@@ -548,6 +563,7 @@ class TicketTransactionScreeen(Screen):
 
     ticket : dict = DictProperty({})
     back_pressed_once = False
+    has_changed_data : bool = BooleanProperty(False)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -792,9 +808,27 @@ class TicketTransactionScreeen(Screen):
             self.for_review_layout.display_none()
             print("step 1")
         elif step == 2:
-            self.step2_layout.is_not_done = False
+            self.step1_layout.is_not_done = False
+            self.step1_layout.parent_event = lambda : None
             self.geolocation_step_layout.display_block()
+            self.geolocation_step_layout.procced_event = self.next_step_2
             self.fiber_connection_step_layout.display_none()
+            self.poc_layout.display_none()
+            self.poc_uploader_layout_1.display_none()
+            self.poc_uploader_layout_2.display_none()
+            self.poc_uploader_layout_3.display_none()
+            self.poc_uploader_layout_4.display_none()
+            self.poc_uploader_layout_5.display_none()
+            self.poc_uploader_layout_6.display_none()
+            self.poc_uploader_layout_7.display_none()
+            self.poc_uploader_layout_8.display_none()
+            self.poc_uploader_layout_9.display_none()
+            self.poc_uploader_layout_10.display_none()
+            self.poc_uploader_layout_11.display_none()
+            self.poc_uploader_layout_12.display_none()
+            self.poc_uploader_layout_13.display_none()
+            self.poc_uploader_layout_14.display_none()
+            self.for_review_layout.display_none()
         
 
 
@@ -805,12 +839,14 @@ class TicketTransactionScreeen(Screen):
         if key in app.communications.key_running:
             return 
         self.manager.proccess_layout.open() 
-        app.communications.ticket_next_step(ticket_id=self.ticket.get('ticket_id'))
+        app.communications.ticket_next_step({"ticket_id" : self.ticket.get('ticket_id')})
         def communication_event(*args):
             data = app.communications.get_and_remove(key) 
             print("data : ", data)
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
+                self.has_changed_data = True
+                self.display_by_step(2)
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
@@ -821,3 +857,38 @@ class TicketTransactionScreeen(Screen):
                 
 
         Clock.schedule_interval(communication_event, 1)
+
+
+
+    def next_step_2(self, geo_map):
+        key = "TICKET_NEXT_STEP"
+        print("next step 1", key)
+        app = MDApp.get_running_app()
+        if key in app.communications.key_running:
+            return 
+        if geo_map is None: 
+            return
+        self.manager.proccess_layout.open() 
+        app.communications.ticket_next_step({
+            "ticket_id" : self.ticket.get('ticket_id'),
+            "geo_map" : geo_map
+            })
+        def communication_event(*args):
+            
+            data = app.communications.get_and_remove(key) 
+            print("data : ", data)
+            if data.get("result", None): 
+                self.manager.proccess_layout.display_success(data.get("message"))
+                self.has_changed_data = True
+                self.display_by_step(3)
+                return False
+            elif data.get("result", False) == False: 
+                self.manager.proccess_layout.display_error(data.get("message"))
+                return False
+            elif data.get("result", False) == None:
+                self.manager.proccess_layout.display_error(data.get("message"))
+                return False
+                
+
+        Clock.schedule_interval(communication_event, 1)
+

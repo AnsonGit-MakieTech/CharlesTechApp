@@ -1,3 +1,4 @@
+from kivy.uix.accordion import DictProperty
 from kivy.uix.screenmanager import Screen
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from kivy.metrics import dp,sp 
@@ -68,7 +69,7 @@ class TicketListScreen(Screen):
     refresh_layout : CustomScrollView = ObjectProperty(None)
     ticket_list : MDGridLayout = ObjectProperty(None)
 
-    tickets : list[dict] = []
+    tickets : dict = DictProperty({})
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -82,7 +83,14 @@ class TicketListScreen(Screen):
 
         if len(self.tickets) == 0:
             self.refresh_callback()
-    
+        
+        transact_screen = self.manager.get_screen(HOME_SCREEN_TRANSACT_SCREEN)
+        if transact_screen.has_changed_data:
+            self.refresh_callback()
+            transact_screen.has_changed_data = False
+        
+        return super().on_enter(*args)
+
     def on_pre_leave(self, *args): 
         Animation(opacity=0, duration=0.5).start(self)
         return super().on_leave(*args)
@@ -110,11 +118,11 @@ class TicketListScreen(Screen):
                 data = app.communications.get_and_remove(key) 
                 print("data : ", data)
                 if data.get("result", None):
-                    self.tickets = data.get("data", [])
+                    self.tickets = data.get("data", {})
                     if len(self.tickets) > 0:
                         self.ticket_list.clear_widgets()
                         
-                        for ticket in self.tickets:
+                        for tkey , ticket in self.tickets.items():
                             new_ticket = Ticket()
                             try:
                                 new_ticket.ticket_number = ticket.get("ticketnumber", "N/A")

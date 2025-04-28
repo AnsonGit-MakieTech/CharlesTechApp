@@ -1371,6 +1371,8 @@
                             pos: self.pos
                             size: self.size
                             radius: [4]
+                    on_release:
+                        root.dismiss()
 
 
 
@@ -1580,6 +1582,9 @@
             height: sp(25)
             font_size: sp(12)
             color: chex("#F7EEDD")
+            opacity: 1 if root.longitude != '0' and root.latitude != '0' else 0.5
+            on_release:
+                root.procced_event(geo_map = root.get_data()) if root.is_okey_to_proceed() else None
             canvas.before:
                 Color:
                     rgba: chex("#5CBA45")
@@ -1694,6 +1699,7 @@
             font_name: "roboto_semibold"
             font_size: sp(12)
             color: chex("#F7EEDD")
+            opacity: 1 if root.is_not_done else 0.5
             canvas.before:
                 Color:
                     rgba: chex("#5CBA45")

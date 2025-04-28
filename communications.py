@@ -383,21 +383,19 @@ class Communications:
         thread.start()
 
 
-    def ticket_next_step(self, ticket_id = None):
+    def ticket_next_step(self, data = dict):
         key = "TICKET_NEXT_STEP"
-        if not ticket_id:
-            return
-
-        def event(self_thread):
+        def event(self_thread , data):
             while self.has_thread_running:
                 time.sleep(0.5)
             self.has_thread_running = True
             self.key_running.append(key)
 
             json_data = {
-                "action": "ticket_next_step",
-                "ticket_id": ticket_id
+                "action": "ticket_next_step"
             }
+            for dkey in data:
+                json_data[dkey] = data[dkey]
             url = self.server + "technical_center_api"
             headers = {
                 "Content-Type": "application/json",
@@ -412,7 +410,7 @@ class Communications:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : data.get("text", "Successfully processed") }
                 else:
-                    self.data[key] = {"result" : False, "message" : "There is a problem in the server"}
+                    self.data[key] = {"result" : False, "message" : data.get("text" ,"There is a problem in the server")}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : "Please Check Your Internet Connection"}
             self.has_thread_running = False
@@ -421,7 +419,7 @@ class Communications:
                 self.threads.remove(self_thread)
 
         
-        thread = threading.Thread(target=lambda: event(thread))
+        thread = threading.Thread(target=lambda: event(thread, data))
         self.threads.append(thread)
         thread.start()
 
