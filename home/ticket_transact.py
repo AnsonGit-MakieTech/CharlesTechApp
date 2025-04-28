@@ -399,8 +399,9 @@ class AccountInfoLayout(MDBoxLayout):
     click_event : object = ObjectProperty(None)
     
     info_label : BoxLayout = ObjectProperty(None)
+    info_color : str = StringProperty('')
     
-    def setup(self, icon_image = None, account_info = None , click_event = None):
+    def setup(self, icon_image = None, account_info = None , click_event = None, color = None):
         if (icon_image):
             self.icon_image = icon_image
         if (account_info): 
@@ -416,9 +417,12 @@ class AccountInfoLayout(MDBoxLayout):
                 account_info = f"[u]{account_info}[/u]"
                 
             self.account_info = account_info
+        if (color):
+            self.info_color = color
 
 class AccountNumberNameLayout(BoxLayout):
     account_image : str = StringProperty('')
+    ticket_number : str = StringProperty('')
 
     def setup_image(self, account_image = None): 
         # ✅ Set the background image path BEFORE adding widgets
@@ -453,7 +457,9 @@ class TicketTransactionScreeen(Screen):
     account_loc3 : AccountInfoLayout = ObjectProperty(None)
     account_phone1 : AccountInfoLayout = ObjectProperty(None)
     account_phone2 : AccountInfoLayout = ObjectProperty(None)
-    account_phone3 : AccountInfoLayout = ObjectProperty(None)
+    account_phone3 : AccountInfoLayout = ObjectProperty(None) 
+    state_widget : AccountInfoLayout = ObjectProperty(None)
+    details_widget : AccountInfoLayout = ObjectProperty(None)
     
     remarks_input : RemarksInputLayout = ObjectProperty(None)
     remarks_list : RemarksListViewer = ObjectProperty(None)
@@ -576,10 +582,10 @@ class TicketTransactionScreeen(Screen):
  
         
         # self.manager.proccess_layout.open() # Use it only if when proccessing a layout
-        
-        self.account_name_info.setup(icon_image='account-box' , account_info=self.ticket.get( "name" , "N/A"))
+        self.account_name.ticket_number = self.ticket.get("ticketnumber", "N/A")
+        self.account_name_info.setup(icon_image='account-box' , account_info=self.ticket.get( "client_name" , "N/A"))
         self.account_email.setup(icon_image='email' , account_info=self.ticket.get( "email" ,"N/A"))
-        
+
         def setup_location_1():
             lat, lng = self.ticket.get("lat_1", 14.5995), self.ticket.get("lng_1", 120.9842)
             self.open_google_maps(14.5995, 120.9842)
@@ -593,16 +599,22 @@ class TicketTransactionScreeen(Screen):
             self.open_google_maps(14.5995, 120.9842)
 
 
-        self.account_loc1.setup(icon_image='google-maps' , account_info=self.ticket.get( "loc1", "N/A") , click_event=setup_location_1)
+        self.account_loc1.setup(icon_image='google-maps' , account_info=self.ticket.get( "address", "N/A") , click_event=setup_location_1)
         
-        self.account_loc2.setup( account_info=self.ticket.get( "loc2", "N/A"), click_event=setup_location_2)
+        self.account_loc2.setup( account_info=self.ticket.get( "address2", "N/A"), click_event=setup_location_2)
         
-        self.account_loc3.setup( account_info=self.ticket.get( "loc3", "N/A"), click_event=setup_location_3)
+        self.account_loc3.setup( account_info=self.ticket.get( "address3", "N/A"), click_event=setup_location_3)
         
-        
-        self.account_phone1.setup(icon_image='phone' , account_info=self.ticket.get( "phone1", "N/A"))
+        self.account_phone1.setup(icon_image='phone' , account_info=self.ticket.get( "primary_contact", "N/A"))
         self.account_phone2.setup(account_info=self.ticket.get( "phone2", "N/A"))
         self.account_phone3.setup(account_info= self.ticket.get( "phone3", "N/A"))
+
+        self.state_widget.setup(
+            icon_image='alert-circle-check' if self.ticket.get( "state", "N/A") == "Normal" else 'alert-octagram' ,
+            account_info= "Normal" if self.ticket.get( "state", "N/A") == "Normal" else self.ticket.get( "state", "N/A"),
+            color= '#5CBA45' if self.ticket.get( "state", "N/A") == "Normal" else '#B71E1E'
+            )
+        self.details_widget.setup(icon_image='information' , account_info=self.ticket.get( "detail", "N/A"))
         
         self.back_text.on_press=self.go_back
             

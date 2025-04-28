@@ -42,6 +42,8 @@
     poc_uploader_layout_13 : poc_uploader_layout_13
     poc_uploader_layout_14 : poc_uploader_layout_14
     for_review_layout : for_review_layout
+    state_widget : state_widget
+    details_widget : details_widget
 
     BoxLayout:
         id:main_parent
@@ -127,6 +129,13 @@
                     id: account_phone2
                 AccountInfoLayout:
                     id: account_phone3
+                AccountInfoLayout:
+                    id: account_phone3
+                AccountInfoLayout:
+                    id: state_widget
+                AccountInfoLayout:
+                    id: details_widget
+                
 
                 Widget:
                     size_hint: 1, None
@@ -1955,9 +1964,9 @@
         height: self.texture_size[1]
         valign: 'top'
         halign: 'left'
-        font_name: 'roboto_light'
+        font_name: 'roboto_light' if root.info_color == '' else 'roboto_extrabold'
         font_size: sp(15)
-        color: chex("#014367")
+        color: chex("#014367") if root.info_color == '' else chex(root.info_color)
         pos_hint: {'top': 0.9}
         markup: True
         
@@ -1995,7 +2004,7 @@
             color: chex("#000000")
 
         Label:
-            text:'64773198'
+            text:root.ticket_number
             size_hint: 1 , 0.7
             font_name: 'roboto_extrabold'
             font_size: sp(30)

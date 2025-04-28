@@ -17,6 +17,7 @@ from variables import *
 from .home_component import *
 
 import time
+import uuid
 
 
 class Ticket(FloatLayout):
@@ -25,7 +26,8 @@ class Ticket(FloatLayout):
     parent_event : callable = ObjectProperty(None)
     ticket_number = StringProperty('S234HSFJD')
     ticket_type = StringProperty('Installation')
-    ticket_date = StringProperty('Jan 23, 2023')
+    ticket_date = StringProperty('Jan 23, 2023') 
+    ticket_id = StringProperty('')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -33,6 +35,7 @@ class Ticket(FloatLayout):
         # ✅ Set the background image path BEFORE adding widgets
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.background_image = os.path.join(parent_dir, 'assets', 'ticket_background.png') 
+        self.ticket_id = str(uuid.uuid4())
 
     def on_parent(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
@@ -43,6 +46,7 @@ class Ticket(FloatLayout):
         if self.collide_point(*touch.pos):
             print("🎟️ Ticket Clicked!")  # Debugging
             if self.parent_event:
+                print("Ticket id: ", self.ticket_id)
                 self.parent_event()
             return True
         return super().on_touch_down(touch)
@@ -109,12 +113,14 @@ class TicketListScreen(Screen):
                     self.tickets = data.get("data", [])
                     if len(self.tickets) > 0:
                         self.ticket_list.clear_widgets()
+
                         for ticket in self.tickets:
                             new_ticket = Ticket()
                             new_ticket.ticket_number = ticket.get("ticketnumber", "N/A")
                             new_ticket.ticket_type = ticket.get("tickettype", "N/A")
-                            new_ticket.ticket_date = ticket.get("opendate", "N/A")
-                            new_ticket.parent_event = lambda : self.change_screen(ticket)
+                            new_ticket.ticket_date = ticket.get("ticket_open_date", "N/A")
+
+                            new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
                             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
                             print("ticket : ", ticket)
                             time.sleep(0.1)
@@ -141,6 +147,7 @@ class TicketListScreen(Screen):
         # self.open_google_maps(14.5995, 120.9842)
     
     def change_screen(self, ticket : dict):
+        # print("ticket_index : ", ticket_index)
         transact_screen = self.manager.get_screen(HOME_SCREEN_TRANSACT_SCREEN)
         transact_screen.ticket = ticket
         self.manager.transition.duration= 0.5
