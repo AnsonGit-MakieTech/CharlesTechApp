@@ -76,13 +76,19 @@ class AccountScreen(Screen):
             else:
                 image = None
 
-            app.communications.update_user_tech_info(email = email , phone = phone , profile = image)
             self.manager.proccess_layout.open() 
+            app.communications.update_user_tech_info(email = email , phone = phone , profile = image)
             def communication_event(*args):
                 data = app.communications.get_and_remove(key)
                 if data:
                     if data.get("result", False): 
                         self.manager.proccess_layout.display_success("User tech info updated successfully")
+                        if image:
+                            self.no_image_path = image
+                        if email:
+                            self.email_editor.text = email
+                        if phone:
+                            self.phone_number_editor.text = phone
                     else:
                         self.manager.proccess_layout.display_error("Failed to update user tech info")
 
