@@ -1104,6 +1104,7 @@
             height: sp(25)
             font_size: sp(12)
             color: chex("#F7EEDD")
+            opacity: 1 if root.is_not_done else 0.5
             canvas.before:
                 Color:
                     rgba: chex("#014367")
@@ -1112,7 +1113,7 @@
                     size: self.size
                     radius: [4]
             on_release:
-                root.parent_event() if root.parent_event else None
+                root.parent_event() if root.parent_event and root.is_not_done else None
 
     
         Button:
@@ -1561,6 +1562,7 @@
             height: sp(25)
             font_size: sp(12)
             color: chex("#F7EEDD")
+            opacity: 1 if root.is_not_done else 0.5
             canvas.before:
                 Color:
                     rgba: chex("#014367")
@@ -1569,7 +1571,7 @@
                     size: self.size
                     radius: [4]
             on_release:
-                root.parent_event() if root.parent_event else None
+                root.parent_event() if root.parent_event and root.is_not_done else None
 
     
         Button:

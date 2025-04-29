@@ -704,7 +704,8 @@ class TicketTransactionScreeen(Screen):
         self.account_name.setup_image()  # ✅ Set the background image path before adding widgets
         
 
-        self.display_by_step(self.ticket.get("step", 1))
+        # self.display_by_step(self.ticket.get("step", 1))
+        self.display_by_step(4)
         
         return super().on_enter(*args)
     
@@ -829,6 +830,55 @@ class TicketTransactionScreeen(Screen):
             self.poc_uploader_layout_13.display_none()
             self.poc_uploader_layout_14.display_none()
             self.for_review_layout.display_none()
+        elif step == 3:
+            self.step1_layout.is_not_done = False
+            self.step1_layout.parent_event = lambda : None
+            self.geolocation_step_layout.display_block()
+            self.geolocation_step_layout.procced_event = lambda : None
+            self.geolocation_step_layout.is_not_done = False
+            self.fiber_connection_step_layout.display_block()
+            self.fiber_connection_step_layout.procced_event = self.next_step_3
+            self.poc_layout.display_none()
+            self.poc_uploader_layout_1.display_none()
+            self.poc_uploader_layout_2.display_none()
+            self.poc_uploader_layout_3.display_none()
+            self.poc_uploader_layout_4.display_none()
+            self.poc_uploader_layout_5.display_none()
+            self.poc_uploader_layout_6.display_none()
+            self.poc_uploader_layout_7.display_none()
+            self.poc_uploader_layout_8.display_none()
+            self.poc_uploader_layout_9.display_none()
+            self.poc_uploader_layout_10.display_none()
+            self.poc_uploader_layout_11.display_none()
+            self.poc_uploader_layout_12.display_none()
+            self.poc_uploader_layout_13.display_none()
+            self.poc_uploader_layout_14.display_none()
+            self.for_review_layout.display_none()
+        elif step == 4:
+            self.step1_layout.is_not_done = False
+            self.step1_layout.parent_event = lambda : None
+            self.geolocation_step_layout.display_block()
+            self.geolocation_step_layout.procced_event = lambda : None
+            self.geolocation_step_layout.is_not_done = False
+            self.fiber_connection_step_layout.display_block()
+            self.fiber_connection_step_layout.procced_event = lambda : None
+            self.fiber_connection_step_layout.is_not_done = False
+            self.poc_layout.display_block()
+            self.poc_uploader_layout_1.display_block()
+            self.poc_uploader_layout_2.display_block()
+            self.poc_uploader_layout_3.display_block()
+            self.poc_uploader_layout_4.display_block()
+            self.poc_uploader_layout_5.display_block()
+            self.poc_uploader_layout_6.display_block()
+            self.poc_uploader_layout_7.display_block()
+            self.poc_uploader_layout_8.display_block()
+            self.poc_uploader_layout_9.display_block()
+            self.poc_uploader_layout_10.display_block()
+            self.poc_uploader_layout_11.display_block()
+            self.poc_uploader_layout_12.display_block()
+            self.poc_uploader_layout_13.display_block()
+            self.poc_uploader_layout_14.display_block()
+            self.for_review_layout.display_none()
         
 
 
@@ -892,3 +942,36 @@ class TicketTransactionScreeen(Screen):
 
         Clock.schedule_interval(communication_event, 1)
 
+
+    def next_step_3(self, rx , tx):
+        key = "TICKET_NEXT_STEP"
+        print("next step 1", key)
+        app = MDApp.get_running_app()
+        if key in app.communications.key_running:
+            return 
+        if rx is None or tx is None:
+            return
+        self.manager.proccess_layout.open() 
+        app.communications.ticket_next_step({
+            "ticket_id" : self.ticket.get('ticket_id'),
+            "rx" : rx,
+            "tx" : tx
+            })
+        def communication_event(*args):
+            
+            data = app.communications.get_and_remove(key) 
+            print("data : ", data)
+            if data.get("result", None): 
+                self.manager.proccess_layout.display_success(data.get("message"))
+                self.has_changed_data = True
+                self.display_by_step(4)
+                return False
+            elif data.get("result", False) == False: 
+                self.manager.proccess_layout.display_error(data.get("message"))
+                return False
+            elif data.get("result", False) == None:
+                self.manager.proccess_layout.display_error(data.get("message"))
+                return False
+                
+
+        Clock.schedule_interval(communication_event, 1)
