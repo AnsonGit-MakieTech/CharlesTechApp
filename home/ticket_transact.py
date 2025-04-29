@@ -988,6 +988,47 @@ class TicketTransactionScreeen(Screen):
             self.poc_uploader_layout_14.parent_event = self.update_image_data
             self.for_review_layout.display_block()
             self.for_review_layout.procced_event = self.next_step_4
+        elif step == 5:
+            self.step1_layout.is_not_done = False
+            self.step1_layout.parent_event = lambda : None
+            self.geolocation_step_layout.display_block()
+            self.geolocation_step_layout.procced_event = lambda : None
+            self.geolocation_step_layout.is_not_done = False
+            self.fiber_connection_step_layout.display_block()
+            self.fiber_connection_step_layout.procced_event = lambda : None
+            self.fiber_connection_step_layout.is_not_done = False
+            self.poc_layout.display_block()
+            self.poc_uploader_layout_1.display_block()
+            self.poc_uploader_layout_1.parent_event = lambda : None
+            self.poc_uploader_layout_2.display_block()
+            self.poc_uploader_layout_2.parent_event = lambda : None
+            self.poc_uploader_layout_3.display_block()
+            self.poc_uploader_layout_3.parent_event = lambda : None
+            self.poc_uploader_layout_4.display_block()
+            self.poc_uploader_layout_4.parent_event = lambda : None
+            self.poc_uploader_layout_5.display_block()
+            self.poc_uploader_layout_5.parent_event = lambda : None
+            self.poc_uploader_layout_6.display_block()
+            self.poc_uploader_layout_6.parent_event = lambda : None
+            self.poc_uploader_layout_7.display_block()
+            self.poc_uploader_layout_7.parent_event = lambda : None
+            self.poc_uploader_layout_8.display_block()
+            self.poc_uploader_layout_8.parent_event = lambda : None
+            self.poc_uploader_layout_9.display_block()
+            self.poc_uploader_layout_9.parent_event = lambda : None
+            self.poc_uploader_layout_10.display_block()
+            self.poc_uploader_layout_10.parent_event = lambda : None
+            self.poc_uploader_layout_11.display_block()
+            self.poc_uploader_layout_11.parent_event = lambda : None
+            self.poc_uploader_layout_12.display_block()
+            self.poc_uploader_layout_12.parent_event = lambda : None
+            self.poc_uploader_layout_13.display_block()
+            self.poc_uploader_layout_13.parent_event = lambda : None
+            self.poc_uploader_layout_14.display_block()
+            self.poc_uploader_layout_14.parent_event = lambda : None
+            self.for_review_layout.display_block()
+            self.for_review_layout.procced_event = lambda : None
+            self.for_review_layout.is_not_done = False
 
         
 
@@ -1240,7 +1281,7 @@ class TicketTransactionScreeen(Screen):
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 self.has_changed_data = True
-                # self.display_by_step(4)
+                self.display_by_step(5)
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
