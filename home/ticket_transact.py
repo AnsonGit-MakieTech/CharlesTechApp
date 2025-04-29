@@ -144,6 +144,7 @@ class POCUploaderLayout(MDBoxLayout):
     def setup_poc_uploader_layout(self, step_text, step_instruction):
         self.step_text = step_text
         self.step_instruction = step_instruction
+        self.selected_images = {}
         self.poc_images_container.clear_widgets()
 
 
