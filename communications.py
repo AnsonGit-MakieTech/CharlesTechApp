@@ -406,11 +406,15 @@ class Communications:
             }
             try:
                 response = self.session.post(url, headers=headers, json=json_data)
+                print(response.text)
+                
                 if response.ok:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : data.get("text", "Successfully processed") }
-                else:
+                else: 
+                    data = response.json()
                     self.data[key] = {"result" : False, "message" : data.get("text" ,"There is a problem in the server")}
+                print(data)
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : "Please Check Your Internet Connection"}
             self.has_thread_running = False

@@ -55,7 +55,7 @@ if platform == "android":
     from androidstorage4kivy import SharedStorage
 
 import random
-from utils.app_utils import image_path_to_base64
+from utils.app_utils import image_path_to_base64, is_image, is_image_ext
 
 from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
 
@@ -173,6 +173,10 @@ class POCUploaderLayout(MDBoxLayout):
     def handle_selection(self, selection):
         if selection:
             image_path = selection[0]  # Display the selected image
+            if not is_image(image_path):
+                if platform == "android":
+                    toast("Invalid image format. Please select a valid image file.") 
+                return
             index = ''.join(random.choices('0123456789', k=5))
             self.selected_images[index] = image_path
             image = POCImageLayout(image_path=image_path, index=index)
@@ -187,8 +191,14 @@ class POCUploaderLayout(MDBoxLayout):
 
     def on_image_loaded(self, content, filename):
         # Save to app cache or internal folder
+        if not is_image_ext(filename):
+            if platform == "android":
+                toast("Invalid image format. Please select a valid image file.")
+            return
+
         save_dir = os.path.join(self.get_save_path(), "selected_images")
         os.makedirs(save_dir, exist_ok=True)
+        
 
         image_path = os.path.join(save_dir, filename)
         with open(image_path, "wb") as f:
@@ -977,6 +987,8 @@ class TicketTransactionScreeen(Screen):
             self.poc_uploader_layout_14.display_block()
             self.poc_uploader_layout_14.parent_event = self.update_image_data
             self.for_review_layout.display_block()
+            self.for_review_layout.procced_event = self.next_step_4
+
         
 
 
@@ -1079,73 +1091,87 @@ class TicketTransactionScreeen(Screen):
         
         poc1 = self.poc_uploader_layout_1.selected_images
         if not poc1:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc2 = self.poc_uploader_layout_2.selected_images
         if not poc2:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc3 = self.poc_uploader_layout_3.selected_images
         if not poc3:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc4 = self.poc_uploader_layout_4.selected_images
         if not poc4:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc5 = self.poc_uploader_layout_5.selected_images
         if not poc5:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc6 = self.poc_uploader_layout_6.selected_images
         if not poc6:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc7 = self.poc_uploader_layout_7.selected_images
         if not poc7:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc8 = self.poc_uploader_layout_8.selected_images
         if not poc8:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
 
         poc9 = self.poc_uploader_layout_9.selected_images
         if not poc9:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
 
         poc10 = self.poc_uploader_layout_10.selected_images
         if not poc10:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc11 = self.poc_uploader_layout_11.selected_images
         if not poc11:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc12 = self.poc_uploader_layout_12.selected_images
         if not poc12:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc13 = self.poc_uploader_layout_13.selected_images
         if not poc13:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc14 = self.poc_uploader_layout_14.selected_images
         if not poc14:
+            self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return 
  
@@ -1165,6 +1191,7 @@ class TicketTransactionScreeen(Screen):
             "poc13" : poc13,
             "poc14" : poc14
         }
+        self.poc_layout.is_not_done = False
         self.for_review_layout.is_ready = True
 
     
@@ -1183,21 +1210,21 @@ class TicketTransactionScreeen(Screen):
             "ticket_id" : self.ticket.get('ticket_id')
         }
         poc_keys = {
-            'poc1' : 'poc1',
-            'poc2' : 'poc2',
-            'poc3' : 'poc3',
-            'poc4' : 'poc4',
-            'poc5' : 'poc5',
-            'poc6' : 'poc6',
-            'poc7' : 'poc7',
-            'poc8' : 'poc8',
-            'poc9' : 'poc9',
-            'poc10' : 'poc10',
-            'poc11' : 'poc11',
-            'poc12' : 'poc12',
-            'poc13' : 'poc13',
-            'poc14' : 'poc14'
-        }
+            'poc1' : 'customer_signature',
+            'poc2' : 'terminal_box',
+            'poc3' : 'terminal_box_tag',
+            'poc4' : 'modem_serial',
+            'poc5' : 'modem_setup',
+            'poc6' : 'configuration',
+            'poc7' : 'rx_tx',
+            'poc8' : 'signal_pon',
+            'poc9' : 'speedtest_2g',
+            'poc10' : 'speedtest_5g',
+            'poc11' : 'wifi_analyzer_2g',
+            'poc12' : 'wifi_analyzer_5g',
+            'poc13' : 'geolocation',
+            'poc14' : 'ticket_form'
+        } 
 
         for imkey in self.images_data:
             proccess_data[poc_keys[imkey]] = []
@@ -1213,7 +1240,7 @@ class TicketTransactionScreeen(Screen):
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 self.has_changed_data = True
-                self.display_by_step(4)
+                # self.display_by_step(4)
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))

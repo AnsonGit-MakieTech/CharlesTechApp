@@ -3,6 +3,9 @@ from kivy.core.window import Window
 from kivy.utils import platform 
 import socket
 import base64
+from PIL import Image
+
+     
 
 if platform == 'android':
     from jnius import autoclass, cast
@@ -57,3 +60,18 @@ def image_path_to_base64(image_path):
     except Exception as e:
         print(f"Error encoding image: {e}")
         return None 
+
+
+def is_image(path):
+    try:
+        with Image.open(path) as img:
+            img.verify()  # Check if it’s an actual image file
+        return True
+    except Exception as e:
+        print(f"❌ Invalid image: {path}, Error: {e}")
+        return False
+    
+
+def is_image_ext(path):
+    allowed_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp')
+    return path.lower().endswith(allowed_extensions)
