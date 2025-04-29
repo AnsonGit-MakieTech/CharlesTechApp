@@ -199,6 +199,7 @@ class FiberConnectionStepLayout(MDBoxLayout):
     original_height = NumericProperty(320)
 
     parent_event : object = ObjectProperty(None)
+    procced_event : object = ObjectProperty(None)
 
     def update_level(self, tx, rx):
         self.tx_level = tx
