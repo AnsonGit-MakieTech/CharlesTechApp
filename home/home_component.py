@@ -87,6 +87,7 @@ class CustomSpinner(Image):
         self.anim += Animation(angle=0, duration=0)
         self.anim.repeat = True
         self.anim.start(self)
+        
 
     def stop_success_spinner(self, *args):
         if self.anim:

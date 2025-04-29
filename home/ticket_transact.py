@@ -77,6 +77,8 @@ class ForReviewLayout(MDBoxLayout):
     step_text : str = StringProperty('Step 5: Submit for Review') 
     is_not_done : bool = BooleanProperty(True)  
     is_accessible : bool = BooleanProperty(False)
+    is_ready : bool = BooleanProperty(False)
+    procced_event : object = ObjectProperty(None)
 
     def display_none(self, *args):
         self.is_accessible = False 
@@ -160,6 +162,7 @@ class POCUploaderLayout(MDBoxLayout):
     def delete_image(self, index):
         if index in self.selected_images:
             del self.selected_images[index]
+            self.parent_event()
 
     def upload_image(self):
         if platform == "win":
@@ -174,7 +177,8 @@ class POCUploaderLayout(MDBoxLayout):
             self.selected_images[index] = image_path
             image = POCImageLayout(image_path=image_path, index=index)
             image.parent_event = self.delete_image
-            self.poc_images_container.add_widget(image) 
+            self.poc_images_container.add_widget(image)
+            self.parent_event()
 
     def on_image_selected(self, uri_list):
         if uri_list:
@@ -197,6 +201,7 @@ class POCUploaderLayout(MDBoxLayout):
         image = POCImageLayout(image_path=image_path, index=index)
         image.parent_event = self.delete_image
         self.poc_images_container.add_widget(image)
+        self.parent_event()
         print(f"Saved and loaded image path (Android): {image_path}")
 
     def get_save_path(self):
@@ -637,6 +642,7 @@ class TicketTransactionScreeen(Screen):
     for_review_layout : ForReviewLayout = ObjectProperty(None)
 
     ticket : dict = DictProperty({})
+    images_data : dict = DictProperty({})
     back_pressed_once = False
     has_changed_data : bool = BooleanProperty(False)
     
@@ -673,6 +679,7 @@ class TicketTransactionScreeen(Screen):
                 self.back_pressed_once = True
                 if platform == 'android':
                     toast("Press back again to exit") 
+                    
                 Clock.schedule_once(self.reset_back_state, 2)
                 return True
             else:
@@ -719,7 +726,7 @@ class TicketTransactionScreeen(Screen):
         print("on_enter : Ticket Transact" , self.ticket)
         if not self.ticket:
             self.go_back()
-
+        self.images_data = {}
         self.geolocation_step_layout.parent_event = self.geolocation_modal.open
         self.geolocation_modal.parent_event = self.geolocation_step_layout.update_location
 
@@ -941,20 +948,34 @@ class TicketTransactionScreeen(Screen):
             self.fiber_connection_step_layout.is_not_done = False
             self.poc_layout.display_block()
             self.poc_uploader_layout_1.display_block()
+            self.poc_uploader_layout_1.parent_event = self.update_image_data
             self.poc_uploader_layout_2.display_block()
+            self.poc_uploader_layout_2.parent_event = self.update_image_data
             self.poc_uploader_layout_3.display_block()
+            self.poc_uploader_layout_3.parent_event = self.update_image_data
             self.poc_uploader_layout_4.display_block()
+            self.poc_uploader_layout_4.parent_event = self.update_image_data
             self.poc_uploader_layout_5.display_block()
+            self.poc_uploader_layout_5.parent_event = self.update_image_data
             self.poc_uploader_layout_6.display_block()
+            self.poc_uploader_layout_6.parent_event = self.update_image_data
             self.poc_uploader_layout_7.display_block()
+            self.poc_uploader_layout_7.parent_event = self.update_image_data
             self.poc_uploader_layout_8.display_block()
+            self.poc_uploader_layout_8.parent_event = self.update_image_data
             self.poc_uploader_layout_9.display_block()
+            self.poc_uploader_layout_9.parent_event = self.update_image_data
             self.poc_uploader_layout_10.display_block()
+            self.poc_uploader_layout_10.parent_event = self.update_image_data
             self.poc_uploader_layout_11.display_block()
+            self.poc_uploader_layout_11.parent_event = self.update_image_data
             self.poc_uploader_layout_12.display_block()
+            self.poc_uploader_layout_12.parent_event = self.update_image_data
             self.poc_uploader_layout_13.display_block()
+            self.poc_uploader_layout_13.parent_event = self.update_image_data
             self.poc_uploader_layout_14.display_block()
-            self.for_review_layout.display_none()
+            self.poc_uploader_layout_14.parent_event = self.update_image_data
+            self.for_review_layout.display_block()
         
 
 
@@ -1051,3 +1072,101 @@ class TicketTransactionScreeen(Screen):
                 
 
         Clock.schedule_interval(communication_event, 1)
+
+
+    def update_image_data(self):
+        
+        poc1 = self.poc_uploader_layout_1.selected_images
+        if not poc1:
+            self.for_review_layout.is_ready = False
+            return
+        
+        poc2 = self.poc_uploader_layout_2.selected_images
+        if not poc2:
+            self.for_review_layout.is_ready = False
+            return
+
+        poc3 = self.poc_uploader_layout_3.selected_images
+        if not poc3:
+            self.for_review_layout.is_ready = False
+            return
+        
+        poc4 = self.poc_uploader_layout_4.selected_images
+        if not poc4:
+            self.for_review_layout.is_ready = False
+            return
+        
+        poc5 = self.poc_uploader_layout_5.selected_images
+        if not poc5:
+            self.for_review_layout.is_ready = False
+            return
+        
+        poc6 = self.poc_uploader_layout_6.selected_images
+        if not poc6:
+            self.for_review_layout.is_ready = False
+            return
+        
+        poc7 = self.poc_uploader_layout_7.selected_images
+        if not poc7:
+            self.for_review_layout.is_ready = False
+            return
+        
+        poc8 = self.poc_uploader_layout_8.selected_images
+        if not poc8:
+            self.for_review_layout.is_ready = False
+            return
+        
+
+        poc9 = self.poc_uploader_layout_9.selected_images
+        if not poc9:
+            self.for_review_layout.is_ready = False
+            return
+        
+
+        poc10 = self.poc_uploader_layout_10.selected_images
+        if not poc10:
+            self.for_review_layout.is_ready = False
+            return
+
+        poc11 = self.poc_uploader_layout_11.selected_images
+        if not poc11:
+            self.for_review_layout.is_ready = False
+            return
+
+        poc12 = self.poc_uploader_layout_12.selected_images
+        if not poc12:
+            self.for_review_layout.is_ready = False
+            return
+
+        poc13 = self.poc_uploader_layout_13.selected_images
+        if not poc13:
+            self.for_review_layout.is_ready = False
+            return
+
+        poc14 = self.poc_uploader_layout_14.selected_images
+        if not poc14:
+            self.for_review_layout.is_ready = False
+            return 
+ 
+        self.images_data = {
+            "poc1" : poc1,
+            "poc2" : poc2,
+            "poc3" : poc3,
+            "poc4" : poc4,
+            "poc5" : poc5,
+            "poc6" : poc6,
+            "poc7" : poc7,
+            "poc8" : poc8,
+            "poc9" : poc9,
+            "poc10" : poc10,
+            "poc11" : poc11,
+            "poc12" : poc12,
+            "poc13" : poc13,
+            "poc14" : poc14
+        }
+        self.for_review_layout.is_ready = True
+
+
+
+
+    
