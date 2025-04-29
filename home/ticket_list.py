@@ -74,7 +74,54 @@ class TicketListScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.bind(size=self.update_size)  # Bind window resize event
+        self.search_box.bind(text=self.on_search_text_change)
+    
+    def on_search_text_change(self, *args):
+        print("Search event") 
+        self.display_by_search_text(self.search_box.text.lower())
+        # self.refresh_callback()
+    
+    def display_by_search_text(self, search_text):
+        print("Search text: ", search_text)
+        self.ticket_list.clear_widgets()
+        if search_text == "":
+            for tkey , ticket in self.tickets.items():
+                new_ticket = Ticket()
+                try:
+                    new_ticket.ticket_number = ticket.get("ticketnumber", "N/A")
+                    new_ticket.ticket_type = ticket.get("tickettype", "N/A")
+                    new_ticket.ticket_date = ticket.get("ticket_open_date", "N/A")
+                except Exception as e:
+                    print("Error : ", e)
+                    new_ticket.ticket_number = "N/A"
+                    new_ticket.ticket_type = "N/A"
+                    new_ticket.ticket_date = "N/A"
+
+                new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
+                self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
+                print("ticket : ", ticket)
+            return
+
+        filtered_tickets = {}
+        for ticket_id, ticket in self.tickets.items():
+            if search_text in ticket.get("ticketnumber", "").lower():
+                filtered_tickets[ticket_id] = ticket
         
+        for tkey , ticket in filtered_tickets.items():
+            new_ticket = Ticket()
+            try:
+                new_ticket.ticket_number = ticket.get("ticketnumber", "N/A")
+                new_ticket.ticket_type = ticket.get("tickettype", "N/A")
+                new_ticket.ticket_date = ticket.get("ticket_open_date", "N/A")
+            except Exception as e:
+                print("Error : ", e)
+                new_ticket.ticket_number = "N/A"
+                new_ticket.ticket_type = "N/A"
+                new_ticket.ticket_date = "N/A"
+
+            new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
+            self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
+            print("ticket : ", ticket)
     
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)
