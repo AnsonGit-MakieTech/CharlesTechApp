@@ -2,6 +2,7 @@
 from kivy.core.window import Window 
 from kivy.utils import platform 
 import socket
+import base64
 
 if platform == 'android':
     from jnius import autoclass, cast
@@ -48,3 +49,11 @@ def has_internet():
         return False
 
 
+def image_path_to_base64(image_path):
+    try:
+        with open(image_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        return encoded_string
+    except Exception as e:
+        print(f"Error encoding image: {e}")
+        return None 

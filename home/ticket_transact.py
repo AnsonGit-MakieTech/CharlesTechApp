@@ -55,7 +55,7 @@ if platform == "android":
     from androidstorage4kivy import SharedStorage
 
 import random
-
+from utils.app_utils import image_path_to_base64
 
 from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
 
@@ -643,6 +643,7 @@ class TicketTransactionScreeen(Screen):
 
     ticket : dict = DictProperty({})
     images_data : dict = DictProperty({})
+    # images_data = { poc : { index : image_path , ... }}
     back_pressed_once = False
     has_changed_data : bool = BooleanProperty(False)
     
@@ -1168,3 +1169,58 @@ class TicketTransactionScreeen(Screen):
 
     
     
+    def next_step_4(self):
+        key = "TICKET_NEXT_STEP"
+        print("next step 1", key)
+        app = MDApp.get_running_app()
+        if key in app.communications.key_running:
+            return  
+        if not self.images_data:
+            return
+        
+        self.manager.proccess_layout.open()
+        proccess_data = {
+            "ticket_id" : self.ticket.get('ticket_id')
+        }
+        poc_keys = {
+            'poc1' : 'poc1',
+            'poc2' : 'poc2',
+            'poc3' : 'poc3',
+            'poc4' : 'poc4',
+            'poc5' : 'poc5',
+            'poc6' : 'poc6',
+            'poc7' : 'poc7',
+            'poc8' : 'poc8',
+            'poc9' : 'poc9',
+            'poc10' : 'poc10',
+            'poc11' : 'poc11',
+            'poc12' : 'poc12',
+            'poc13' : 'poc13',
+            'poc14' : 'poc14'
+        }
+
+        for imkey in self.images_data:
+            proccess_data[poc_keys[imkey]] = []
+            for innerimkey in self.images_data[imkey]:
+                converted_imagepath = image_path_to_base64(self.images_data[imkey][innerimkey])
+                proccess_data[poc_keys[imkey]].append(converted_imagepath)
+
+        app.communications.ticket_next_step(proccess_data)
+        def communication_event(*args):
+            
+            data = app.communications.get_and_remove(key) 
+            print("data : ", data)
+            if data.get("result", None): 
+                self.manager.proccess_layout.display_success(data.get("message"))
+                self.has_changed_data = True
+                self.display_by_step(4)
+                return False
+            elif data.get("result", False) == False: 
+                self.manager.proccess_layout.display_error(data.get("message"))
+                return False
+            elif data.get("result", False) == None:
+                self.manager.proccess_layout.display_error(data.get("message"))
+                return False
+                
+
+        Clock.schedule_interval(communication_event, 1)
