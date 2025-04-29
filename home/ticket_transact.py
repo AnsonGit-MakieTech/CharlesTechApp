@@ -1046,6 +1046,13 @@ class TicketTransactionScreeen(Screen):
             print("data : ", data)
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
+                state = data.get( "data", {}).get("state", "N/A")
+                self.state_widget.setup(
+                    icon_image='alert-circle-check' if state == "Normal" else 'alert-octagram' ,
+                    account_info= "Normal" if state == "Normal" else state,
+                    color= '#5CBA45' if state == "Normal" else '#B71E1E'
+                    ) 
+
                 self.has_changed_data = True
                 self.display_by_step(2)
                 return False
@@ -1081,6 +1088,12 @@ class TicketTransactionScreeen(Screen):
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 self.has_changed_data = True
+                state = data.get( "data", {}).get("state", "N/A")
+                self.state_widget.setup(
+                    icon_image='alert-circle-check' if state == "Normal" else 'alert-octagram' ,
+                    account_info= "Normal" if state == "Normal" else state,
+                    color= '#5CBA45' if state == "Normal" else '#B71E1E'
+                    ) 
                 self.display_by_step(3)
                 return False
             elif data.get("result", False) == False: 
@@ -1115,6 +1128,12 @@ class TicketTransactionScreeen(Screen):
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 self.has_changed_data = True
+                state = data.get( "data", {}).get("state", "N/A")
+                self.state_widget.setup(
+                    icon_image='alert-circle-check' if state == "Normal" else 'alert-octagram' ,
+                    account_info= "Normal" if state == "Normal" else state,
+                    color= '#5CBA45' if state == "Normal" else '#B71E1E'
+                    ) 
                 self.display_by_step(4)
                 return False
             elif data.get("result", False) == False: 
@@ -1235,8 +1254,7 @@ class TicketTransactionScreeen(Screen):
         self.poc_layout.is_not_done = False
         self.for_review_layout.is_ready = True
 
-    
-    
+
     def next_step_4(self):
         key = "TICKET_NEXT_STEP"
         print("next step 1", key)
@@ -1281,6 +1299,12 @@ class TicketTransactionScreeen(Screen):
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 self.has_changed_data = True
+                state = data.get( "data", {}).get("state", "N/A")
+                self.state_widget.setup(
+                    icon_image='alert-circle-check' if state == "Normal" else 'alert-octagram' ,
+                    account_info= "Normal" if state == "Normal" else state,
+                    color= '#5CBA45' if state == "Normal" else '#B71E1E'
+                    ) 
                 self.display_by_step(5)
                 return False
             elif data.get("result", False) == False: 
@@ -1292,3 +1316,11 @@ class TicketTransactionScreeen(Screen):
                 
 
         Clock.schedule_interval(communication_event, 1)
+
+
+
+
+
+
+
+

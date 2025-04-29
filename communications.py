@@ -410,7 +410,8 @@ class Communications:
                 
                 if response.ok:
                     data = response.json()
-                    self.data[key] = {"result" : True, "message" : data.get("text", "Successfully processed") }
+                    # print(data)
+                    self.data[key] = {"result" : True, "message" : data.get("text", "Successfully processed"), "data" : data}
                 else: 
                     data = response.json()
                     self.data[key] = {"result" : False, "message" : data.get("text" ,"There is a problem in the server")}

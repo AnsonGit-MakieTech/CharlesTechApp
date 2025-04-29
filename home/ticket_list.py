@@ -127,9 +127,9 @@ class TicketListScreen(Screen):
                             self.tickets[rkwy] = ticket_data
 
                     # Remove the keys that are not in the raw_tickets dictionary
-                    to_remove = [key for key in self.tickets if key not in raw_tickets]
-                    for key in to_remove:
-                        del self.tickets[key]
+                    to_remove = [lkey for lkey in self.tickets if lkey not in raw_tickets]
+                    for rkey in to_remove:
+                        del self.tickets[rkey]
 
 
 
