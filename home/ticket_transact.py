@@ -787,8 +787,8 @@ class TicketTransactionScreeen(Screen):
         self.account_name.setup_image()  # ✅ Set the background image path before adding widgets
         
 
-        # self.display_by_step(self.ticket.get("step", 1))
-        self.display_by_step(4)
+        self.display_by_step(self.ticket.get("step", 1))
+        # self.display_by_step(4)
         
         return super().on_enter(*args)
     
@@ -1166,7 +1166,5 @@ class TicketTransactionScreeen(Screen):
         }
         self.for_review_layout.is_ready = True
 
-
-
-
+    
     

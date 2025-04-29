@@ -1132,9 +1132,9 @@
             height: sp(25)
             font_size: sp(12)
             color: chex("#F7EEDD")
-            opacity: 1 if root.is_valid_level else 0.5
+            opacity: 1 if root.is_valid_level and root.is_not_done else 0.5
             on_release:
-                root.procced_event() if root.is_valid_level and root.procced_event and root.is_not_done else None
+                root.procced_event(root.rx_level, root.tx_level) if root.is_valid_level and root.procced_event and root.is_not_done else None
             canvas.before:
                 Color:
                     rgba: chex("#5CBA45")
