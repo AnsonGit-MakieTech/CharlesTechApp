@@ -118,7 +118,15 @@ class TicketListScreen(Screen):
                 data = app.communications.get_and_remove(key) 
                 print("data : ", data)
                 if data.get("result", None):
-                    self.tickets = data.get("data", {})
+                    raw_tickets = data.get("data", {})
+
+                    for rkwy, ticket_data in raw_tickets.items():
+                        if rkwy in self.tickets:
+                            self.tickets[rkwy].update(ticket_data)
+                        else:
+                            self.tickets[rkwy] = ticket_data
+
+                
                     if len(self.tickets) > 0:
                         self.ticket_list.clear_widgets()
                         

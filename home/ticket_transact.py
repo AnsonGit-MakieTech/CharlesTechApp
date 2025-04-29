@@ -1,5 +1,7 @@
+from kivymd.uix.gridlayout import MDGridLayout
 from kivy.uix.accordion import DictProperty
 from kivymd.uix.chip.chip import MDIcon
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.accordion import ListProperty
 from kivy.uix.accordion import BooleanProperty
 from kivy.uix.accordion import ObjectProperty
@@ -15,8 +17,7 @@ from kivy.animation import Animation
   
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout 
-import os
+from kivy.uix.floatlayout import FloatLayout  
 from variables import *
 from .home_component import *
 
@@ -44,6 +45,16 @@ from kivymd.app import MDApp
 if platform == "android":
     from plyer import gps
     from kivymd.toast import toast
+from kivy import platform
+import os
+
+if platform == "win":
+    from plyer import filechooser
+if platform == "android":
+    from android.storage import app_storage_path
+    from androidstorage4kivy import SharedStorage
+
+import random
 
 
 from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
@@ -80,24 +91,35 @@ class ForReviewLayout(MDBoxLayout):
         # Restore opacity
         Animation(opacity=1, duration=0.3).start(self)
 
+ 
 
-
+class ClickableIcon(ButtonBehavior, MDIcon):
+    pass
 
 class POCImageLayout(Image):
     image_path : str = StringProperty('') 
-
+    parent_event : object = ObjectProperty(None)
+    index : str = StringProperty('')
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        image_path = kwargs.get('image_path', '')
+        self.index = kwargs.get('index', '')
+        if image_path:
+            self.image_path = image_path
+        else:
+            parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+            self.image_path = os.path.join(parent_dir, 'assets', 'app_logo.png')
     
-    def on_parent(self, *args):
-        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
-        self.image_path = os.path.join(parent_dir, 'assets', 'app_logo.png')
+    # def on_parent(self, *args):
+    #     parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        # self.image_path = os.path.join(parent_dir, 'assets', 'app_logo.png')
         # print("image_path", self.image_path)
 
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             Animation(opacity=0, duration=0.3).start(self)
+            self.parent_event(self.index)
             Clock.schedule_once(lambda dt: self.parent.remove_widget(self), 0.3)
             return True
         return super().on_touch_down(touch)
@@ -111,8 +133,11 @@ class POCUploaderLayout(MDBoxLayout):
     original_height : int = NumericProperty(140)
     step_text : str = StringProperty('1. Costumer Proof Signature.')
     step_instruction : str = StringProperty("Instructions : Upload an image of the customer's signed proof of service completion.")
-    add_poc_image_button : FloatLayout = ObjectProperty(None)
     is_accessible : bool = BooleanProperty(False)
+
+    parent_event = ObjectProperty(None)
+    selected_images = DictProperty({}) # {index: image_path}
+    poc_images_container : BoxLayout = ObjectProperty(None)
     
     def setup_poc_uploader_layout(self, step_text, step_instruction):
         self.step_text = step_text
@@ -131,6 +156,55 @@ class POCUploaderLayout(MDBoxLayout):
 
         # Restore opacity
         Animation(opacity=1, duration=0.3, height=dp(self.original_height)).start(self)
+
+    def delete_image(self, index):
+        if index in self.selected_images:
+            del self.selected_images[index]
+
+    def upload_image(self):
+        if platform == "win":
+            filechooser.open_file(on_selection=self.handle_selection)
+        elif platform == "android":
+            SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
+
+    def handle_selection(self, selection):
+        if selection:
+            image_path = selection[0]  # Display the selected image
+            index = ''.join(random.choices('0123456789', k=5))
+            self.selected_images[index] = image_path
+            image = POCImageLayout(image_path=image_path, index=index)
+            image.parent_event = self.delete_image
+            self.poc_images_container.add_widget(image) 
+
+    def on_image_selected(self, uri_list):
+        if uri_list:
+            uri = uri_list[0]
+            SharedStorage().read_file(uri, self.on_image_loaded)
+
+    def on_image_loaded(self, content, filename):
+        # Save to app cache or internal folder
+        save_dir = os.path.join(self.get_save_path(), "selected_images")
+        os.makedirs(save_dir, exist_ok=True)
+
+        image_path = os.path.join(save_dir, filename)
+        with open(image_path, "wb") as f:
+            f.write(content)
+
+        # Now update UI to show image
+        # self.no_image_path = image_path
+        index = ''.join(random.choices('0123456789', k=5))
+        self.selected_images[index] = image_path
+        image = POCImageLayout(image_path=image_path, index=index)
+        image.parent_event = self.delete_image
+        self.poc_images_container.add_widget(image)
+        print(f"Saved and loaded image path (Android): {image_path}")
+
+    def get_save_path(self):
+        # Return a writable path depending on the platform
+        if platform == "android": 
+            return app_storage_path()
+        else:
+            return os.path.expanduser("~")
 
 class POCFileUploaderModalView(ModalView):
     file_image_path : str = StringProperty('')
@@ -683,10 +757,11 @@ class TicketTransactionScreeen(Screen):
         self.account_phone2.setup(account_info=self.ticket.get( "phone2", "N/A"))
         self.account_phone3.setup(account_info= self.ticket.get( "phone3", "N/A"))
 
+        state = self.ticket.get( "state", "N/A")
         self.state_widget.setup(
-            icon_image='alert-circle-check' if self.ticket.get( "state", "N/A") == "Normal" else 'alert-octagram' ,
-            account_info= "Normal" if self.ticket.get( "state", "N/A") == "Normal" else self.ticket.get( "state", "N/A"),
-            color= '#5CBA45' if self.ticket.get( "state", "N/A") == "Normal" else '#B71E1E'
+            icon_image='alert-circle-check' if state == "Normal" else 'alert-octagram' ,
+            account_info= "Normal" if state == "Normal" else state,
+            color= '#5CBA45' if state == "Normal" else '#B71E1E'
             )
         self.details_widget.setup(icon_image='information' , account_info=self.ticket.get( "detail", "N/A"))
         

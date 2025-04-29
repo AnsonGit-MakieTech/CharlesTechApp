@@ -10,6 +10,7 @@ import os
 if platform == "win":
     from plyer import filechooser
 if platform == "android":
+    from android.storage import app_storage_path
     from androidstorage4kivy import SharedStorage
 
 class AccountScreen(Screen):

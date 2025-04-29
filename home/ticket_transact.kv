@@ -573,6 +573,11 @@
                     size: self.size
                     radius: [4]
 
+<ClickableIcon>:
+    icon: "plus"
+    font_size: sp(20)
+    color: chex("#014367")
+    
 <POCUploaderLayout>:
     orientation: 'vertical' 
     padding: ( dp(20) , 0, dp(20), dp(20))
@@ -615,7 +620,6 @@
         padding: (dp(20), dp(10),dp(20) , 0)
         
         FloatLayout:
-            id: add_poc_image_button
             size_hint: None, None
             width: sp(40)
             height: sp(40)
@@ -628,11 +632,11 @@
                     size: self.size
                     radius: (4, 4 ,4 ,4)
             
-            MDIcon:
-                icon: "plus"
-                font_size: sp(20)
-                color: chex("#014367")
+            ClickableIcon:
+                id: add_poc_image_button
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                on_release:
+                    root.upload_image()
  
             
         ScrollView:
@@ -653,9 +657,9 @@
                 # Make the layout wider than the ScrollView to enable scroll
                 width: self.minimum_width
                 
-                POCImageLayout:
+                # POCImageLayout:
                     
-                POCImageLayout:
+                # POCImageLayout:
 
 
 
