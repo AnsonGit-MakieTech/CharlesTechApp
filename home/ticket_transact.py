@@ -1064,7 +1064,11 @@ class TicketTransactionScreeen(Screen):
                     ) 
 
                 self.has_changed_data = True
-                self.display_by_step(2)
+                step = data.get("data", {}).get("step", None)
+                if step is None:
+                    self.go_back()
+                else:
+                    self.display_by_step(step) 
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
@@ -1104,7 +1108,11 @@ class TicketTransactionScreeen(Screen):
                     account_info= "Normal" if state == "Normal" else state,
                     color= '#5CBA45' if state == "Normal" else '#B71E1E'
                     ) 
-                self.display_by_step(3)
+                step = data.get("data", {}).get("step", None)
+                if step is None:
+                    self.go_back()
+                else:
+                    self.display_by_step(step) 
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
@@ -1144,7 +1152,11 @@ class TicketTransactionScreeen(Screen):
                     account_info= "Normal" if state == "Normal" else state,
                     color= '#5CBA45' if state == "Normal" else '#B71E1E'
                     ) 
-                self.display_by_step(4)
+                step = data.get("data", {}).get("step", None)
+                if step is None:
+                    self.go_back()
+                else:
+                    self.display_by_step(step) 
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
@@ -1315,7 +1327,11 @@ class TicketTransactionScreeen(Screen):
                     account_info= "Normal" if state == "Normal" else state,
                     color= '#5CBA45' if state == "Normal" else '#B71E1E'
                     ) 
-                self.display_by_step(5)
+                step = data.get("data", {}).get("step", None)
+                if step is None:
+                    self.go_back()
+                else:
+                    self.display_by_step(step) 
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
