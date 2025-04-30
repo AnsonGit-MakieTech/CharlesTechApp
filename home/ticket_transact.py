@@ -475,7 +475,8 @@ class GeolocationStepLayout(MDBoxLayout):
             return False
         if self.latitude == '0' or self.longitude == '0':
             return False
-        
+        if not self.is_not_done:
+            return False
         return True
 
     def update_location(self, lat_data, lon_data):
