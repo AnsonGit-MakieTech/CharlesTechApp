@@ -463,7 +463,7 @@ class GeolocationStepLayout(MDBoxLayout):
     def display_block(self, *args):
         self.is_accessible = True
         self.next_step_button.disabled = False
-        self.set_location_button.disabled = False 
+        self.set_location_button.disabled = False
 
         # Restore opacity
         Animation(opacity=1, duration=0.3, height=dp(self.original_height)).start(self)
@@ -521,7 +521,9 @@ class Step1Layout(MDBoxLayout):
 
         return super().on_touch_down(touch)
 
-        
+    def reset_layout(self):
+        self.is_not_done = True 
+
     def close(self):
         pass
 
@@ -726,6 +728,7 @@ class TicketTransactionScreeen(Screen):
         
 
     def on_leave(self, *args):
+        
         Animation(height=dp(60), opacity = 1, duration=0.5).start(self.manager.parent.navigation_bar)
         Animation(opacity=0, duration=0.5).start(self)
         return super().on_leave(*args)
@@ -908,6 +911,7 @@ class TicketTransactionScreeen(Screen):
             self.step1_layout.is_not_done = False
             self.step1_layout.parent_event = lambda : None
             self.geolocation_step_layout.display_block()
+            self.geolocation_step_layout.is_not_done = True
             self.geolocation_step_layout.procced_event = self.next_step_2
             self.fiber_connection_step_layout.display_none()
             self.poc_layout.display_none()
@@ -933,6 +937,7 @@ class TicketTransactionScreeen(Screen):
             self.geolocation_step_layout.procced_event = lambda : None
             self.geolocation_step_layout.is_not_done = False
             self.fiber_connection_step_layout.display_block()
+            self.fiber_connection_step_layout.is_not_done = True
             self.fiber_connection_step_layout.procced_event = self.next_step_3
             self.poc_layout.display_none()
             self.poc_uploader_layout_1.display_none()
@@ -960,6 +965,7 @@ class TicketTransactionScreeen(Screen):
             self.fiber_connection_step_layout.procced_event = lambda : None
             self.fiber_connection_step_layout.is_not_done = False
             self.poc_layout.display_block()
+            self.poc_layout.is_not_done = True
             self.poc_uploader_layout_1.display_block()
             self.poc_uploader_layout_1.parent_event = self.update_image_data
             self.poc_uploader_layout_2.display_block()
@@ -989,6 +995,7 @@ class TicketTransactionScreeen(Screen):
             self.poc_uploader_layout_14.display_block()
             self.poc_uploader_layout_14.parent_event = self.update_image_data
             self.for_review_layout.display_block()
+            self.for_review_layout.is_not_done = True
             self.for_review_layout.procced_event = self.next_step_4
         elif step == 5:
             self.step1_layout.is_not_done = False
@@ -1000,6 +1007,7 @@ class TicketTransactionScreeen(Screen):
             self.fiber_connection_step_layout.procced_event = lambda : None
             self.fiber_connection_step_layout.is_not_done = False
             self.poc_layout.display_block()
+            self.poc_layout.is_not_done = False
             self.poc_uploader_layout_1.display_block()
             self.poc_uploader_layout_1.parent_event = lambda : None
             self.poc_uploader_layout_2.display_block()

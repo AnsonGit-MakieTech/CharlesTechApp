@@ -404,6 +404,7 @@ class Communications:
                 # "Origin": self.server,
                 "User-Agent": "KivyApp/1.0.0",
             }
+            print("payload : ", json_data)
             try:
                 response = self.session.post(url, headers=headers, json=json_data)
                 # print(response.text)
