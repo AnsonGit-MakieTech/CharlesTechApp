@@ -906,8 +906,7 @@ class TicketTransactionScreeen(Screen):
             self.poc_uploader_layout_12.display_none()
             self.poc_uploader_layout_13.display_none()
             self.poc_uploader_layout_14.display_none()
-            self.for_review_layout.display_none()
-            print("step 1")
+            self.for_review_layout.display_none() 
         elif step == 2:
             self.step1_layout.is_not_done = False
             self.step1_layout.parent_event = lambda *args : None
