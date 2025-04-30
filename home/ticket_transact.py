@@ -909,7 +909,7 @@ class TicketTransactionScreeen(Screen):
             print("step 1")
         elif step == 2:
             self.step1_layout.is_not_done = False
-            self.step1_layout.parent_event = lambda : None
+            self.step1_layout.parent_event = lambda *args : None
             self.geolocation_step_layout.display_block()
             self.geolocation_step_layout.is_not_done = True
             self.geolocation_step_layout.procced_event = self.next_step_2
@@ -932,9 +932,9 @@ class TicketTransactionScreeen(Screen):
             self.for_review_layout.display_none()
         elif step == 3:
             self.step1_layout.is_not_done = False
-            self.step1_layout.parent_event = lambda : None
+            self.step1_layout.parent_event = lambda *args : None
             self.geolocation_step_layout.display_block()
-            self.geolocation_step_layout.procced_event = lambda : None
+            self.geolocation_step_layout.procced_event = lambda *args : None
             self.geolocation_step_layout.is_not_done = False
             self.fiber_connection_step_layout.display_block()
             self.fiber_connection_step_layout.is_not_done = True
@@ -957,12 +957,12 @@ class TicketTransactionScreeen(Screen):
             self.for_review_layout.display_none()
         elif step == 4:
             self.step1_layout.is_not_done = False
-            self.step1_layout.parent_event = lambda : None
+            self.step1_layout.parent_event = lambda *args : None
             self.geolocation_step_layout.display_block()
-            self.geolocation_step_layout.procced_event = lambda : None
+            self.geolocation_step_layout.procced_event = lambda *args : None
             self.geolocation_step_layout.is_not_done = False
             self.fiber_connection_step_layout.display_block()
-            self.fiber_connection_step_layout.procced_event = lambda : None
+            self.fiber_connection_step_layout.procced_event = lambda *args : None
             self.fiber_connection_step_layout.is_not_done = False
             self.poc_layout.display_block()
             self.poc_layout.is_not_done = True
@@ -999,45 +999,45 @@ class TicketTransactionScreeen(Screen):
             self.for_review_layout.procced_event = self.next_step_4
         elif step == 5:
             self.step1_layout.is_not_done = False
-            self.step1_layout.parent_event = lambda : None
+            self.step1_layout.parent_event = lambda *args : None
             self.geolocation_step_layout.display_block()
-            self.geolocation_step_layout.procced_event = lambda : None
+            self.geolocation_step_layout.procced_event = lambda *args : None
             self.geolocation_step_layout.is_not_done = False
             self.fiber_connection_step_layout.display_block()
-            self.fiber_connection_step_layout.procced_event = lambda : None
+            self.fiber_connection_step_layout.procced_event = lambda *args : None
             self.fiber_connection_step_layout.is_not_done = False
             self.poc_layout.display_block()
             self.poc_layout.is_not_done = False
             self.poc_uploader_layout_1.display_block()
-            self.poc_uploader_layout_1.parent_event = lambda : None
+            self.poc_uploader_layout_1.parent_event = lambda *args : None
             self.poc_uploader_layout_2.display_block()
-            self.poc_uploader_layout_2.parent_event = lambda : None
+            self.poc_uploader_layout_2.parent_event = lambda *args : None
             self.poc_uploader_layout_3.display_block()
-            self.poc_uploader_layout_3.parent_event = lambda : None
+            self.poc_uploader_layout_3.parent_event = lambda *args : None
             self.poc_uploader_layout_4.display_block()
-            self.poc_uploader_layout_4.parent_event = lambda : None
+            self.poc_uploader_layout_4.parent_event = lambda *args : None
             self.poc_uploader_layout_5.display_block()
-            self.poc_uploader_layout_5.parent_event = lambda : None
+            self.poc_uploader_layout_5.parent_event = lambda *args : None
             self.poc_uploader_layout_6.display_block()
-            self.poc_uploader_layout_6.parent_event = lambda : None
+            self.poc_uploader_layout_6.parent_event = lambda *args : None
             self.poc_uploader_layout_7.display_block()
-            self.poc_uploader_layout_7.parent_event = lambda : None
+            self.poc_uploader_layout_7.parent_event = lambda *args : None
             self.poc_uploader_layout_8.display_block()
-            self.poc_uploader_layout_8.parent_event = lambda : None
+            self.poc_uploader_layout_8.parent_event = lambda *args : None
             self.poc_uploader_layout_9.display_block()
-            self.poc_uploader_layout_9.parent_event = lambda : None
+            self.poc_uploader_layout_9.parent_event = lambda *args : None
             self.poc_uploader_layout_10.display_block()
-            self.poc_uploader_layout_10.parent_event = lambda : None
+            self.poc_uploader_layout_10.parent_event = lambda *args : None
             self.poc_uploader_layout_11.display_block()
-            self.poc_uploader_layout_11.parent_event = lambda : None
+            self.poc_uploader_layout_11.parent_event = lambda *args : None
             self.poc_uploader_layout_12.display_block()
-            self.poc_uploader_layout_12.parent_event = lambda : None
+            self.poc_uploader_layout_12.parent_event = lambda *args : None
             self.poc_uploader_layout_13.display_block()
-            self.poc_uploader_layout_13.parent_event = lambda : None
+            self.poc_uploader_layout_13.parent_event = lambda *args : None
             self.poc_uploader_layout_14.display_block()
-            self.poc_uploader_layout_14.parent_event = lambda : None
+            self.poc_uploader_layout_14.parent_event = lambda *args : None
             self.for_review_layout.display_block()
-            self.for_review_layout.procced_event = lambda : None
+            self.for_review_layout.procced_event = lambda *args : None
             self.for_review_layout.is_not_done = False
 
         
