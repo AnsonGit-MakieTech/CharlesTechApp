@@ -27,16 +27,14 @@
             size_hint: 1,1
             pos_hint: {'center_x': 0.5,'center_y': 0.5}
 
-            Widget:
-                size_hint: 1,0.1 
-
-
             BoxLayout:
-                size_hint: 1,0.3
-
+                size_hint: 1,0.4
+ 
                 Image:
                     size_hint: .8,.8
                     source: app.icon
+                    allow_stretch: True
+                    keep_ratio: True
                     pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
             PinHolder:
