@@ -27,7 +27,8 @@ Window.show_cursor = True
 
 
 # Set Window Size Before App Starts if platform is 
-Window.size = (320, 568)
+if platform == "win":
+    Window.size = (320, 568)
 
 
 class MainApp(MDScreenManager):  # Acts as ScreenManager
