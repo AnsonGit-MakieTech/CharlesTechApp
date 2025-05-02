@@ -14,6 +14,8 @@ import os
 # from plyer import gps
 
 from kivymd.app import MDApp
+from kivy.core.window import Window
+
 
 
 # Optional: Custom tile server or use default
@@ -102,12 +104,21 @@ class Dashboard(Screen):
     
     def on_size(self, *args):
         print("on_size called")
-        if self.width * 0.07 < 32:
-            self.team_name_font_size = self.width * 0.07
-        if self.width * 0.04 < 13.8:
-            self.title_anl_font_size = self.width * 0.04  
-        if self.width * 0.1 < 40:
-            self.body_anl_font_size = self.width * 0.1 
+        if min(Window.width, Window.height) * 0.07 < 32:
+            self.team_name_font_size = min(Window.width, Window.height) * 0.07
+        if min(Window.width, Window.height) * 0.04 < 13.8:
+            self.title_anl_font_size = min(Window.width, Window.height) * 0.04  
+        if min(Window.width, Window.height) * 0.1 < 40:
+            self.body_anl_font_size = min(Window.width, Window.height) * 0.1 
+        
+        # # Team name (clamp to 32sp max)
+        # self.team_name_font_size = min(self.width * 0.07, 32)
+
+        # # Title font (clamp to 13.8sp max)
+        # self.title_anl_font_size = min(self.width * 0.04, 13.8)
+
+        # # Body font (clamp to 40sp max)
+        # self.body_anl_font_size = min(self.width * 0.1, 40)
         
     
     def on_leave(self, *args):
