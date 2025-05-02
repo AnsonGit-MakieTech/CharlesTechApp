@@ -152,7 +152,7 @@ class TicketListScreen(Screen):
 
     def update_size(self, *args):
         """ Update circle size dynamically when window size changes """  
-        self.text_input_font_size = sp(min(Window.width, Window.height) * 0.025)
+        self.text_input_font_size = sp(min(Window.width, Window.height) * 0.02)
         print("update_size : ", self.text_input_font_size)
 
 
