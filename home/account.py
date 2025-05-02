@@ -6,6 +6,7 @@ from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivy import platform
 import os
+import shutil
 
 if platform == "win":
     from plyer import filechooser
@@ -113,21 +114,27 @@ class AccountScreen(Screen):
 
     def on_image_selected(self, uri_list):
         if uri_list:
-            uri = uri_list[0]
-            SharedStorage().read_file(uri, self.on_image_loaded)
+            uri = uri_list[0] 
+            ss = SharedStorage()
+            private_file_path = ss.copy_from_shared(uri)
+            if private_file_path:
+                self.on_image_loaded_path(private_file_path)
+            else:
+                print("❌ Failed to copy file from shared storage.")
 
-    def on_image_loaded(self, content, filename):
-        # Save to app cache or internal folder
+    def on_image_loaded_path(self, private_file_path):
+        filename = os.path.basename(private_file_path)
         save_dir = os.path.join(self.get_save_path(), "selected_images")
         os.makedirs(save_dir, exist_ok=True)
 
         image_path = os.path.join(save_dir, filename)
-        with open(image_path, "wb") as f:
-            f.write(content)
 
-        # Now update UI to show image
+        # ✅ Move or copy from temp path to your desired app location
+        shutil.copy(private_file_path, image_path)
+
+        # ✅ Set for use in Image or other display
         self.no_image_path = image_path
-        print(f"Saved and loaded image path (Android): {image_path}")
+        print(f"✅ Saved image path: {image_path}")
 
     def get_save_path(self):
         # Return a writable path depending on the platform

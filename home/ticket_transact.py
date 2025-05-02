@@ -41,6 +41,7 @@ from utils.app_utils import is_valid_latlon
 from kivy.uix.image import Image
 from utils.app_utils import has_internet
 from kivymd.app import MDApp
+import shutil
 
 if platform == "android":
     from plyer import gps
@@ -191,10 +192,20 @@ class POCUploaderLayout(MDBoxLayout):
     def on_image_selected(self, uri_list):
         if uri_list:
             uri = uri_list[0]
-            SharedStorage().read_file(uri, self.on_image_loaded)
+            ss = SharedStorage()
 
-    def on_image_loaded(self, content, filename):
-        # Save to app cache or internal folder
+            # ✅ Copy file from shared storage to app cache
+            private_file_path = ss.copy_from_shared(uri)
+            if private_file_path:
+                self.on_image_loaded_path(private_file_path)
+            else:
+                if platform == "android":
+                    toast("Failed to load image from storage.")
+
+    def on_image_loaded_path(self, private_file_path):
+        filename = os.path.basename(private_file_path)
+
+        # ✅ Check if it's an image
         if not is_image_ext(filename):
             if platform == "android":
                 toast("Invalid image format. Please select a valid image file.")
@@ -202,21 +213,20 @@ class POCUploaderLayout(MDBoxLayout):
 
         save_dir = os.path.join(self.get_save_path(), "selected_images")
         os.makedirs(save_dir, exist_ok=True)
-        
 
         image_path = os.path.join(save_dir, filename)
-        with open(image_path, "wb") as f:
-            f.write(content)
 
-        # Now update UI to show image
-        # self.no_image_path = image_path
+        # ✅ Copy file to save location
+        shutil.copy(private_file_path, image_path)
+
+        # ✅ Update UI
         index = ''.join(random.choices('0123456789', k=5))
         self.selected_images[index] = image_path
         image = POCImageLayout(image_path=image_path, index=index)
         image.parent_event = self.delete_image
         self.poc_images_container.add_widget(image)
         self.parent_event()
-        print(f"Saved and loaded image path (Android): {image_path}")
+        print(f"✅ Saved and loaded image path (Android): {image_path}")
 
     def get_save_path(self):
         # Return a writable path depending on the platform
