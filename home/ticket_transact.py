@@ -196,8 +196,8 @@ class POCUploaderLayout(MDBoxLayout):
 
             # ✅ Copy file from shared storage to app cache
             private_file_path = ss.copy_from_shared(uri)
-            if private_file_path:
-                self.on_image_loaded_path(private_file_path)
+            if private_file_path: 
+                Clock.schedule_once(lambda dt: self.on_image_loaded_path(private_file_path))
             else:
                 if platform == "android":
                     toast("Failed to load image from storage.")
