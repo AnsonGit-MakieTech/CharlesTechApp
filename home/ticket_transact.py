@@ -1061,14 +1061,19 @@ class TicketTransactionScreeen(Screen):
                     icon_image='alert-circle-check' if state == "Normal" else 'alert-octagram' ,
                     account_info= "Normal" if state == "Normal" else state,
                     color= '#5CBA45' if state == "Normal" else '#B71E1E'
-                    ) 
+                    )
+                
+                
 
                 self.has_changed_data = True
                 step = data.get("data", {}).get("step", None)
                 if step is None:
                     self.go_back()
                 else:
-                    self.display_by_step(step) 
+                    if step == 1:
+                        self.go_back()
+                    else:
+                        self.display_by_step(step) 
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
@@ -1112,7 +1117,10 @@ class TicketTransactionScreeen(Screen):
                 if step is None:
                     self.go_back()
                 else:
-                    self.display_by_step(step) 
+                    if step == 2:
+                        self.go_back()
+                    else:
+                        self.display_by_step(step) 
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
@@ -1156,7 +1164,10 @@ class TicketTransactionScreeen(Screen):
                 if step is None:
                     self.go_back()
                 else:
-                    self.display_by_step(step) 
+                    if step == 3:
+                        self.go_back()
+                    else:
+                        self.display_by_step(step) 
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
@@ -1331,7 +1342,10 @@ class TicketTransactionScreeen(Screen):
                 if step is None:
                     self.go_back()
                 else:
-                    self.display_by_step(step) 
+                    if step == 4:
+                        self.go_back()
+                    else:
+                        self.display_by_step(step) 
                 return False
             elif data.get("result", False) == False: 
                 self.manager.proccess_layout.display_error(data.get("message"))
