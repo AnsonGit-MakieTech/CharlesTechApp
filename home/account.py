@@ -1,3 +1,4 @@
+from kivy.uix.accordion import BooleanProperty
 from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.textinput import TextInput
@@ -24,6 +25,7 @@ class AccountScreen(Screen):
     phone_number_editor: TextInput = ObjectProperty()
     email_editor: TextInput = ObjectProperty()
     is_loaded: bool = False
+    is_selecting_file : bool = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -101,6 +103,9 @@ class AccountScreen(Screen):
 
 
     def upload_image(self):
+        if self.is_selecting_file:
+            return
+        self.is_selecting_file = True
         if platform == "win":
             filechooser.open_file(on_selection=self.handle_selection)
         elif platform == "android":
@@ -111,6 +116,8 @@ class AccountScreen(Screen):
         if selection:
             self.no_image_path = selection[0]  # Display the selected image
             print(f"Selected image path (Windows): {self.no_image_path}")
+        
+        self.is_selecting_file = False
 
     def on_image_selected(self, uri_list):
         if uri_list:
@@ -121,6 +128,9 @@ class AccountScreen(Screen):
                 self.on_image_loaded_path(private_file_path)
             else:
                 print("❌ Failed to copy file from shared storage.")
+                self.is_selecting_file = False
+        else:
+            self.is_selecting_file = False
 
     def on_image_loaded_path(self, private_file_path):
         filename = os.path.basename(private_file_path)
@@ -135,6 +145,7 @@ class AccountScreen(Screen):
         # ✅ Set for use in Image or other display
         self.no_image_path = image_path
         print(f"✅ Saved image path: {image_path}")
+        self.is_selecting_file = False
 
     def get_save_path(self):
         # Return a writable path depending on the platform

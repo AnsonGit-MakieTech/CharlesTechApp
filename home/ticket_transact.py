@@ -141,6 +141,7 @@ class POCUploaderLayout(MDBoxLayout):
     parent_event = ObjectProperty(None)
     selected_images = DictProperty({}) # {index: image_path}
     poc_images_container : BoxLayout = ObjectProperty(None)
+    is_selecting_file : bool = BooleanProperty(False)
     
     def setup_poc_uploader_layout(self, step_text, step_instruction):
         self.step_text = step_text
@@ -168,6 +169,9 @@ class POCUploaderLayout(MDBoxLayout):
             self.parent_event()
 
     def upload_image(self):
+        if self.is_selecting_file:
+            return
+        self.is_selecting_file = True
         if platform == "win":
             filechooser.open_file(on_selection=self.handle_selection)
         elif platform == "android":
@@ -188,6 +192,9 @@ class POCUploaderLayout(MDBoxLayout):
             image.parent_event = self.delete_image
             self.poc_images_container.add_widget(image)
             self.parent_event()
+            self.is_selecting_file = False
+        else:
+            self.is_selecting_file = False
 
     def on_image_selected(self, uri_list):
         if uri_list:
@@ -201,6 +208,9 @@ class POCUploaderLayout(MDBoxLayout):
             else:
                 if platform == "android":
                     toast("Failed to load image from storage.")
+                self.is_selecting_file = False
+        else:
+            self.is_selecting_file = False
 
     def on_image_loaded_path(self, private_file_path):
         filename = os.path.basename(private_file_path)
@@ -209,6 +219,7 @@ class POCUploaderLayout(MDBoxLayout):
         if not is_image_ext(filename):
             if platform == "android":
                 toast("Invalid image format. Please select a valid image file.")
+            self.is_selecting_file = False
             return
 
         save_dir = os.path.join(self.get_save_path(), "selected_images")
@@ -226,6 +237,7 @@ class POCUploaderLayout(MDBoxLayout):
         image.parent_event = self.delete_image
         self.poc_images_container.add_widget(image)
         self.parent_event()
+        self.is_selecting_file = False
         print(f"✅ Saved and loaded image path (Android): {image_path}")
 
     def get_save_path(self):
