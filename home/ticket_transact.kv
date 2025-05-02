@@ -65,12 +65,15 @@
                     size: self.size
             Widget:
                 size_hint: 0.05,1 
-            Image:
-                id: back_image
-                source: root.go_back_icon if root.go_back_icon else None
-                size_hint: 0.1 , 1
-                allow_stretch: True  # ✅ Allows scaling while maintaining aspect ratio
-                keep_ratio: True  # ✅ Ensures it doesn't distort
+            FloatLayout:
+                size_hint: 0.1 , 1 
+                Image:
+                    id: back_image
+                    source: root.go_back_icon if root.go_back_icon else None
+                    size_hint: 0.6 , 0.6
+                    allow_stretch: True  # ✅ Allows scaling while maintaining aspect ratio
+                    keep_ratio: True  # ✅ Ensures it doesn't distort
+                    pos_hint: {'center_x': 0.5,'center_y': 0.5}
             Widget:
                 size_hint: 0.02,1 
             LoginBackButton:
