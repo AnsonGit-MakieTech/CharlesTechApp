@@ -366,7 +366,7 @@ class GeolocationModalView(ModalView):
                 except NotImplementedError:
                     print("GPS not implemented on this platform")
             else:
-                self.go_to_location(12.375466976256769, 123.63299577874449)  # fallback
+                self.go_to_location(12.375493, 123.63214041)  # fallback
 
     def gps_status(self, status_type, status):
         print(f"GPS Status → {status_type}: {status}")
@@ -384,7 +384,7 @@ class GeolocationModalView(ModalView):
             if not has_internet():
                 return
             
-            self.mapview = MapView(lat=12.375466976256769, lon=123.63299577874449, zoom=25,
+            self.mapview = MapView(lat=12.375493, lon=123.63214041, zoom=25,
                               map_source=map_source,
                               size_hint=(1, 1),
                               pos_hint={"center_x": 0.5, "center_y": 0.5})
