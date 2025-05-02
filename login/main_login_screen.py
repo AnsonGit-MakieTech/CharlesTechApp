@@ -11,6 +11,7 @@ from kivy.clock import Clock
 from kivy.utils import platform
 from kivy.uix.screenmanager import SlideTransition, FadeTransition, SwapTransition, ScreenManager
 from kivymd.app import MDApp
+from home import home
 
 
 
@@ -407,6 +408,9 @@ class PinKeyboard(BoxLayout):
                 if data.get("data", {}).get("is_login", False):
                     self.parent.parent.parent.manager.custom_popup.my_text = "Logging In!"
                     app.communications.is_login = True
+                        
+                    home_screen = home.HomeScreen(name=HOME_SCREEN)
+                    self.parent.parent.parent.manager.parent.manager.add_widget(home_screen)  # ✅ Add screens via Python 
                     self.parent.parent.parent.manager.parent.manager.current = HOME_SCREEN 
                 else:
                     self.parent.parent.parent.manager.custom_popup.my_text = "Incorrect Pin!" 
@@ -434,10 +438,9 @@ class PinLoginScreen(Screen):
         super().__init__(**kwargs)
         self.update_size()  # Set initial size
         Window.bind(size=self.update_size)  # Bind window resize event
-
+ 
         self.forgot_pin.label_event = self.forgot_pin_event
-        self.register_pin.label_event = self.register_pin_event
-        
+        self.register_pin.label_event = self.register_pin_event 
     
     def on_enter(self, *args):
         self.manager.parent.user_screen_action = LOGIN_SCREEN_ACTION_PIN

@@ -68,15 +68,17 @@
                 id: back_image
                 source: root.go_back_icon if root.go_back_icon else None
                 size_hint: 0.1 , 1
-                # allow_stretch: True  # ✅ Allows scaling while maintaining aspect ratio
-                # keep_ratio: True  # ✅ Ensures it doesn't distort
+                allow_stretch: True  # ✅ Allows scaling while maintaining aspect ratio
+                keep_ratio: True  # ✅ Ensures it doesn't distort
+            Widget:
+                size_hint: 0.02,1 
             LoginBackButton:
                 id: back_text
                 size_hint: 0.2,1  
-                font_size: root.go_back_screen_font_size  
+                font_size: sp(root.go_back_screen_font_size  )
             
             Widget:
-                size_hint: 0.7,1 
+                size_hint: 0.58,1 
 
 
         CustomScrollView:

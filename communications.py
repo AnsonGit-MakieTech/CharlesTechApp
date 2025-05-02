@@ -89,7 +89,7 @@ class Communications:
 
 
     def open_by_pin(self, username : str , password : str , pin : str):
-        key = "LOGIN_PIN" 
+        key = "LOGIN_PIN"
         
         def event(self_thread):
             while self.has_thread_running:
@@ -142,7 +142,7 @@ class Communications:
         
     
     def register_pin(self, username : str , password : str , pin : str):
-        key = "REGISTER_PIN"
+        key = "REGISTER_PIN"  
         
         def event(self_thread):
             while self.has_thread_running:

@@ -6,7 +6,6 @@ from kivy.utils import platform, get_color_from_hex
 
 from variables import *
 from login import main_login_screen  # Import login screen class
-from home import home
 import os
 import json
 
@@ -15,6 +14,7 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 
 from communications  import Communications
+from kivy.logger import Logger
 
 if platform == "android": 
     from android.permissions import request_permissions, Permission, check_permission  # pylint: disable=import-error
@@ -48,11 +48,17 @@ class TechnicalApp(MDApp):
             else:
                 print("❌ Storage permission NOT granted. Requesting now...")
                 request_permissions([
+                    Permission.INTERNET,
+                    Permission.ACCESS_FINE_LOCATION,
+                    Permission.ACCESS_COARSE_LOCATION,
+                    Permission.READ_MEDIA_IMAGES,
+                    Permission.READ_MEDIA_VIDEO,
+                    Permission.READ_MEDIA_AUDIO,
                     Permission.READ_EXTERNAL_STORAGE,
                     Permission.WRITE_EXTERNAL_STORAGE,
-                    Permission.ACCESS_FINE_LOCATION,  # ✅ GPS Permission
-                    Permission.ACCESS_COARSE_LOCATION  # ✅ Coarse GPS Permission
                 ])
+        # Defer screen loading after UI is visible
+        Clock.schedule_once(self.load_screens, 0.1)
 
     def check_permissions(self):
         """ Check if READ/WRITE storage permissions are granted """
@@ -102,11 +108,11 @@ class TechnicalApp(MDApp):
         
         # Set App Communications
         self.communications = Communications()
-
         # Load Application 
         Builder.load_file('main.kv')  # ✅ Load only UI, not screens
-        self.root_screen_manager = MainApp()  # ✅ Initialize empty ScreenManager
-        
+        sm = MainApp()
+        self.root_screen_manager = sm
+
         
         # Load login screen
         login_component_kv_path = os.path.join(os.path.dirname(__file__), 'login', "login_design.kv")
@@ -119,9 +125,28 @@ class TechnicalApp(MDApp):
         Builder.load_file(login_pin_kv_path)
         Builder.load_file(register_account_kv_path)
         Builder.load_file(register_pin_kv_path)
+        
         login_screen = main_login_screen.LoginScreen(name=LOGIN_SCREEN)
         self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
+         
+
+        return sm
+    
+    def load_screens(self, *args):
+
+        # # Load login screen
+        # login_component_kv_path = os.path.join(os.path.dirname(__file__), 'login', "login_design.kv")
+        # login_kv_path = os.path.join(os.path.dirname(__file__), 'login', "main_login_screen.kv") 
+        # login_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "pinlogin.kv")
+        # register_account_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registeraccount.kv")
+        # register_pin_kv_path = os.path.join(os.path.dirname(__file__), 'login', "registerpin.kv")
+        # Builder.load_file(login_component_kv_path)
+        # Builder.load_file(login_kv_path)
+        # Builder.load_file(login_pin_kv_path)
+        # Builder.load_file(register_account_kv_path)
+        # Builder.load_file(register_pin_kv_path)
         
+
         # Load home screen
         account_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'account.kv')
         dashboard_kv_path = os.path.join(os.path.dirname(__file__), 'home', 'dashboard.kv')
@@ -136,14 +161,6 @@ class TechnicalApp(MDApp):
         Builder.load_file(ticket_list_kv_path) 
         Builder.load_file(home_kv_path)
         Builder.load_file(account_kv_path)
-
-        home_screen = home.HomeScreen(name=HOME_SCREEN)
-        self.root_screen_manager.add_widget(home_screen)  # ✅ Add screens via Python
-        # self.root_screen_manager.current = HOME_SCREEN
-        
-        
-        
-        return self.root_screen_manager
 
 if __name__ == '__main__':
     LabelBase.register(name="roboto_extrabolditalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBoldItalic.ttf'))
