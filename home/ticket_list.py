@@ -68,6 +68,7 @@ class TicketListScreen(Screen):
     search_box : SearchBoxTicket = ObjectProperty(None)
     refresh_layout : CustomScrollView = ObjectProperty(None)
     ticket_list : MDGridLayout = ObjectProperty(None)
+    is_calling_refresh : bool = BooleanProperty(False)
 
     tickets : dict = DictProperty({})
     
@@ -156,6 +157,9 @@ class TicketListScreen(Screen):
 
 
     def refresh_callback(self, *args): 
+        if self.is_calling_refresh:
+            return
+        self.is_calling_refresh = True
         app = MDApp.get_running_app()
         key = "TICKET_LIST"
         if key not in app.communications.key_running:
@@ -199,15 +203,21 @@ class TicketListScreen(Screen):
                             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
                             print("ticket : ", ticket)
                             time.sleep(0.1)
+                    self.is_calling_refresh = False
                     return False
                 elif data.get("result", False) == False: 
+                    self.is_calling_refresh = False
                     return False
                 elif data.get("result", False) == None:
+                    self.is_calling_refresh = False
                     return False
                     
 
-            Clock.schedule_interval(communication_event, 1)
+            Clock.schedule_interval(communication_event, 1) 
 
+        else:
+            self.is_calling_refresh = False
+            return False
 
         # ✅ Create a new ticket
         # new_ticket = Ticket()

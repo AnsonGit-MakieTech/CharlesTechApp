@@ -17,7 +17,7 @@ from kivy.graphics import PushMatrix, PopMatrix, Rotate, Translate
 
 
 class CallControl:
-    def __init__(self, interval=1):
+    def __init__(self, interval=3):
         self.interval = interval
         self.last_call = 0
 
@@ -42,7 +42,7 @@ class CustomScrollEffect(DampedScrollEffect):
         if self.overscroll < -50:  # Pulling down
             self.controlled_callback()
 
-    @CallControl(interval=1)
+    @CallControl(interval=3)
     def do_refresh_controlled(self):
         print("🔄 Pull-to-refresh triggered!")
         if self.parent_event:
