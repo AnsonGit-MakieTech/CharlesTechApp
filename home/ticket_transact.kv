@@ -54,7 +54,7 @@
 
         BoxLayout:
             orientation:'horizontal'
-            size_hint: 1,0.1
+            size_hint: 1,0.08
 
             
             canvas.before:
@@ -63,7 +63,8 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-            
+            Widget:
+                size_hint: 0.05,1 
             Image:
                 id: back_image
                 source: root.go_back_icon if root.go_back_icon else None
@@ -78,12 +79,12 @@
                 font_size: sp(root.go_back_screen_font_size  )
             
             Widget:
-                size_hint: 0.38,1 
+                size_hint: 0.33,1 
 
 
         CustomScrollView:
             id:refresh_layout
-            size_hint: 1, 0.9
+            size_hint: 1, 0.92
 
             
             MDGridLayout:

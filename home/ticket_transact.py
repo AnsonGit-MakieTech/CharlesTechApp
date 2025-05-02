@@ -725,7 +725,7 @@ class TicketTransactionScreeen(Screen):
         """ Update circle size dynamically when window size changes """  
         self.body_font_size = min(Window.width, Window.height) * 0.04
         self.title_font_size = min(Window.width, Window.height) * 0.05
-        self.go_back_screen_font_size = min(Window.width, Window.height) * 0.04
+        self.go_back_screen_font_size = min(Window.width, Window.height) * 0.03
         print("update_size : ", self.text_input_font_size)
 
         
