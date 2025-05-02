@@ -128,7 +128,7 @@ class TechnicalApp(MDApp):
         
         login_screen = main_login_screen.LoginScreen(name=LOGIN_SCREEN)
         self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
-         
+        self.root_screen_manager.current = LOGIN_SCREEN
 
         return sm
     

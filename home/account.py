@@ -104,7 +104,7 @@ class AccountScreen(Screen):
             filechooser.open_file(on_selection=self.handle_selection)
         elif platform == "android":
             self.chooser = Chooser(self.on_image_selected)
-            self.chooser.choose_content(mime_type="image/*", multiple=False)
+            self.chooser.choose_content('image/*', multiple=False)
 
     def handle_selection(self, selection):
         if selection:

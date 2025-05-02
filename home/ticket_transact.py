@@ -172,7 +172,7 @@ class POCUploaderLayout(MDBoxLayout):
         elif platform == "android":
             # SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
             self.chooser = Chooser(self.on_image_selected)
-            self.chooser.choose_content(mime_type="image/*", multiple=False)
+            self.chooser.choose_content('image/*', multiple=False)
 
     def handle_selection(self, selection):
         if selection:
