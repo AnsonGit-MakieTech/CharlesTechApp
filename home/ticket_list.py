@@ -64,7 +64,7 @@ class SearchBoxTicket(login_components.LoginTextInput):
 class TicketListScreen(Screen):
     
     main_parent : FloatLayout = ObjectProperty(None)
-    text_input_font_size = NumericProperty(0)
+    text_input_font_size = ObjectProperty(sp(18))
     search_box : SearchBoxTicket = ObjectProperty(None)
     refresh_layout : CustomScrollView = ObjectProperty(None)
     ticket_list : MDGridLayout = ObjectProperty(None)
@@ -151,7 +151,7 @@ class TicketListScreen(Screen):
 
     def update_size(self, *args):
         """ Update circle size dynamically when window size changes """  
-        self.text_input_font_size = min(Window.width, Window.height) * 0.03
+        self.text_input_font_size = sp(min(Window.width, Window.height) * 0.03)
         print("update_size : ", self.text_input_font_size)
 
 
@@ -159,7 +159,9 @@ class TicketListScreen(Screen):
         app = MDApp.get_running_app()
         key = "TICKET_LIST"
         if key not in app.communications.key_running:
+            self.ticket_list.clear_widgets()
             app.communications.get_ticket_list()
+            
 
             def communication_event(*args):
                 data = app.communications.get_and_remove(key) 
@@ -180,10 +182,7 @@ class TicketListScreen(Screen):
 
 
 
-                
-                    if len(self.tickets) > 0:
-                        self.ticket_list.clear_widgets()
-                        
+                    if len(self.tickets) > 0: 
                         for tkey , ticket in self.tickets.items():
                             new_ticket = Ticket()
                             try:
