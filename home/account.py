@@ -11,7 +11,7 @@ if platform == "win":
     from plyer import filechooser
 if platform == "android":
     from android.storage import app_storage_path
-    from androidstorage4kivy import SharedStorage
+    from androidstorage4kivy import SharedStorage, Chooser
 
 class AccountScreen(Screen):
     no_image_path: str = StringProperty('')
@@ -103,7 +103,8 @@ class AccountScreen(Screen):
         if platform == "win":
             filechooser.open_file(on_selection=self.handle_selection)
         elif platform == "android":
-            SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
+            self.chooser = Chooser(self.on_image_selected)
+            self.chooser.choose_content(mime_type="image/*", multiple=False)
 
     def handle_selection(self, selection):
         if selection:

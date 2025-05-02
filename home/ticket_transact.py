@@ -52,7 +52,7 @@ if platform == "win":
     from plyer import filechooser
 if platform == "android":
     from android.storage import app_storage_path
-    from androidstorage4kivy import SharedStorage
+    from androidstorage4kivy import SharedStorage, Chooser
 
 import random
 from utils.app_utils import image_path_to_base64, is_image, is_image_ext
@@ -170,7 +170,9 @@ class POCUploaderLayout(MDBoxLayout):
         if platform == "win":
             filechooser.open_file(on_selection=self.handle_selection)
         elif platform == "android":
-            SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
+            # SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
+            self.chooser = Chooser(self.on_image_selected)
+            self.chooser.choose_content(mime_type="image/*", multiple=False)
 
     def handle_selection(self, selection):
         if selection:
