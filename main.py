@@ -63,9 +63,17 @@ class TechnicalApp(MDApp):
     def check_permissions(self):
         """ Check if READ/WRITE storage permissions are granted """
         if platform == "android":
-            has_read = check_permission(Permission.READ_EXTERNAL_STORAGE)
-            has_write = check_permission(Permission.WRITE_EXTERNAL_STORAGE)
-            return has_read and has_write
+            perms = [
+                Permission.INTERNET,
+                Permission.ACCESS_FINE_LOCATION,
+                Permission.ACCESS_COARSE_LOCATION,
+                Permission.READ_MEDIA_IMAGES,
+                Permission.READ_MEDIA_VIDEO,
+                Permission.READ_MEDIA_AUDIO,
+                Permission.READ_EXTERNAL_STORAGE,
+                Permission.WRITE_EXTERNAL_STORAGE,
+            ] 
+            return all(check_permission(p) for p in perms)
         return True  # ✅ Assume granted on other platforms
     
 

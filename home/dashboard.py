@@ -7,7 +7,7 @@ from kivy.properties import ObjectProperty, StringProperty
 # from kivy.graphics import Line, Color
 from kivy.uix.boxlayout import BoxLayout
 # from utils.app_utils import has_internet
-from kivy.metrics import dp
+from kivy.metrics import sp
 import os
 # import random
 # from kivy import platform
@@ -82,9 +82,9 @@ class Dashboard(Screen):
     truck_image_path : str = StringProperty('')
     location_image_path : str = StringProperty('')
 
-    team_name_font_size : int = NumericProperty(18)
-    title_anl_font_size : int = NumericProperty(20)
-    body_anl_font_size : int = NumericProperty(16)
+    team_name_font_size : int = ObjectProperty(sp(18))
+    title_anl_font_size : int = ObjectProperty(sp(20))
+    body_anl_font_size : int = ObjectProperty(sp(16))
 
     team_member_container : BoxLayout = ObjectProperty(None)
     # dashboard_server_data : dict = ObjectProperty(None)
@@ -103,23 +103,10 @@ class Dashboard(Screen):
 
     
     def on_size(self, *args):
-        print("on_size called")
-        if min(Window.width, Window.height) * 0.07 < 32:
-            self.team_name_font_size = min(Window.width, Window.height) * 0.07
-        if min(Window.width, Window.height) * 0.04 < 13.8:
-            self.title_anl_font_size = min(Window.width, Window.height) * 0.04  
-        if min(Window.width, Window.height) * 0.1 < 40:
-            self.body_anl_font_size = min(Window.width, Window.height) * 0.1 
-        
-        # # Team name (clamp to 32sp max)
-        # self.team_name_font_size = min(self.width * 0.07, 32)
-
-        # # Title font (clamp to 13.8sp max)
-        # self.title_anl_font_size = min(self.width * 0.04, 13.8)
-
-        # # Body font (clamp to 40sp max)
-        # self.body_anl_font_size = min(self.width * 0.1, 40)
-        
+        print("on_size called") 
+        self.team_name_font_size = sp(min(Window.width, Window.height) * 0.07) 
+        self.title_anl_font_size = sp(min(Window.width, Window.height) * 0.04 ) 
+        self.body_anl_font_size = sp(min(Window.width, Window.height) * 0.1) 
     
     def on_leave(self, *args):
         
