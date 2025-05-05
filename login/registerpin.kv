@@ -69,7 +69,7 @@
                 text: "Your PIN is personal and confidential. Never share it with\nanyone to protect your account from unauthorized access.\nUse a unique and strong PIN to ensure the security of your\ntransactions and data."
                 size_hint: .8,.1
                 font_name: 'roboto_light'
-                font_size: root.pin_info_font_size
+                font_size: sp(root.pin_info_font_size)
                 color: chex("#014367")
                 pos_hint: {'center_x': 0.5}  
 
@@ -80,7 +80,7 @@
 
                 LoginLabelTitle:
                     text: "Pin ;"
-                    font_size: root.title_font_size
+                    font_size: sp(root.title_font_size)
                     size_hint: 1, 0.2
  
 
@@ -88,21 +88,21 @@
                     id: pin_input
                     size_hint: 1, 0.2 
                     hint_text: "Provide Your 4 Pins . . ."
-                    font_size: root.text_input_font_size
+                    font_size: sp(root.text_input_font_size)
                     input_filter: 'int'
                     max_text_length: 4
 
                 
                 LoginLabelTitle:
                     text: "Pins ;"
-                    font_size: root.title_font_size 
+                    font_size: sp(root.title_font_size )
                     size_hint: 1, 0.2 
 
                 LoginTextInput:
                     id: pin_input_2
                     size_hint: 1, 0.2 
                     hint_text: "Re-Enter Your 4 Pins . . ."
-                    font_size: root.text_input_font_size
+                    font_size: sp(root.text_input_font_size)
                     input_filter: 'int'
                     max_text_length: 4
                 
@@ -113,7 +113,7 @@
                     text: "Login Now"
                     size_hint: 0.35, 0.15
                     pos_hint: {'right': 1 , 'center_y': 0.5}
-                    font_size: root.text_input_font_size
+                    font_size: sp(root.text_input_font_size)
                     on_press:
                         root.register_pin()
 
