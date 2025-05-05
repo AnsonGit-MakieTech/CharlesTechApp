@@ -443,15 +443,18 @@ class GeolocationModalView(ModalView):
     def go_to_location(self , new_lat , new_lon): 
         self.lat_data = new_lat
         self.lon_data = new_lon
-        if self.mapview:
-            self.mapview.center_on(new_lat, new_lon)
-            self.mapview.zoom = 16  # Optional: adjust zoom for better clarity
-            self.mapview.min_zoom = 1
-            self.mapview.max_zoom = 17
-        else:
-            Clock.schedule_once(self.load_map, 0.3)
-            Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)
-    
+        try:
+            if self.mapview:
+                self.mapview.center_on(new_lat, new_lon)
+                self.mapview.zoom = 16  # Optional: adjust zoom for better clarity
+                self.mapview.min_zoom = 1
+                self.mapview.max_zoom = 17
+            else:
+                Clock.schedule_once(self.load_map, 0.3)
+                Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)
+        except Exception as e:
+            print(f"Error: {e}")
+        
 
 
 

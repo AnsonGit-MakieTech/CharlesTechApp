@@ -98,9 +98,11 @@ class RegisterPinScreen(Screen):
         """ Update circle size dynamically when window size changes """
         self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
         self.go_back_screen_font_size = min(Window.width, Window.height) * 0.02
-        self.title_font_size = min(Window.width, Window.height) * 0.025
-        self.text_input_font_size = min(Window.width, Window.height) * 0.02
-        self.pin_info_font_size = min(Window.width, Window.height) * 0.018
+        self.title_font_size = min(Window.width, Window.height) * 0.03
+        self.text_input_font_size = min(Window.width, Window.height) * 0.025
+        self.pin_info_font_size = min(Window.width, Window.height) * 0.02
+
+         
 
     def go_back(self, *args): 
         if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
