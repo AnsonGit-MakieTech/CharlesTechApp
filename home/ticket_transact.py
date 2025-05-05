@@ -177,7 +177,7 @@ class POCUploaderLayout(MDBoxLayout):
             self.is_selecting_file = False
 
         Clock.schedule_once( reset_selecting  , 1)
-        
+
         if platform == "win":
             filechooser.open_file(on_selection=self.handle_selection)
         elif platform == "android":
@@ -392,12 +392,12 @@ class GeolocationModalView(ModalView):
                 gps.start(minTime=1000, minDistance=1)
             except NotImplementedError:
                 print("GPS not implemented on this platform")
-                self.go_to_location(12.375493, 123.63214041)
+                self.go_to_location(12.367796960, 123.62151820)
             except Exception as e:
                 print(f"Error starting GPS: {e}")
-                self.go_to_location(12.375493, 123.63214041)
+                self.go_to_location(12.367796960, 123.62151820)
         else:
-            self.go_to_location(12.375493, 123.63214041)  # fallback
+            self.go_to_location(12.367796960, 123.62151820)  # fallback
 
     def gps_status(self, status_type, status):
         print(f"GPS Status → {status_type}: {status}")
@@ -415,7 +415,7 @@ class GeolocationModalView(ModalView):
             if not has_internet():
                 return
             
-            self.mapview = MapView(lat=12.375493, lon=123.63214041, zoom=25,
+            self.mapview = MapView(lat=12.367796960, lon=123.62151820, zoom=25,
                               map_source=map_source,
                               size_hint=(1, 1),
                               pos_hint={"center_x": 0.5, "center_y": 0.5})
