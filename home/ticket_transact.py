@@ -172,6 +172,12 @@ class POCUploaderLayout(MDBoxLayout):
         if self.is_selecting_file:
             return
         self.is_selecting_file = True
+        
+        def reset_selecting(*args):
+            self.is_selecting_file = False
+
+        Clock.schedule_once( reset_selecting  , 1)
+        
         if platform == "win":
             filechooser.open_file(on_selection=self.handle_selection)
         elif platform == "android":
