@@ -100,11 +100,12 @@ class RegisterPinScreen(Screen):
         self.go_back_screen_font_size = min(Window.width, Window.height) * 0.02
         self.title_font_size = min(Window.width, Window.height) * 0.03
         self.text_input_font_size = min(Window.width, Window.height) * 0.025
-        self.pin_info_font_size = min(Window.width, Window.height) * 0.02
+        self.pin_info_font_size = min(Window.width, Window.height) * 0.017
 
          
 
     def go_back(self, *args): 
+        
         if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
             self.manager.transition.direction = 'right'
         else:
