@@ -379,19 +379,19 @@ class GeolocationModalView(ModalView):
         else:
             self.is_valid_location = False
 
-    def on_open(self, *args):
-        self.lat_data = 0
-        self.lon_data = 0
-        if self.lat_data == 0 or self.lon_data == 0:
-            if platform == "android":
-                try:
-                    gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
-                    gps.start(minTime=1000, minDistance=1)
-                except NotImplementedError:
-                    print("GPS not implemented on this platform")
-                    self.go_to_location(12.375493, 123.63214041)
-            else:
-                self.go_to_location(12.375493, 123.63214041)  # fallback
+    def on_open(self, *args): 
+        if platform == "android":
+            try:
+                gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
+                gps.start(minTime=1000, minDistance=1)
+            except NotImplementedError:
+                print("GPS not implemented on this platform")
+                self.go_to_location(12.375493, 123.63214041)
+            except Exception as e:
+                print(f"Error starting GPS: {e}")
+                self.go_to_location(12.375493, 123.63214041)
+        else:
+            self.go_to_location(12.375493, 123.63214041)  # fallback
 
     def gps_status(self, status_type, status):
         print(f"GPS Status → {status_type}: {status}")
