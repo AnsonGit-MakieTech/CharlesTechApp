@@ -552,7 +552,7 @@ class Step1Layout(MDBoxLayout):
         if self.next_step_button and self.next_step_button.collide_point(*touch.pos): 
             # You can manually call its on_release or do any action
             if self.parent_event:
-                self.parent_event()
+                self.parent_event() 
             # self.next_step_button.dispatch('on_release')  # Optional: simulate normal click
             return True  # Stop the touch here if needed (so it doesn't pass through)
 
