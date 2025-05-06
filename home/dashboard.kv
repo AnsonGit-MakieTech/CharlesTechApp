@@ -201,7 +201,7 @@
     
     canvas.before:
         Color:
-            rgba: chex("ACE2E1")
+            rgba: chex("ACE2E1")[:3] + [0.5] 
         RoundedRectangle:
             pos: self.pos
             size: self.size

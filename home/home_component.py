@@ -32,37 +32,20 @@ class CallControl:
 
 
 class CustomScrollEffect(DampedScrollEffect):
-
     parent_event: callable = ObjectProperty(None)
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.triggered = False  # Only allow refresh once per pull
+    pulled_enough = False
 
     def on_overscroll(self, *args):
         super().on_overscroll(*args)
+        self.pulled_enough = self.overscroll < -50
 
-        # Watch how far user pulled down
-        if self.overscroll < -50:
-            print("Pulled down enough!") 
-            self.triggered = True
-        else:
-            print("Not enough!")
-            self.triggered = False  # Reset if not enough
-
-    def on_touch_up(self, touch):
-        # Only trigger if they let go *after* pulling enough
-        if self.triggered:
-            self.triggered = False  # prevent multiple triggers
-            print("Pulled enough, refreshing!")
-            self.refresh()
-
-        return super().on_touch_up(touch)
+    def should_refresh(self):
+        return self.pulled_enough
 
     @CallControl(interval=3)
     def refresh(self):
-        print("✅ Pull-to-refresh triggered!")
         if self.parent_event:
+            print("✅ Pull-to-refresh triggered!")
             self.parent_event()
 
 
@@ -78,9 +61,15 @@ class CustomScrollView(ScrollView):
     def setup_effect_callback(self, refresh_callback: object): 
         self.effect_cls = CustomScrollEffect
         self.effect_cls.parent_event = refresh_callback
+        self.effect_y.parent_event = refresh_callback  # set manually
         print("Setup : ", refresh_callback)
         
- 
+    def on_touch_up(self, touch):
+        # Call refresh only after overscroll + release
+        if isinstance(self.effect_y, CustomScrollEffect):
+            if self.effect_y.should_refresh():
+                self.effect_y.refresh()
+        return super().on_touch_up(touch)
 
 class CustomSpinner(Image):
     # process_image: str = StringProperty('')
