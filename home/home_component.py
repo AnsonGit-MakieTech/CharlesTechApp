@@ -37,7 +37,7 @@ class CustomScrollEffect(DampedScrollEffect):
 
     def on_overscroll(self, *args):
         super().on_overscroll(*args)
-        self.pulled_enough = self.overscroll < -50
+        self.pulled_enough = self.overscroll < -250
 
     def should_refresh(self):
         return self.pulled_enough
