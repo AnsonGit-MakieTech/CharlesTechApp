@@ -547,25 +547,28 @@ class Step1Layout(MDBoxLayout):
     
     parent_event : object = ObjectProperty(None)
     next_step_button : Button = ObjectProperty(None)
+    adjusting_height = ObjectProperty(dp(95))
     
     def on_touch_down(self, touch):
         if self.next_step_button and self.next_step_button.collide_point(*touch.pos): 
             # You can manually call its on_release or do any action
             if self.parent_event:
-                self.parent_event() 
+                # self.parent_event()
+                print(f"parent_event: Yahooo")
+                pass
             # self.next_step_button.dispatch('on_release')  # Optional: simulate normal click
             return True  # Stop the touch here if needed (so it doesn't pass through)
 
         return super().on_touch_down(touch)
-
     def reset_layout(self):
         self.is_not_done = True 
 
-    def close(self):
-        pass
+    def has_next(self):
+        self.adjusting_height = dp(40)
 
-    def open(self):
-        pass
+    def has_no_next(self):
+        self.adjusting_height = dp(95)
+
 
 
 
@@ -925,6 +928,7 @@ class TicketTransactionScreeen(Screen):
         if step == 1:
             self.step1_layout.is_not_done = True
             self.step1_layout.parent_event = self.next_step_1
+            self.step1_layout.has_no_next()
             self.geolocation_step_layout.display_none()
             self.fiber_connection_step_layout.display_none()
             self.poc_layout.display_none()
@@ -946,6 +950,7 @@ class TicketTransactionScreeen(Screen):
         elif step == 2:
             self.step1_layout.is_not_done = False
             self.step1_layout.parent_event = lambda *args : None
+            self.step1_layout.has_next()
             self.geolocation_step_layout.display_block()
             self.geolocation_step_layout.is_not_done = True
             self.geolocation_step_layout.procced_event = self.next_step_2
@@ -969,6 +974,7 @@ class TicketTransactionScreeen(Screen):
         elif step == 3:
             self.step1_layout.is_not_done = False
             self.step1_layout.parent_event = lambda *args : None
+            self.step1_layout.has_next()
             self.geolocation_step_layout.display_block()
             self.geolocation_step_layout.procced_event = lambda *args : None
             self.geolocation_step_layout.is_not_done = False
@@ -994,6 +1000,7 @@ class TicketTransactionScreeen(Screen):
         elif step == 4:
             self.step1_layout.is_not_done = False
             self.step1_layout.parent_event = lambda *args : None
+            self.step1_layout.has_next()
             self.geolocation_step_layout.display_block()
             self.geolocation_step_layout.procced_event = lambda *args : None
             self.geolocation_step_layout.is_not_done = False
@@ -1036,6 +1043,7 @@ class TicketTransactionScreeen(Screen):
         elif step == 5:
             self.step1_layout.is_not_done = False
             self.step1_layout.parent_event = lambda *args : None
+            self.step1_layout.has_next()
             self.geolocation_step_layout.display_block()
             self.geolocation_step_layout.procced_event = lambda *args : None
             self.geolocation_step_layout.is_not_done = False

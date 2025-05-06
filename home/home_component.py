@@ -42,7 +42,7 @@ class CustomScrollEffect(DampedScrollEffect):
     def should_refresh(self):
         return self.pulled_enough
 
-    @CallControl(interval=3)
+    @CallControl(interval=1)
     def refresh(self):
         if self.parent_event:
             print("✅ Pull-to-refresh triggered!")
