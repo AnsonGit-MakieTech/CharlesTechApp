@@ -169,7 +169,7 @@ class TicketListScreen(Screen):
 
             def communication_event(*args):
                 data = app.communications.get_and_remove(key) 
-                print("data : ", data)
+                # print("data : ", data)
                 if data.get("result", None):
                     raw_tickets = data.get("data", {})
 
@@ -183,7 +183,7 @@ class TicketListScreen(Screen):
                     to_remove = [lkey for lkey in self.tickets if lkey not in raw_tickets]
                     for rkey in to_remove:
                         del self.tickets[rkey]
-
+    
 
 
                     if len(self.tickets) > 0: 
@@ -201,7 +201,7 @@ class TicketListScreen(Screen):
 
                             new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
                             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
-                            print("ticket : ", ticket)
+                            # print("ticket : ", ticket)
                             time.sleep(0.1)
                     self.is_calling_refresh = False
                     return False

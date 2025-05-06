@@ -14,6 +14,7 @@ import os
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 
 from kivy.graphics import PushMatrix, PopMatrix, Rotate, Translate
+from kivy import platform
 
 
 class CallControl:
@@ -31,22 +32,39 @@ class CallControl:
 
 
 class CustomScrollEffect(DampedScrollEffect):
-    
-    parent_event : callable = ObjectProperty(None)
+
+    parent_event: callable = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.controlled_callback = self.do_refresh_controlled
+        self.triggered = False  # Only allow refresh once per pull
 
     def on_overscroll(self, *args):
         super().on_overscroll(*args)
-        if self.overscroll < -50:  # Pulling down
-            self.controlled_callback()
+
+        # Watch how far user pulled down
+        if self.overscroll < -50:
+            print("Pulled down enough!") 
+            self.triggered = True
+        else:
+            print("Not enough!")
+            self.triggered = False  # Reset if not enough
+
+    def on_touch_up(self, touch):
+        # Only trigger if they let go *after* pulling enough
+        if self.triggered:
+            self.triggered = False  # prevent multiple triggers
+            print("Pulled enough, refreshing!")
+            self.refresh()
+
+        return super().on_touch_up(touch)
 
     @CallControl(interval=3)
-    def do_refresh_controlled(self):
-        print("🔄 Pull-to-refresh triggered!")
+    def refresh(self):
+        print("✅ Pull-to-refresh triggered!")
         if self.parent_event:
             self.parent_event()
+
 
 
 class CustomScrollView(ScrollView):
