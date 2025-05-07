@@ -7,6 +7,9 @@
 
     phone_number_editor : phone_number_editor
     email_editor : email_editor
+    old_pin_editor : old_pin_editor
+    new_pin_editor : new_pin_editor
+    confirm_pin_editor : confirm_pin_editor
  
 
     ScrollView: 
@@ -169,11 +172,13 @@
                 height: sp(10)
 
             SearchBoxTicket: 
+                id : old_pin_editor
                 pos_hint: {'center_x': 0.5,'center_y': 0.5}
                 size_hint: 0.8, None
                 height: sp(30)
                 font_size: sp(10)
                 hint_text: "Provide Your Old 4 Pins . . ."
+                on_text: root.limit_to_4_digits(self, self.text)
 
 
 
@@ -197,11 +202,13 @@
                 height: sp(10)
                 
             SearchBoxTicket: 
+                id : new_pin_editor
                 pos_hint: {'center_x': 0.5,'center_y': 0.5}
                 size_hint: 0.8, None
                 height: sp(30)
                 font_size: sp(10)
                 hint_text: "Provide Your New 4 Pins . . ." 
+                on_text: root.limit_to_4_digits(self, self.text)
 
             Widget:
                 size_hint: 1, None
@@ -223,11 +230,13 @@
                 height: sp(10)
                 
             SearchBoxTicket: 
+                id : confirm_pin_editor
                 pos_hint: {'center_x': 0.5,'center_y': 0.5}
                 size_hint: 0.8, None
                 height: sp(30)
                 font_size: sp(10)
                 hint_text: "Re-Enter Your 4 Pins . . ."
+                on_text: root.limit_to_4_digits(self, self.text)
 
             Widget:
                 size_hint: 1, None
@@ -250,7 +259,7 @@
                     font_name: 'roboto_semibold'
                     background_color: (0 , 0, 0 ,0)
                     on_release:
-                        root.update_techinfo()
+                        root.update_pin()
 
                     canvas.before:
                         Color:
@@ -259,18 +268,7 @@
                             pos: self.pos
                             size: self.size
                             radius: (4, 4 ,4 ,4)
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
             Widget:

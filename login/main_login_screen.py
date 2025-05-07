@@ -40,6 +40,7 @@ class RegisterPinScreen(Screen):
 
     pin_input = ObjectProperty(None)
     pin_input_2 = ObjectProperty(None)
+    
  
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -51,7 +52,13 @@ class RegisterPinScreen(Screen):
             self.trigger_keyboard_height = Clock.create_trigger(self.update_keyboard_height, 0.2, interval=True)
             self.trigger_cancel_keyboard_height = Clock.create_trigger(lambda dt: self.trigger_keyboard_height.cancel(), 1.0, interval=False)
 
-    
+
+    def limit_to_4_digits(self, instance, value):
+        digits = ''.join(filter(str.isdigit, value))[:4]
+        if instance.text != digits:
+            instance.text = digits
+
+
     def update_keyboard_height(self, dt):
         """ Detect keyboard height and move screen if necessary """
         if platform == 'android':

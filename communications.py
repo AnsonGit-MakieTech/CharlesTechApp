@@ -479,4 +479,47 @@ class Communications:
         thread.start()
 
 
+    def reset_pin(self, old_pin : str, new_pin : str, confirm_pin : str):
+        key = "RESET_PIN"
+        def event(self_thread):
+            while self.has_thread_running:
+                time.sleep(0.5)
+            self.has_thread_running = True
+            self.key_running.append(key)
+
+            json_data = {
+                "action": "update_pin",
+                "old_pin": old_pin,
+                "new_pin": new_pin,
+                "confirm_pin": confirm_pin
+            } 
+            url = self.server + "technical_center_api"
+            headers = {
+                "Content-Type": "application/json",
+                # "X-CSRFToken": csrf_token,
+                # "Referer": url,  # important if Django checks referer
+                # "Origin": self.server,
+                "User-Agent": "KivyApp/1.0.0",
+            }
+            try:
+                response = self.session.post(url, headers=headers, json=json_data)
+                if response.ok:
+                    data = response.json()
+                    self.data[key] = {"result" : True, "message" : "" , "data" : data}
+                else:
+                    print(response.text)
+                    self.data[key] = {"result" : False, "message" : ""}
+            except Exception as e:
+                self.data[key] = {"result" : False, "message" : str(e)}
+            self.has_thread_running = False
+            self.key_running.remove(key)
+            if self_thread in self.threads:
+                self.threads.remove(self_thread)
+
+        
+        thread = threading.Thread(target=lambda: event(thread))
+        self.threads.append(thread)
+        thread.start()
+
+
 

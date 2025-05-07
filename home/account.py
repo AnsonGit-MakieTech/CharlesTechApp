@@ -24,6 +24,11 @@ class AccountScreen(Screen):
     phone: str = StringProperty('')
     phone_number_editor: TextInput = ObjectProperty()
     email_editor: TextInput = ObjectProperty()
+    
+    old_pin_editor : TextInput = ObjectProperty()
+    new_pin_editor : TextInput = ObjectProperty()
+    confirm_pin_editor : TextInput = ObjectProperty()
+
     is_loaded: bool = False
     is_selecting_file : bool = BooleanProperty(False)
 
@@ -99,6 +104,36 @@ class AccountScreen(Screen):
 
             Clock.schedule_interval(communication_event, 1)  
 
+
+    def update_pin(self, *args):
+        app = MDApp.get_running_app()
+        key = "RESET_PIN"
+        if key not in app.communications.key_running:
+            old_pin = self.old_pin_editor.text
+            new_pin = self.new_pin_editor.text
+            confirm_pin = self.confirm_pin_editor.text
+
+            self.manager.proccess_layout.open() 
+            app.communications.reset_pin(old_pin, new_pin, confirm_pin)
+            def communication_event(*args):
+                data = app.communications.get_and_remove(key)
+                if data:
+                    if data.get("result", False): 
+                        self.manager.proccess_layout.display_success("Successfully Updated Pin") 
+                        self.old_pin_editor.text = ""
+                        self.new_pin_editor.text = ""
+                        self.confirm_pin_editor.text = ""
+                    else:
+                        self.manager.proccess_layout.display_error(data.get("data", {}).get("message", "Failed to update pin"))
+
+                    return False   
+
+            Clock.schedule_interval(communication_event, 1)  
+
+    def limit_to_4_digits(self, instance, value):
+        digits = ''.join(filter(str.isdigit, value))[:4]
+        if instance.text != digits:
+            instance.text = digits
 
 
 

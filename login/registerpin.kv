@@ -89,8 +89,8 @@
                     size_hint: 1, 0.2 
                     hint_text: "Provide Your 4 Pins . . ."
                     font_size: sp(root.text_input_font_size)
-                    input_filter: 'int'
-                    max_text_length: 4
+                    input_filter: 'int' 
+                    on_text: root.limit_to_4_digits(self, self.text)
 
                 
                 LoginLabelTitle:
@@ -104,7 +104,7 @@
                     hint_text: "Re-Enter Your 4 Pins . . ."
                     font_size: sp(root.text_input_font_size)
                     input_filter: 'int'
-                    max_text_length: 4
+                    on_text: root.limit_to_4_digits(self, self.text)
                 
                 Widget:
                     size_hint: 1,0.05
