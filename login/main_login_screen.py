@@ -262,7 +262,7 @@ class RegisterAccountScreen(Screen):
     def register_account(self, *args):
         app = MDApp.get_running_app()
         if self.valid_inputs():
-            if self.manager.parent.user_screen_action == LOGIN_SCREEN_FIRST_ACTION:
+            if self.manager.parent.user_screen_action == LOGIN_SCREEN_FIRST_ACTION or self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
                 if app.communications.is_login:
                     return
                 
@@ -275,6 +275,7 @@ class RegisterAccountScreen(Screen):
                 
                 def continue_registering(*args):
                     self.manager.custom_popup.dismiss()
+                    self.manager.transition.direction = 'left'
                     self.manager.parent.user_screen_action = LOGIN_SCREEN_ACTION_REGISTER
                     self.manager.current = LOGIN_SCREEN_REGISTER_PIN_SCREEN
                 
@@ -298,6 +299,8 @@ class RegisterAccountScreen(Screen):
                             return False
                         elif result.get("with_pin", None) == False:
                             self.manager.custom_popup.my_text = "No Pin Found! Please Register!"
+                            app.user_app_data['username'] = self.username_input.text
+                            app.user_app_data['password'] = self.password_input.text 
                             self.manager.custom_popup.open()
                             self.manager.custom_popup.auto_dismiss = False
                             Clock.schedule_once(continue_registering, 2)
