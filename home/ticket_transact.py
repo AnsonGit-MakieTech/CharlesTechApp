@@ -664,7 +664,14 @@ class AccountInfoLayout(MDBoxLayout):
                     return super(label.__class__, label).on_touch_down(touch)  # ✅ Call original method 
                 self.info_label.on_touch_down = MethodType(on_touch_down, self.info_label)
                 account_info = f"[u]{account_info}[/u]"
-                
+            else:
+                def on_touch_down(label, touch):
+                    """ Detect touch inside the image """
+                    if label.collide_point(*touch.pos):
+                        # click_event()
+                        return True  # ✅ Stops event propagation if needed
+                    return super(label.__class__, label).on_touch_down(touch)  # ✅ Call original method 
+                self.info_label.on_touch_down = MethodType(on_touch_down, self.info_label)
             self.account_info = account_info
         if (color):
             self.info_color = color
@@ -702,8 +709,8 @@ class TicketTransactionScreeen(Screen):
     account_name_info : AccountInfoLayout = ObjectProperty(None)
     account_email : AccountInfoLayout = ObjectProperty(None) 
     account_loc1 : AccountInfoLayout = ObjectProperty(None)
-    account_loc2 : AccountInfoLayout = ObjectProperty(None)
-    account_loc3 : AccountInfoLayout = ObjectProperty(None)
+    # account_loc2 : AccountInfoLayout = ObjectProperty(None)
+    # account_loc3 : AccountInfoLayout = ObjectProperty(None)
     account_phone1 : AccountInfoLayout = ObjectProperty(None)
     account_phone2 : AccountInfoLayout = ObjectProperty(None)
     account_phone3 : AccountInfoLayout = ObjectProperty(None) 
@@ -845,28 +852,33 @@ class TicketTransactionScreeen(Screen):
         self.account_name_info.setup(icon_image='account-box' , account_info=self.ticket.get( "client_name" , "N/A"))
         self.account_email.setup(icon_image='email' , account_info=self.ticket.get( "email" ,"N/A"))
 
-        def setup_location_1():
-            lat, lng = self.ticket.get("lat_1", 14.5995), self.ticket.get("lng_1", 120.9842)
-            self.open_google_maps(14.5995, 120.9842)
 
-        def setup_location_2():
-            lat, lng = self.ticket.get("lat_2", 14.5995), self.ticket.get("lng_2", 120.9842)
-            self.open_google_maps(14.5995, 120.9842)
+        # def setup_location_2():
+        #     lat, lng = self.ticket.get("lat_2", 14.5995), self.ticket.get("lng_2", 120.9842)
+        #     self.open_google_maps(14.5995, 120.9842)
             
-        def setup_location_3():
-            lat, lng = self.ticket.get("lat_3", 14.5995), self.ticket.get("lng_3", 120.9842)
-            self.open_google_maps(14.5995, 120.9842)
+        # def setup_location_3():
+        #     lat, lng = self.ticket.get("lat_3", 14.5995), self.ticket.get("lng_3", 120.9842)
+        #     self.open_google_maps(14.5995, 120.9842)
 
+        geomap = self.ticket.get("geomap", [14.5995, 120.9842])
+        
+        if geomap:
+            def setup_location_1():
+                lat, lng = geomap
+                self.open_google_maps(lat, lng)
 
-        self.account_loc1.setup(icon_image='google-maps' , account_info=self.ticket.get( "address", "N/A") , click_event=setup_location_1)
+            self.account_loc1.setup(icon_image='google-maps' , account_info=self.ticket.get( "address", "N/A") , click_event=setup_location_1)
+        else:
+            self.account_loc1.setup(icon_image='google-maps' , account_info=self.ticket.get( "address", "N/A"), click_event=None)
         
-        self.account_loc2.setup( account_info=self.ticket.get( "address2", "N/A"), click_event=setup_location_2)
+        # self.account_loc2.setup( account_info=self.ticket.get( "address2", "N/A"), click_event=setup_location_2)
         
-        self.account_loc3.setup( account_info=self.ticket.get( "address3", "N/A"), click_event=setup_location_3)
+        # self.account_loc3.setup( account_info=self.ticket.get( "address3", "N/A"), click_event=setup_location_3)
         
         self.account_phone1.setup(icon_image='phone' , account_info=self.ticket.get( "primary_contact", "N/A"))
         self.account_phone2.setup(account_info=self.ticket.get( "phone2", "N/A"))
-        self.account_phone3.setup(account_info= self.ticket.get( "phone3", "N/A"))
+        self.account_phone3.setup(account_info=self.ticket.get( "phone3", "N/A"))
 
         state = self.ticket.get( "state", "N/A")
         self.state_widget.setup(
