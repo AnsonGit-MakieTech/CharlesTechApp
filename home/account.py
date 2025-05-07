@@ -88,10 +88,10 @@ class AccountScreen(Screen):
                         self.manager.proccess_layout.display_success("User tech info updated successfully")
                         if image:
                             self.no_image_path = image
-                        if email:
-                            self.email_editor.text = email
+                        if email: 
+                            self.email = email
                         if phone:
-                            self.phone_number_editor.text = phone
+                            self.phone = phone
                     else:
                         self.manager.proccess_layout.display_error("Failed to update user tech info")
 

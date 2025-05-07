@@ -112,6 +112,15 @@ class RegisterPinScreen(Screen):
             self.manager.transition.direction = 'left'
         self.manager.current =  LOGIN_SCREEN_REGISTER_ACCOUNT_SCREEN
 
+    
+    def button_event(self, *args):
+        if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_FORGOT_PIN:
+            print("Forgot pin")
+            self.forgot_pin()
+        else:
+            print("Login")
+            self.register_pin()
+
     def register_pin(self, *args):
         if len(self.pin_input.text) > 4:
             print("Pin is too long")
@@ -159,9 +168,56 @@ class RegisterPinScreen(Screen):
             
             Clock.schedule_interval(communication_event, 1)
             return
-        else:
-            print("Forgot Pin")
-        self.manager.popup.open()
+
+
+
+    def forgot_pin(self, *args):
+        if len(self.pin_input.text) > 4:
+            print("Pin is too long")
+            return
+        if self.pin_input.text != self.pin_input_2.text:
+            print("Pins do not match")
+            return
+        
+        register_screen = self.manager.get_screen(LOGIN_SCREEN_REGISTER_ACCOUNT_SCREEN)
+        username = register_screen.username_input.text
+        password = register_screen.password_input.text
+        pin = self.pin_input.text
+        app = MDApp.get_running_app()
+        if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_FORGOT_PIN:
+            app.communications.forgot_pin(username, password, pin)
+            self.manager.popup.open()
+
+            def done_registering(*args):
+                self.manager.custom_popup.dismiss()
+                
+            
+            def continue_registering(*args):
+                self.manager.custom_popup.dismiss()
+                self.manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN
+            
+            def communication_event(*args):
+                data = app.communications.get_and_remove("FORGOT_PIN")
+                if data:
+                    self.manager.popup.dismiss() 
+                    if data.get("result", None) == "NA":
+                        self.manager.custom_popup.my_text = data.get("message", "No Internet Connection")
+                        Clock.schedule_once(done_registering, 1)
+                        return False
+                    
+                    if data.get("result", False):
+                        self.manager.custom_popup.my_text = "Successfully updated pin"
+                        self.manager.custom_popup.auto_dismiss = False 
+                        Clock.schedule_once(continue_registering, 2) 
+                    else:
+                        self.manager.custom_popup.my_text = data.get("data", {}).get("text", "Please try again")
+                        Clock.schedule_once(done_registering, 2)
+                    self.manager.custom_popup.open()
+                    return False
+                
+            
+            Clock.schedule_interval(communication_event, 1)
+            return 
 
 
 
@@ -316,12 +372,13 @@ class RegisterAccountScreen(Screen):
                 
 
             
-        if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER: 
-            self.manager.transition.direction = 'left'
-        else:
-            self.manager.transition.direction = 'right'
-        
-        self.manager.current = LOGIN_SCREEN_REGISTER_PIN_SCREEN
+            if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER: 
+                # self.manager.transition.direction = 'left'
+                pass
+            else:
+                self.manager.transition.direction = 'right'
+            
+            self.manager.current = LOGIN_SCREEN_REGISTER_PIN_SCREEN
 
     def valid_inputs(self):
         if not self.username_input.text:

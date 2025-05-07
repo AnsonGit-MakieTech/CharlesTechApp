@@ -351,8 +351,8 @@ class Communications:
                     # You can also extract the file extension if needed
                     file_ext = os.path.splitext(profile)[1].replace('.', '')  # jpg, png, etc.
 
-                    json_data["profile"] = encoded_image
-                    json_data["profile_ext"] = file_ext  
+                    json_data["profilepic"] = encoded_image
+                    json_data["profilepic_ext"] = file_ext  
 
             url = self.server + "technical_center_api"
             headers = {
@@ -428,4 +428,55 @@ class Communications:
         thread = threading.Thread(target=lambda: event(thread, data))
         self.threads.append(thread)
         thread.start()
+
+
+    def forgot_pin(self, username : str, password : str, new_pin : str):
+        key = "FORGOT_PIN"
+        def event(self_thread):
+            while self.has_thread_running:
+                time.sleep(0.5)
+            self.has_thread_running = True
+            self.key_running.append(key)
+
+            if not has_internet():
+                self.data[key] = {"result" : "NA", "message" : "No Internet Connection"}
+                self.has_thread_running = False
+                self.key_running.remove(key) 
+                if self_thread in self.threads:
+                    self.threads.remove(self_thread) 
+                return
+
+            json_data = {"username": username, "password": password, "new_pin": new_pin, "action": "reset_pin"}
+            # csrf_token = self.session.cookies.get('csrftoken')  # Django sets this
+            url = self.server + "technical_unauthenticated_api"
+            headers = {
+                "Content-Type": "application/json",
+                # "X-CSRFToken": csrf_token,
+                # "Referer": url,  # important if Django checks referer
+                # "Origin": self.server,
+                "User-Agent": "KivyApp/1.0.0",
+            } 
+            try:
+                response = self.session.post(url, headers=headers, json=json_data)
+                if response.ok:
+                    data = response.json() 
+                    self.data[key] = {"result" : True, "message" : "Verified Users!" , "data" : data}
+                else:
+                    print(response.text)
+                    self.data[key] = {"result" : False, "message" : "No Pin Found! Please Register!"}
+                
+            except Exception as e:
+                    self.data[key] = {"result" : False, "message" : "Error: " + str(e)}
+            self.has_thread_running = False
+            self.key_running.remove(key)
+
+            if self_thread in self.threads:
+                self.threads.remove(self_thread)
+            
+        
+        thread = threading.Thread(target=lambda: event(thread))
+        self.threads.append(thread)
+        thread.start()
+
+
 
