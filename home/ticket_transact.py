@@ -574,26 +574,72 @@ class Step1Layout(MDBoxLayout):
 
 class Remark(BoxLayout):
     remark_text : str = StringProperty('This is a remark')
+    remark_id : int = NumericProperty(0)
 
 
 class RemarksListViewer(ModalView):
-    pass
+    
+    remarks_list_view : BoxLayout = ObjectProperty(None)
+
+    def clean_remarks_list_view(self):
+        self.remarks_list_view.clear_widgets()
+
+    def add_remarks(self, title : str, remarks : str , rdate : str , by : str, rid : int):
+        remark = Remark()
+        remark.remark_id = rid
+        remark.remark_text = f"[font=roboto_semibold]TITLE: [/font] {title}\n[font=roboto_semibold]Content: [/font] {remarks} \n[font=roboto_semibold]DATE: [/font] {rdate} \n[font=roboto_semibold]ADDED BY: [/font] {by}"
+        self.remarks_list_view.add_widget(remark , index=len(self.remarks_list_view.children))
+
+    def add_remarks_from_list(self, remarks_list : list):
+        self.clean_remarks_list_view()
+        for remark in remarks_list:
+            self.add_remarks(remark['title'], remark['remark'], remark['remark_date'], remark['remark_by'], remark['remark_by_id'])
      
 
 class RemarksInputLayout(ModalView):
     remark_text : TextInput = ObjectProperty(None)
+    title_remark : TextInput = ObjectProperty(None)
     is_ready_to_submit : bool = BooleanProperty(False)
+    parent_obj : object = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.remark_text.bind(text=self.on_text_change)
+        self.title_remark.bind(text=self.on_text_change)
     
     def on_open(self):
         self.remark_text.focus = True
     
     def on_text_change(self, instance, value):
-        self.is_ready_to_submit = len(value) > 0
+        if len(self.remark_text.text) > 0 and len(self.title_remark.text) > 0:
+            self.is_ready_to_submit = True
+        else:
+            self.is_ready_to_submit = False
     
+    def submit_remarks(self):
+        key = "ADD_REMARKS" 
+        app = MDApp.get_running_app()
+        if key in app.communications.key_running:
+            return 
+        self.parent_obj.manager.proccess_layout.open() 
+        app.communications.add_remarks( self.parent_obj.ticket.get('ticket_id'), self.title_remark.text , self.remark_text.text )
+        def communication_event(*args):
+            data = app.communications.get_and_remove(key)  
+            if data.get("result", None): 
+                self.parent_obj.manager.proccess_layout.display_success(data.get("message"))
+                self.title_remark.text = ""
+                self.remark_text.text = ""
+                Clock.schedule_once(self.parent_obj.refetch_remarks, 0.5)
+                return False
+            elif data.get("result", False) == False: 
+                self.parent_obj.manager.proccess_layout.display_error(data.get("message")) 
+                return False
+            elif data.get("result", False) == None:
+                self.parent_obj.manager.proccess_layout.display_error(data.get("message"))
+                return False
+                
+
+        Clock.schedule_interval(communication_event, 1)
 
 
 class AccountInfoLayout(MDBoxLayout):
@@ -712,6 +758,7 @@ class TicketTransactionScreeen(Screen):
         
         
         self.remarks_input = RemarksInputLayout()
+        self.remarks_input.parent_obj = self
         self.remarks_list = RemarksListViewer()
         self.geolocation_modal = GeolocationModalView()
         self.fiber_connection_modal = FiberConnectionModalView()
@@ -778,6 +825,7 @@ class TicketTransactionScreeen(Screen):
         Animation(height=dp(-10), opacity = 0, duration=0.5).start(self.manager.parent.navigation_bar)
         Animation(opacity=1, duration=0.5).start(self)
 
+        self.remarks_list.clean_remarks_list_view()
         # self.poc_file_uploader_modal.open()
         print("on_enter : Ticket Transact" , self.ticket)
         if not self.ticket:
@@ -845,7 +893,12 @@ class TicketTransactionScreeen(Screen):
 
         self.display_by_step(self.ticket.get("step", 1))
         # self.display_by_step(4)
+
+        def display_the_remaks(*args):
+            remarks = self.ticket.get("remarks", [])
+            self.remarks_list.add_remarks_from_list(remarks)
         
+        Clock.schedule_once(display_the_remaks, 0.5)
         return super().on_enter(*args)
     
 
@@ -1402,6 +1455,27 @@ class TicketTransactionScreeen(Screen):
         Clock.schedule_interval(communication_event, 1)
 
 
+
+    def refetch_remarks(self, *args):
+        key = "REFETCH_REMARKS" 
+        app = MDApp.get_running_app()
+        if key in app.communications.key_running:
+            return 
+        app.communications.refetch_remarks( self.ticket.get('ticket_id') )
+        def communication_event(*args):
+            data = app.communications.get_and_remove(key)  
+            if data.get("result", None):
+                remarks = data.get("data", {}).get("remarks", [])
+                self.remarks_list.add_remarks_from_list(remarks)
+                return False
+            elif data.get("result", False) == False: 
+                return False
+            elif data.get("result", False) == None:
+                return False
+                
+
+        Clock.schedule_interval(communication_event, 1)
+    
 
 
 

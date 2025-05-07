@@ -521,5 +521,88 @@ class Communications:
         self.threads.append(thread)
         thread.start()
 
+    def add_remarks(self, ticket_id : str, title : str, remarks : str):
+        key = "ADD_REMARKS"
+        def event(self_thread):
+            while self.has_thread_running:
+                time.sleep(0.5)
+            self.has_thread_running = True
+            self.key_running.append(key)
+
+            json_data = {
+                "action": "add_ticket_remarks",
+                "title": title,
+                "ticket_id": ticket_id,
+                "remarks": remarks
+            } 
+            url = self.server + "technical_center_api"
+            headers = {
+                "Content-Type": "application/json",
+                # "X-CSRFToken": csrf_token,
+                # "Referer": url,  # important if Django checks referer
+                # "Origin": self.server,
+                "User-Agent": "KivyApp/1.0.0",
+            }
+            try:
+                response = self.session.post(url, headers=headers, json=json_data)
+                if response.ok:
+                    data = response.json()
+                    self.data[key] = {"result" : True, "message" : "Successfully added remarks" , "data" : data}
+                else:
+                    print(response.text)
+                    self.data[key] = {"result" : False, "message" : "Failed to add remarks"}
+            except Exception as e:
+                self.data[key] = {"result" : False, "message" : str(e)}
+            self.has_thread_running = False
+            self.key_running.remove(key)
+            if self_thread in self.threads:
+                self.threads.remove(self_thread)
+
+        
+        thread = threading.Thread(target=lambda: event(thread))
+        self.threads.append(thread)
+        thread.start()
+
+    def refetch_remarks(self, ticket_id : str):
+        key = "REFETCH_REMARKS"
+        def event(self_thread):
+            while self.has_thread_running:
+                time.sleep(0.5)
+            self.has_thread_running = True
+            self.key_running.append(key)
+
+            json_data = {
+                "action": "get_remarks_by_ticket",
+                "ticket_id": ticket_id, 
+            } 
+            url = self.server + "technical_center_api"
+            headers = {
+                "Content-Type": "application/json",
+                # "X-CSRFToken": csrf_token,
+                # "Referer": url,  # important if Django checks referer
+                # "Origin": self.server,
+                "User-Agent": "KivyApp/1.0.0",
+            }
+            try:
+                response = self.session.post(url, headers=headers, json=json_data)
+                if response.ok:
+                    data = response.json()
+                    self.data[key] = {"result" : True, "message" : "Successfully added remarks" , "data" : data}
+                else:
+                    print(response.text)
+                    self.data[key] = {"result" : False, "message" : "Failed to add remarks"}
+            except Exception as e:
+                self.data[key] = {"result" : False, "message" : str(e)}
+            self.has_thread_running = False
+            self.key_running.remove(key)
+            if self_thread in self.threads:
+                self.threads.remove(self_thread)
+
+        
+        thread = threading.Thread(target=lambda: event(thread))
+        self.threads.append(thread)
+        thread.start()
+
+
 
 
