@@ -138,11 +138,11 @@
                 height: sp(30)
 
             Label:
-                text: 'General Settings'
+                text: 'Modify Pin'
                 size_hint: 1, None
-                height: sp(10)
-                font_name: 'roboto_semibold'
-                font_size: sp(10)
+                height: sp(16)
+                font_name: 'roboto_extrabold'
+                font_size: sp(13)
                 color: chex("#01334F")
                 text_size: self.size
                 valign: 'middle'
@@ -151,21 +151,127 @@
             Widget:
                 size_hint: 1, None
                 height: sp(10)
-
-            BoxLayout:
-                orientation: 'vertical'
+            
+            
+            Label:
+                text: 'Old Pin'
                 size_hint: 1, None
-                height: sp(155)
-                padding: [dp(15), dp(10), dp(15), dp(10)]
- 
+                height: sp(10)
+                font_name: 'roboto_semibold'
+                font_size: sp(10)
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
 
-                canvas.before:
-                    Color:
-                        rgba: chex("#ACE2E1")
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [4]
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+
+            SearchBoxTicket: 
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                size_hint: 0.8, None
+                height: sp(30)
+                font_size: sp(10)
+                hint_text: "Provide Your Old 4 Pins . . ."
+
+
+
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+
+            Label:
+                text: 'New Pin'
+                size_hint: 1, None
+                height: sp(10)
+                font_name: 'roboto_semibold'
+                font_size: sp(10)
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left' 
+
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+                
+            SearchBoxTicket: 
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                size_hint: 0.8, None
+                height: sp(30)
+                font_size: sp(10)
+                hint_text: "Provide Your New 4 Pins . . ." 
+
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+
+            Label:
+                text: 'Confirm Pin'
+                size_hint: 1, None
+                height: sp(10)
+                font_name: 'roboto_semibold'
+                font_size: sp(10)
+                color: chex("#01334F")
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+
+            Widget:
+                size_hint: 1, None
+                height: sp(10)
+                
+            SearchBoxTicket: 
+                pos_hint: {'center_x': 0.5,'center_y': 0.5}
+                size_hint: 0.8, None
+                height: sp(30)
+                font_size: sp(10)
+                hint_text: "Re-Enter Your 4 Pins . . ."
+
+            Widget:
+                size_hint: 1, None
+                height: sp(30)
+
+            MDBoxLayout:
+                orientation:'horizontal' 
+                size_hint: 1, None
+                adaptive_height: True 
+                
+                
+                Widget:
+                    
+                Button: 
+                    text: "Update Pin"
+                    size_hint: None , None
+                    size: sp(120) , sp(30) 
+                    font_size: sp(14)
+                    color: chex("#F7EEDD")
+                    font_name: 'roboto_semibold'
+                    background_color: (0 , 0, 0 ,0)
+                    on_release:
+                        root.update_techinfo()
+
+                    canvas.before:
+                        Color:
+                            rgba : chex("#008DDA")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: (4, 4 ,4 ,4)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             Widget:
                 size_hint: 1, None
