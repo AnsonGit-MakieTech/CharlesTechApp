@@ -943,7 +943,7 @@ class TicketTransactionScreeen(Screen):
             step_instruction="Instructions : Provide a clear image of the installed terminal box."
         )
         self.poc_uploader_layout_3.setup_poc_uploader_layout(
-            step_text="3. Terminal Box Fiber Tag/Labe",
+            step_text="3. Terminal Box Fiber Tag/Label",
             step_instruction="Instructions :Capture the fiber tag or labeling on the terminal box."
         )
         self.poc_uploader_layout_4.setup_poc_uploader_layout(
