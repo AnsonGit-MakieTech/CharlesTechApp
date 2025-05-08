@@ -1870,14 +1870,15 @@
 
             TextInput: 
                 id: title_remark
-                hint_text: "Provide your remarks here . . ." 
+                hint_text: "Provide your title remarks here . . ." 
                 multiline: True 
                 size_hint: 1, 0.1
                 background_color: 0, 0, 0, 0  # Transparent
                 foreground_color: chex("#014367")  # This is the actual text color
                 cursor_color: chex("#014367")  # Optional, to see the cursor better
                 font_name: 'roboto_semibold'
-                font_size: sp(10) 
+                font_size: sp(10)
+                padding: dp(10), dp(5)  # Add padding for readability 
 
                 canvas.before:
                     Color:
@@ -1891,7 +1892,7 @@
 
             TextInput: 
                 id: remark_text
-                hint_text: "Provide your remarks here . . ." 
+                hint_text: "Provide your content remarks here . . ." 
                 multiline: True 
                 size_hint: 1, 0.7
                 background_color: 0, 0, 0, 0  # Transparent
