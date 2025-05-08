@@ -44,9 +44,10 @@ class TechnicalApp(MDApp):
 
         if platform == "android":
             if self.check_permissions():
-                print("✅ Storage permission already granted.")
+                # print("✅ Storage permission already granted.")
+                pass
             else:
-                print("❌ Storage permission NOT granted. Requesting now...")
+                # print("❌ Storage permission NOT granted. Requesting now...")
                 request_permissions([
                     Permission.INTERNET,
                     Permission.ACCESS_FINE_LOCATION,
@@ -85,7 +86,8 @@ class TechnicalApp(MDApp):
             # Close communications
             self.communications.kill_all_threads()
         except Exception as e:
-            print(f"Error saving user data: {e}")
+            # print(f"Error saving user data: {e}")
+            pass
 
     def on_pause(self):
         # Save user app data
@@ -93,7 +95,8 @@ class TechnicalApp(MDApp):
             with open("user_data.json", "w") as f:
                 json.dump(self.user_app_data, f)
         except Exception as e:
-            print(f"Error saving user data: {e}")
+            # print(f"Error saving user data: {e}")
+            pass
         return super().on_pause()
 
             

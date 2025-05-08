@@ -45,7 +45,7 @@ class CustomScrollEffect(DampedScrollEffect):
     @CallControl(interval=1)
     def refresh(self):
         if self.parent_event:
-            print("✅ Pull-to-refresh triggered!")
+            # print("✅ Pull-to-refresh triggered!")
             self.parent_event()
 
 
@@ -62,7 +62,7 @@ class CustomScrollView(ScrollView):
         self.effect_cls = CustomScrollEffect
         self.effect_cls.parent_event = refresh_callback
         self.effect_y.parent_event = refresh_callback  # set manually
-        print("Setup : ", refresh_callback)
+        # print("Setup : ", refresh_callback)
         
     def on_touch_up(self, touch):
         # Call refresh only after overscroll + release

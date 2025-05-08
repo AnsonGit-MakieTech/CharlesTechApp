@@ -103,7 +103,7 @@ class Dashboard(Screen):
 
     
     def on_size(self, *args):
-        print("on_size called") 
+        # print("on_size called") 
         self.team_name_font_size = sp(min(Window.width, Window.height) * 0.055) 
         self.title_anl_font_size = sp(min(Window.width, Window.height) * 0.02 ) 
         self.body_anl_font_size = sp(min(Window.width, Window.height) * 0.05) 
@@ -122,7 +122,7 @@ class Dashboard(Screen):
         Animation(opacity=1, duration=0.5).start(self)  
         app = MDApp.get_running_app()  
         key = "DASHBOARD"
-        print(f'keys : {app.communications.key_running}')
+        # print(f'keys : {app.communications.key_running}')
         if key not in app.communications.key_running:
             app.communications.grab_dashboard()
             def communication_event(*args):
@@ -130,7 +130,7 @@ class Dashboard(Screen):
                 if data: 
                     if data.get("result", False) == True:
                         dashboard_server_data = data.get("data", {})
-                        print(f'dashboard_server_data : {dashboard_server_data}')
+                        # print(f'dashboard_server_data : {dashboard_server_data}')
                         self.team_name = str(dashboard_server_data.get("team_name", "TEAM NAME"))
                         self.team_member_count = str(dashboard_server_data.get("team_member_count", "0"))
                         self.ticket_close_today = str(dashboard_server_data.get("ticket_close_today", "0"))
@@ -139,7 +139,7 @@ class Dashboard(Screen):
                         
                         self.team_member_container.clear_widgets()
                         for member in dashboard_server_data.get("members", []):
-                            print(f'member : {member}')
+                            # print(f'member : {member}')
                             member_widget = MemberDataWidget()
                             member_widget.member_name = str(member.get("name", ""))
                             member_widget.member_ticket = str(member.get("ticket", "None"))

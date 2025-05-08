@@ -244,7 +244,7 @@ class POCUploaderLayout(MDBoxLayout):
         self.poc_images_container.add_widget(image)
         self.parent_event()
         self.is_selecting_file = False
-        print(f"✅ Saved and loaded image path (Android): {image_path}")
+        # print(f"✅ Saved and loaded image path (Android): {image_path}")
 
     def get_save_path(self):
         # Return a writable path depending on the platform
@@ -375,7 +375,7 @@ class GeolocationModalView(ModalView):
 
 
     def on_location_change(self, instance, value):
-        print(f"📍 Location input changed to: {value}")
+        # print(f"📍 Location input changed to: {value}")
         if is_valid_latlon(value):
             self.is_valid_location = True 
             lat_str, lon_str = value.split(",")
@@ -391,21 +391,22 @@ class GeolocationModalView(ModalView):
                 gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
                 gps.start(minTime=1000, minDistance=1)
             except NotImplementedError:
-                print("GPS not implemented on this platform")
+                # print("GPS not implemented on this platform")
                 self.go_to_location(12.367796960, 123.62151820)
             except Exception as e:
-                print(f"Error starting GPS: {e}")
+                # # print(f"Error starting GPS: {e}")
                 self.go_to_location(12.367796960, 123.62151820)
         else:
             self.go_to_location(12.367796960, 123.62151820)  # fallback
 
     def gps_status(self, status_type, status):
-        print(f"GPS Status → {status_type}: {status}")
+        # print(f"GPS Status → {status_type}: {status}")
+        pass
     
     def gps_callback(self, **kwargs):
         self.lat_data = float(kwargs.get('lat', 0))
         self.lon_data = float(kwargs.get('lon', 0))
-        print(f"📡 GPS location received → Lat: {self.lat_data}, Lon: {self.lon_data}")
+        # print(f"📡 GPS location received → Lat: {self.lat_data}, Lon: {self.lon_data}")
         self.go_to_location(self.lat_data, self.lon_data)
         gps.stop()  # Stop after getting one location fix
 
@@ -436,7 +437,7 @@ class GeolocationModalView(ModalView):
         if self.mapview:
             self.lat_data = self.mapview.lat
             self.lon_data = self.mapview.lon 
-            print(f"📍 Map center updated → Lat: {self.lat_data}, Lon: {self.lon_data}")
+            # print(f"📍 Map center updated → Lat: {self.lat_data}, Lon: {self.lon_data}")
             self.parent_event(lat_data = self.lat_data, lon_data = self.lon_data)
             lat = f"{round(self.lat_data, 10)}.." if len(str(self.lat_data)) > 10 else self.lat_data
             lon = f"{round(self.lon_data, 10)}.." if len(str(self.lon_data)) > 10 else self.lon_data
@@ -462,7 +463,8 @@ class GeolocationModalView(ModalView):
                 Clock.schedule_once(self.load_map, 0.3)
                 Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)
         except Exception as e:
-            print(f"Error: {e}")
+            # print(f"Error: {e}")
+            pass
         
 
 
@@ -530,11 +532,12 @@ class GeolocationStepLayout(MDBoxLayout):
         # Check if the touch was inside location_info
         if self.location_info and self.location_info.collide_point(*touch.pos):
             Clipboard.copy(f"{self.latitude}, {self.longitude}")
-            print(f"📋 Copied to clipboard: {self.latitude}, {self.longitude}")
-            if platform == "android": 
-                toast("📍 Coordinates copied to clipboard!")
-            else:
-                print("📍 Coordinates copied to clipboard!")  # fallback on desktop
+            # print(f"📋 Copied to clipboard: {self.latitude}, {self.longitude}")
+            # if platform == "android": 
+            #     toast("📍 Coordinates copied to clipboard!")
+            # else:
+            #     # print("📍 Coordinates copied to clipboard!")  # fallback on desktop
+            #     pass
             return True  # Swallow the touch event
         return super().on_touch_down(touch)
     
@@ -687,7 +690,7 @@ class AccountNumberNameLayout(BoxLayout):
             return
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.account_image = os.path.join(parent_dir, 'assets', 'account_image.png') 
-        print("account_image : ", self.account_image)
+        # print("account_image : ", self.account_image)
          
 
 
@@ -760,7 +763,7 @@ class TicketTransactionScreeen(Screen):
         parent_dir = os.path.dirname(os.path.dirname(__file__)) 
         
         self.go_back_icon = os.path.join(parent_dir, 'assets', 'go_back_icon.png')
-        print("go back icon", self.go_back_icon)
+        # print("go back icon", self.go_back_icon)
         self.bind(size=self.update_size)  # Bind window resize event
         
         
@@ -810,14 +813,15 @@ class TicketTransactionScreeen(Screen):
             # self.main_parent.height = self.parent.height - dp(65)
       
     def refresh_callback(self, *args):
-        print("refresh_callback : Ticket Transact")
+        # print("refresh_callback : Ticket Transact")
+        pass
  
     def update_size(self, *args):
         """ Update circle size dynamically when window size changes """  
         self.body_font_size = min(Window.width, Window.height) * 0.04
         self.title_font_size = min(Window.width, Window.height) * 0.05
         self.go_back_screen_font_size = min(Window.width, Window.height) * 0.03
-        print("update_size : ", self.text_input_font_size)
+        # print("update_size : ", self.text_input_font_size)
 
         
 
@@ -834,7 +838,7 @@ class TicketTransactionScreeen(Screen):
 
         self.remarks_list.clean_remarks_list_view()
         # self.poc_file_uploader_modal.open()
-        print("on_enter : Ticket Transact" , self.ticket)
+        # print("on_enter : Ticket Transact" , self.ticket)
         if not self.ticket:
             self.go_back()
         self.images_data = {}
@@ -1154,7 +1158,7 @@ class TicketTransactionScreeen(Screen):
 
     def next_step_1(self):
         key = "TICKET_NEXT_STEP"
-        print("next step 1", key)
+        # print("next step 1", key)
         app = MDApp.get_running_app()
         if key in app.communications.key_running:
             return 
@@ -1162,7 +1166,7 @@ class TicketTransactionScreeen(Screen):
         app.communications.ticket_next_step({"ticket_id" : self.ticket.get('ticket_id')})
         def communication_event(*args):
             data = app.communications.get_and_remove(key) 
-            print("data : ", data)
+            # print("data : ", data)
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 state = data.get( "data", {}).get("state", "N/A")
@@ -1198,7 +1202,7 @@ class TicketTransactionScreeen(Screen):
 
     def next_step_2(self, geo_map):
         key = "TICKET_NEXT_STEP"
-        print("next step 1", key)
+        # print("next step 1", key)
         app = MDApp.get_running_app()
         if key in app.communications.key_running:
             return 
@@ -1212,7 +1216,7 @@ class TicketTransactionScreeen(Screen):
         def communication_event(*args):
             
             data = app.communications.get_and_remove(key) 
-            print("data : ", data)
+            # print("data : ", data)
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 self.has_changed_data = True
@@ -1244,7 +1248,7 @@ class TicketTransactionScreeen(Screen):
 
     def next_step_3(self, rx , tx):
         key = "TICKET_NEXT_STEP"
-        print("next step 1", key)
+        # print("next step 1", key)
         app = MDApp.get_running_app()
         if key in app.communications.key_running:
             return 
@@ -1259,7 +1263,7 @@ class TicketTransactionScreeen(Screen):
         def communication_event(*args):
             
             data = app.communications.get_and_remove(key) 
-            print("data : ", data)
+            # print("data : ", data)
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 self.has_changed_data = True
@@ -1399,7 +1403,7 @@ class TicketTransactionScreeen(Screen):
 
     def next_step_4(self):
         key = "TICKET_NEXT_STEP"
-        print("next step 1", key)
+        # print("next step 1", key)
         app = MDApp.get_running_app()
         if key in app.communications.key_running:
             return  
@@ -1437,7 +1441,7 @@ class TicketTransactionScreeen(Screen):
         def communication_event(*args):
             
             data = app.communications.get_and_remove(key) 
-            print("data : ", data)
+            # print("data : ", data)
             if data.get("result", None): 
                 self.manager.proccess_layout.display_success(data.get("message"))
                 self.has_changed_data = True

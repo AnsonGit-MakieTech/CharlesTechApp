@@ -43,11 +43,11 @@ class Ticket(FloatLayout):
         
     def on_touch_down(self, touch):
         """ ✅ Detect click/tap event and execute action """
-        print("Parent event ")
+        # print("Parent event ")
         if self.collide_point(*touch.pos):
-            print("🎟️ Ticket Clicked!")  # Debugging
+            # print("🎟️ Ticket Clicked!")  # Debugging
             if self.parent_event:
-                print("Ticket id: ", self.ticket_id)
+                # print("Ticket id: ", self.ticket_id)
                 self.parent_event()
             return True
         return super().on_touch_down(touch)
@@ -59,7 +59,7 @@ class SearchBoxTicket(login_components.LoginTextInput):
     def update_padding(self, *args):
         """ Dynamically center text vertically """
         self.padding_y_dynamic = (self.height - self.line_height) / 2 if self.height > 0 else 8
-        print("happen here")
+        # print("happen here")
         
 class TicketListScreen(Screen):
     
@@ -78,12 +78,12 @@ class TicketListScreen(Screen):
         self.search_box.bind(text=self.on_search_text_change)
     
     def on_search_text_change(self, *args):
-        print("Search event") 
+        # print("Search event") 
         self.display_by_search_text(self.search_box.text.lower())
         # self.refresh_callback()
     
     def display_by_search_text(self, search_text):
-        print("Search text: ", search_text)
+        # print("Search text: ", search_text)
         self.ticket_list.clear_widgets()
         if search_text == "":
             for tkey , ticket in self.tickets.items():
@@ -93,14 +93,14 @@ class TicketListScreen(Screen):
                     new_ticket.ticket_type = ticket.get("tickettype", "N/A")
                     new_ticket.ticket_date = ticket.get("ticket_open_date", "N/A")
                 except Exception as e:
-                    print("Error : ", e)
+                    # print("Error : ", e)
                     new_ticket.ticket_number = "N/A"
                     new_ticket.ticket_type = "N/A"
                     new_ticket.ticket_date = "N/A"
 
                 new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
                 self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
-                print("ticket : ", ticket)
+                # print("ticket : ", ticket)
             return
 
         filtered_tickets = {}
@@ -115,14 +115,14 @@ class TicketListScreen(Screen):
                 new_ticket.ticket_type = ticket.get("tickettype", "N/A")
                 new_ticket.ticket_date = ticket.get("ticket_open_date", "N/A")
             except Exception as e:
-                print("Error : ", e)
+                # print("Error : ", e)
                 new_ticket.ticket_number = "N/A"
                 new_ticket.ticket_type = "N/A"
                 new_ticket.ticket_date = "N/A"
 
             new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
-            print("ticket : ", ticket)
+            # print("ticket : ", ticket)
     
     def on_enter(self, *args):
         Animation(opacity=1, duration=0.5).start(self)

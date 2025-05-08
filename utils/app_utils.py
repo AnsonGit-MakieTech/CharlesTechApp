@@ -58,7 +58,7 @@ def image_path_to_base64(image_path):
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
         return encoded_string
     except Exception as e:
-        print(f"Error encoding image: {e}")
+        # print(f"Error encoding image: {e}")
         return None 
 
 
@@ -68,7 +68,7 @@ def is_image(path):
             img.verify()  # Check if it’s an actual image file
         return True
     except Exception as e:
-        print(f"❌ Invalid image: {path}, Error: {e}")
+        # print(f"❌ Invalid image: {path}, Error: {e}")
         return False
     
 

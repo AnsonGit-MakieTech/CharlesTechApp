@@ -154,7 +154,7 @@ class AccountScreen(Screen):
     def handle_selection(self, selection):
         if selection:
             self.no_image_path = selection[0]  # Display the selected image
-            print(f"Selected image path (Windows): {self.no_image_path}")
+            # print(f"Selected image path (Windows): {self.no_image_path}")
         
         self.is_selecting_file = False
 
@@ -166,7 +166,7 @@ class AccountScreen(Screen):
             if private_file_path:
                 self.on_image_loaded_path(private_file_path)
             else:
-                print("❌ Failed to copy file from shared storage.")
+                # print("❌ Failed to copy file from shared storage.")
                 self.is_selecting_file = False
         else:
             self.is_selecting_file = False
@@ -183,7 +183,7 @@ class AccountScreen(Screen):
 
         # ✅ Set for use in Image or other display
         self.no_image_path = image_path
-        print(f"✅ Saved image path: {image_path}")
+        # print(f"✅ Saved image path: {image_path}")
         self.is_selecting_file = False
 
     def get_save_path(self):

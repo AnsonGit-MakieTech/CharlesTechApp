@@ -71,7 +71,7 @@ class Communications:
                     data = response.json() 
                     self.data[key] = {"result" : True, "message" : "Verified Users!" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : "No Pin Found! Please Register!"}
                 
             except Exception as e:
@@ -123,7 +123,7 @@ class Communications:
                 response = self.session.post(url, headers=headers, json=json_data , timeout=(3, 5)) 
                 if response.ok:
                     data = response.json()
-                    print(data)
+                    # print(data)
                     self.data[key] = {"result" : True, "message" : "Logging In!" , "data" : data}
                 else:
                     self.data[key] = {"result" : False, "message" : "Incorrect Pin!"}
@@ -178,7 +178,7 @@ class Communications:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : "Registration successful" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : "Registration failed"}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
@@ -227,10 +227,10 @@ class Communications:
                 response = self.session.post(url, headers=headers, json=json_data)
                 if response.ok:
                     data = response.json() 
-                    print(data)
+                    # print(data)
                     self.data[key] = {"result" : True, "message" : "" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : ""}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
@@ -312,7 +312,7 @@ class Communications:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : "" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : ""}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
@@ -368,7 +368,7 @@ class Communications:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : "" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : ""}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
@@ -404,19 +404,19 @@ class Communications:
                 # "Origin": self.server,
                 "User-Agent": "KivyApp/1.0.0",
             }
-            print("payload : ", json_data)
+            # print("payload : ", json_data)
             try:
                 response = self.session.post(url, headers=headers, json=json_data)
-                # print(response.text)
+                # # print(response.text)
                 
                 if response.ok:
                     data = response.json()
-                    # print(data)
+                    # # print(data)
                     self.data[key] = {"result" : True, "message" : data.get("text", "Successfully processed"), "data" : data}
                 else: 
                     data = response.json()
                     self.data[key] = {"result" : False, "message" : data.get("text" ,"There is a problem in the server")}
-                # print(data)
+                # # print(data)
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : "Please Check Your Internet Connection"}
             self.has_thread_running = False
@@ -462,7 +462,7 @@ class Communications:
                     data = response.json() 
                     self.data[key] = {"result" : True, "message" : "Verified Users!" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : "No Pin Found! Please Register!"}
                 
             except Exception as e:
@@ -507,7 +507,7 @@ class Communications:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : "" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : ""}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
@@ -549,7 +549,7 @@ class Communications:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : "Successfully added remarks" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : "Failed to add remarks"}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
@@ -589,7 +589,7 @@ class Communications:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : "Successfully added remarks" , "data" : data}
                 else:
-                    print(response.text)
+                    # print(response.text)
                     self.data[key] = {"result" : False, "message" : "Failed to add remarks"}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}

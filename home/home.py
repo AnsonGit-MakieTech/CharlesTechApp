@@ -89,11 +89,11 @@ class NavigationBar(BoxLayout):
             self.anim_button.start(self.ticket_button)
         if self.settings_button.font_size >= sp(self.maximum_icon_font_size):
             self.anim_button.start(self.settings_button)
-        print(f'Button selected : {HOME_SCREEN_DASHBOARD_SCREEN}')
-        if hasattr(self.parent.home_screen_manager, 'transition') and self.parent.home_screen_manager.transition:
-            print("✅ ScreenManager has a transition set:", self.parent.home_screen_manager.transition)
-        else:
-            print("❌ No transition set")
+        # print(f'Button selected : {HOME_SCREEN_DASHBOARD_SCREEN}')
+        # if hasattr(self.parent.home_screen_manager, 'transition') and self.parent.home_screen_manager.transition:
+        #     # print("✅ ScreenManager has a transition set:", self.parent.home_screen_manager.transition)
+        # else:
+        #     # print("❌ No transition set")
 
         self.parent.home_screen_manager.transition.direction = 'left'
         self.parent.home_screen_manager.current = HOME_SCREEN_DASHBOARD_SCREEN
@@ -110,7 +110,7 @@ class NavigationBar(BoxLayout):
             self.anim_button_selected.start(self.ticket_button)
         if self.settings_button.font_size >= sp(self.maximum_icon_font_size):
             self.anim_button.start(self.settings_button)
-        print(f'Button selected : {HOME_SCREEN_TICKETLIST_SCREEN}') 
+        # print(f'Button selected : {HOME_SCREEN_TICKETLIST_SCREEN}') 
         # self.parent.home_screen_manager.transition.direction = 'right'
         self.parent.home_screen_manager.current = HOME_SCREEN_TICKETLIST_SCREEN
         
@@ -126,7 +126,7 @@ class NavigationBar(BoxLayout):
             self.anim_button.start(self.ticket_button)
         if self.settings_button.font_size <= sp(self.minimum_icon_font_size):
             self.anim_button_selected.start(self.settings_button) 
-        print(f'Button selected : {HOME_SCREEN_ACCOUNT_SCREEN}') 
+        # print(f'Button selected : {HOME_SCREEN_ACCOUNT_SCREEN}') 
         # self.parent.home_screen_manager.transition.direction = 'right'
         self.parent.home_screen_manager.current = HOME_SCREEN_ACCOUNT_SCREEN
     
@@ -203,7 +203,7 @@ class HomeScreen(Screen):
     def on_enter(self, *args):
         app = MDApp.get_running_app()  
         key = "DASHBOARD"
-        print(f'keys : {app.communications.key_running}')
+        # print(f'keys : {app.communications.key_running}')
         if key not in app.communications.key_running:
             app.communications.grab_dashboard()
             def communication_event(*args):
@@ -211,7 +211,7 @@ class HomeScreen(Screen):
                 if data: 
                     if data.get("result", False) == True:
                         dashboard_server_data = data.get("data", {})
-                        print(f'dashboard_server_data : {dashboard_server_data}') 
+                        # print(f'dashboard_server_data : {dashboard_server_data}') 
                         dashboard = self.home_screen_manager.get_screen(HOME_SCREEN_DASHBOARD_SCREEN)
                         dashboard.team_name = str(dashboard_server_data.get("team_name", "TEAM NAME"))
                         dashboard.team_member_count = str(dashboard_server_data.get("team_member_count", "0"))
@@ -220,7 +220,7 @@ class HomeScreen(Screen):
                         dashboard.total_ticket_assigned = str(dashboard_server_data.get("ticket_assinged_total", "0"))
                         dashboard.team_member_container.clear_widgets()
                         for member in dashboard_server_data.get("members", []):
-                            print(f'member : {member}')
+                            # print(f'member : {member}')
                             member_widget = MemberDataWidget()
                             member_widget.member_name = str(member.get("name", ""))
                             member_widget.member_ticket = str(member.get("ticket", "None"))
