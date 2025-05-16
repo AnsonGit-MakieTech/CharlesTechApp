@@ -323,11 +323,19 @@ class FiberConnectionStepLayout(MDBoxLayout):
     procced_event : object = ObjectProperty(None)
 
     def update_level(self, tx, rx):
-        self.tx_level = tx
-        self.rx_level = rx
-        if str(tx).isdigit() and str(rx).isdigit():
+        try:
+            # Convert to float to accept both int and float values (including negatives)
+            _ = float(tx)
+            _ = float(rx)
+
+            self.tx_level = tx
+            self.rx_level = rx
+
+            # Check if both are valid numbers (including 0 or negative)
             self.is_valid_level = True
-        else:
+
+        except (ValueError, TypeError):
+            # If conversion fails, it's not a valid number
             self.is_valid_level = False
 
 
