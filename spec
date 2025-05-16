@@ -8,6 +8,9 @@ title = TechApp
 # (str) Package name
 package.name = techapp
 
+# Python version for maximum support
+python_version = 3.10
+
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.billingko
 source.dir = .
@@ -21,8 +24,8 @@ presplash.filename = assets/splash_app.png
 android.presplash_color = #ABCFE3
 
 android.api = 34
-android.minapi = 29
-android.ndk = 25b
+android.minapi = 28
+android.ndk = 23b
 android.accept_sdk_license = True
 android.archs = arm64-v8a, armeabi-v7a
 

@@ -1,3 +1,4 @@
+from kivy.uix.accordion import ObjectProperty
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivy.lang.builder import Builder
@@ -12,6 +13,8 @@ import json
 from kivy.config import Config
 from kivy.core.window import Window
 from kivy.clock import Clock
+from kivy.uix.modalview import ModalView
+from kivy.uix.image import Image
 
 from communications  import Communications
 from kivy.logger import Logger
@@ -34,10 +37,37 @@ if platform == "win":
 class MainApp(MDScreenManager):  # Acts as ScreenManager
     pass
 
+class TappableImage(Image):
+    def __init__(self, modal_ref, **kwargs):
+        super().__init__(**kwargs)
+        self.modal_ref = modal_ref
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.modal_ref.dismiss()
+            return True
+        return super().on_touch_down(touch)
+
+
+class ImageModal(ModalView):
+    def __init__(self, image_path, **kwargs):
+        super().__init__(**kwargs)
+        self.auto_dismiss = False  # Don't dismiss by tapping outside
+        self.background_color = (0, 0, 0, 0)
+        self.image_widget = TappableImage(
+            source=image_path,
+            allow_stretch=True,
+            keep_ratio=True,
+            modal_ref=self
+        )
+        self.add_widget(self.image_widget)
+
+
 class TechnicalApp(MDApp): 
     
     user_app_data : dict = None
     communications : Communications = None
+    done_load_modal : ImageModal = ObjectProperty(None)
     
     def on_start(self):
         """ Check and request storage permission on Android """
@@ -90,6 +120,7 @@ class TechnicalApp(MDApp):
             pass
 
     def on_pause(self):
+        Clock.schedule_once(self.show_welcome_popup, 0.1)
         # Save user app data
         try:
             with open("user_data.json", "w") as f:
@@ -116,6 +147,10 @@ class TechnicalApp(MDApp):
         
         # Set App Icon
         self.icon = os.path.join(os.path.dirname(__file__), 'assets', 'app_logo.png')
+        splash_image = os.path.join(os.path.dirname(__file__), 'assets', 'splash_app.png')
+
+        self.done_load_modal = ImageModal(splash_image)
+
         
         # Set App Communications
         self.communications = Communications()
@@ -139,9 +174,21 @@ class TechnicalApp(MDApp):
         
         login_screen = main_login_screen.LoginScreen(name=LOGIN_SCREEN)
         self.root_screen_manager.add_widget(login_screen)  # ✅ Add screens via Python
-        self.root_screen_manager.current = LOGIN_SCREEN
+        def change_to_login_screen(*args):
+            print("this happen hehehee")
+            self.root_screen_manager.current = LOGIN_SCREEN
+        Clock.schedule_once(self.show_welcome_popup, 0.5)
+        Clock.schedule_once(change_to_login_screen, 1) 
 
         return sm
+        
+
+    def show_welcome_popup(self, *args):
+        self.done_load_modal.open()
+        def close_popup(*args):
+            self.done_load_modal.dismiss()
+        Clock.schedule_once(close_popup, 1)
+
     
     def load_screens(self, *args):
 
