@@ -1,3 +1,5 @@
+__version__ = "1.0.0"
+
 from kivy.uix.accordion import ObjectProperty
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
