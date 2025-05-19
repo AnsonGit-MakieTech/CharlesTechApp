@@ -16,7 +16,7 @@ package.domain = org.billingko
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json,ttf,txt,otf
 version = 0.1
-requirements = python3,kivy==2.3.1,https://github.com/kivymd/KivyMD/archive/master.zip,materialyoucolor,https://github.com/HyTurtle/plyer/archive/master.zip,requests,pillow,kivy_garden.mapview,androidstorage4kivy,filetype,openssl,asynckivy,asyncgui
+requirements = cython==0.29.36,python3,kivy==2.3.1,https://github.com/kivymd/KivyMD/archive/master.zip,materialyoucolor,https://github.com/HyTurtle/plyer/archive/master.zip,requests,pillow,kivy_garden.mapview,androidstorage4kivy,filetype,openssl,asynckivy,asyncgui
 
 orientation = portrait
 icon.filename = assets/app_logo.png
@@ -25,7 +25,7 @@ android.presplash_color = #ABCFE3
 
 android.api = 34
 android.minapi = 28
-android.ndk = 23b
+android.ndk = 25b
 android.accept_sdk_license = True
 android.archs = arm64-v8a, armeabi-v7a
 
