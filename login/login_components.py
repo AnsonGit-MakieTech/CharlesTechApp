@@ -86,16 +86,23 @@ class LoginLabelTitle(Label):
     pass
 
 class LoginTextInput(TextInput):
-    padding_y_dynamic = NumericProperty(8)  # Default value, will update dynamically
-
+    text_tab_px = NumericProperty(8)
+    adjusted_vpad = NumericProperty(15)
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.update_padding()
         self.bind(size=self.update_padding)  # ✅ Update padding when size changes
 
+    def on_parent(self, *args):
+        self.update_padding()
+    
     def update_padding(self, *args):
-        """ Dynamically center text vertically """
-        self.padding_y_dynamic = (self.height - self.line_height) / 2 if self.height > 0 else 8
+        """ Dynamically center text vertically """ 
+        width, height = self.size
+        # Protect padding from going negative
+        vpad = min(max(0, (height - self.line_height) / 2), self.adjusted_vpad) 
+        self.padding = [self.text_tab_px, vpad, self.text_tab_px, vpad] 
+        self._refresh_text(self.text)
 
 
 class LoginButton(Button):

@@ -41,17 +41,28 @@ class RegisterPinScreen(Screen):
     pin_input = ObjectProperty(None)
     pin_input_2 = ObjectProperty(None)
     
+    
  
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
         self.update_size()  # Set initial size
-        Window.bind(size=self.update_size)  # Bind window resize event
+        self.bind(size=self.update_size)  # Bind window resize event
         
         if platform == 'android':
             self.trigger_keyboard_height = Clock.create_trigger(self.update_keyboard_height, 0.2, interval=True)
             self.trigger_cancel_keyboard_height = Clock.create_trigger(lambda dt: self.trigger_keyboard_height.cancel(), 1.0, interval=False)
 
+    def update_size(self, *args):
+        """ Update circle size dynamically when window size changes """
+        width, height = self.size
+        self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
+        self.go_back_screen_font_size = min(width, height) * 0.035
+        self.title_font_size = min(width, height) * 0.04
+        self.text_input_font_size = min(width, height) * 0.04
+        self.pin_info_font_size = min(width, height) * 0.03
+        self.pin_input.adjusted_vpad = 12
+        self.pin_input_2.adjusted_vpad = 12
 
     def limit_to_4_digits(self, instance, value):
         digits = ''.join(filter(str.isdigit, value))[:4]
@@ -101,13 +112,6 @@ class RegisterPinScreen(Screen):
         return super().on_enter(*args)
 
         
-    def update_size(self, *args):
-        """ Update circle size dynamically when window size changes """
-        self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
-        self.go_back_screen_font_size = min(Window.width, Window.height) * 0.02
-        self.title_font_size = min(Window.width, Window.height) * 0.03
-        self.text_input_font_size = min(Window.width, Window.height) * 0.025
-        self.pin_info_font_size = min(Window.width, Window.height) * 0.017
 
          
 
@@ -251,12 +255,19 @@ class RegisterAccountScreen(Screen):
         super().__init__(**kwargs)
         
         self.update_size()  # Set initial size
-        Window.bind(size=self.update_size)  # Bind window resize event
+        self.bind(size=self.update_size)  # Bind window resize event
         
         if platform == 'android':
             self.trigger_keyboard_height = Clock.create_trigger(self.update_keyboard_height, 0.2, interval=True)
             self.trigger_cancel_keyboard_height = Clock.create_trigger(lambda dt: self.trigger_keyboard_height.cancel(), 1.0, interval=False)
 
+    def update_size(self, *args):
+        """ Update circle size dynamically when window size changes """
+        width, height = self.size
+        self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
+        self.go_back_screen_font_size = min(width, height) * 0.035
+        self.title_font_size = min(width, height) * 0.04
+        self.text_input_font_size = min(width, height) * 0.04
     
     def update_keyboard_height(self, dt):
         """ Detect keyboard height and move screen if necessary """
@@ -307,12 +318,6 @@ class RegisterAccountScreen(Screen):
         return super().on_enter(*args)
 
         
-    def update_size(self, *args):
-        """ Update circle size dynamically when window size changes """
-        self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
-        self.go_back_screen_font_size = min(Window.width, Window.height) * 0.02
-        self.title_font_size = min(Window.width, Window.height) * 0.03
-        self.text_input_font_size = min(Window.width, Window.height) * 0.025
 
     def go_back(self, *args): 
         if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
@@ -498,6 +503,7 @@ class PinLoginScreen(Screen):
     circle_size = NumericProperty(min(Window.width * 0.9, Window.height * 0.5))
     icon_size = NumericProperty(min(Window.width * 0.9, Window.height * 0.5))
     never_forget_pin_font_size = NumericProperty(0)
+    below_label_font_size = NumericProperty(0)
     
     pinholder : PinHolder = ObjectProperty(None)
     
@@ -507,7 +513,7 @@ class PinLoginScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.update_size()  # Set initial size
-        Window.bind(size=self.update_size)  # Bind window resize event
+        self.bind(size=self.update_size)  # Bind window resize event
  
         self.forgot_pin.label_event = self.forgot_pin_event
         self.register_pin.label_event = self.register_pin_event 
@@ -531,7 +537,9 @@ class PinLoginScreen(Screen):
     def update_size(self, *args):
         """ Update circle size dynamically when window size changes """
         self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
-        self.never_forget_pin_font_size = min(Window.width, Window.height) * 0.025
+        width, height = self.size
+        self.never_forget_pin_font_size = min(width, height) * 0.04
+        self.below_label_font_size = min(width, height) * 0.03
         
 
 

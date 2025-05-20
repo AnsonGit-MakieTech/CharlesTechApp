@@ -48,7 +48,7 @@
                 LoginBackButton:
                     id: back_text
                     size_hint: 0.2,1  
-                    font_size: sp(root.go_back_screen_font_size  )
+                    font_size: root.go_back_screen_font_size 
                 
                 Widget:
                     size_hint: 0.58,1 
@@ -70,7 +70,7 @@
 
                 LoginLabelTitle:
                     text: "Username ;"
-                    font_size: sp(root.title_font_size)
+                    font_size: root.title_font_size
                     size_hint: 1, 0.2
  
 
@@ -78,19 +78,19 @@
                     id: username_input
                     size_hint: 1, 0.2 
                     hint_text: "Provide Your Username . . ."
-                    font_size: sp(root.text_input_font_size)
+                    font_size: root.text_input_font_size
 
                 
                 LoginLabelTitle:
                     text: "Password ;"
-                    font_size: sp(root.title_font_size)
+                    font_size: root.title_font_size
                     size_hint: 1, 0.2 
 
                 LoginTextInput:
                     id: password_input
                     size_hint: 1, 0.2 
                     hint_text: "Provide Your Password . . ."
-                    font_size: sp(root.text_input_font_size)
+                    font_size: root.text_input_font_size
                     password: True
                 
                 Widget:
@@ -100,7 +100,7 @@
                     text: root.login_button_text
                     size_hint: 0.35, 0.15
                     pos_hint: {'right': 1 , 'center_y': 0.5}
-                    font_size: sp(root.text_input_font_size)
+                    font_size: root.text_input_font_size
                     on_press:
                         root.register_account()
 

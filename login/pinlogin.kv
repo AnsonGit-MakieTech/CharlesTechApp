@@ -46,7 +46,7 @@
                 size_hint: 1,0.05
                 text: 'Keep Your PIN Secure – Never Share It'
                 font_name:  "roboto_light"
-                font_size: sp(root.never_forget_pin_font_size)
+                font_size: root.never_forget_pin_font_size
                 color: chex('#014367') 
                     
 
@@ -62,10 +62,12 @@
                 ClickableLabel: 
                     id: forgot_pin
                     text: "[u]Forgot your pin?[/u]"
+                    font_size: root.below_label_font_size
                 
                 ClickableLabel:
                     id: register_pin
                     text: "[u]Change/Register Account[/u]" 
+                    font_size: root.below_label_font_size
 
 
 
