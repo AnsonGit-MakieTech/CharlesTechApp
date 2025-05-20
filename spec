@@ -8,9 +8,6 @@ title = TechApp
 # (str) Package name
 package.name = techapp
 
-# Python version for maximum support
-python_version = 3.10
-
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.billingko
 source.dir = .
