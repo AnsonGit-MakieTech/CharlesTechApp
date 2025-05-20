@@ -17,7 +17,7 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
 from kivy.uix.image import Image
-
+from kivy.uix.boxlayout import BoxLayout
 from communications  import Communications
 from kivy.logger import Logger
 
@@ -60,18 +60,6 @@ class TappableImage(Image):
         super().__init__(**kwargs)
         self.modal_ref = modal_ref
 
-        # 🔴 Add a red background using hex code and get_color_from_hex
-        with self.canvas.before:
-            Color(*get_color_from_hex('#ABCFE3'))  # Red background
-            self.bg_rect = Rectangle(pos=self.pos, size=self.size)
-
-        # Update background rectangle when resized or moved
-        self.bind(pos=self.update_rect, size=self.update_rect)
-
-    def update_rect(self, *args):
-        self.bg_rect.pos = self.pos
-        self.bg_rect.size = self.size
-
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             self.modal_ref.dismiss()
@@ -85,13 +73,29 @@ class ImageModal(ModalView):
         self.auto_dismiss = False
         self.background_color = (0, 0, 0, 0)  # Transparent modal background
 
+        # Main container with canvas background
+        self.container = BoxLayout()
+        with self.container.canvas.before:
+            Color(*get_color_from_hex('#ABCFE3'))  # Light blue background
+            self.bg_rect = Rectangle(pos=self.container.pos, size=self.container.size)
+
+        # Update rectangle when container resizes or moves
+        self.container.bind(pos=self.update_bg_rect, size=self.update_bg_rect)
+
+        # Add image inside the BoxLayout
         self.image_widget = TappableImage(
             source=image_path,
             allow_stretch=True,
             keep_ratio=True,
             modal_ref=self
         )
-        self.add_widget(self.image_widget)
+
+        self.container.add_widget(self.image_widget)
+        self.add_widget(self.container)
+
+    def update_bg_rect(self, *args):
+        self.bg_rect.pos = self.container.pos
+        self.bg_rect.size = self.container.size
 
 
 class TechnicalApp(MDApp): 
