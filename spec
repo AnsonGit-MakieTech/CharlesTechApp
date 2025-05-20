@@ -24,13 +24,13 @@ presplash.filename = assets/splash_app.png
 android.presplash_color = #ABCFE3
 
 android.api = 34
-android.minapi = 28
+android.minapi = 29
 android.ndk = 25b
 android.accept_sdk_license = True
 android.archs = arm64-v8a, armeabi-v7a
 
 # Permissions you might need based on your dependencies (Mapview, Storage, Webview, etc.) 
-android.permissions = INTERNET,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,READ_MEDIA_IMAGES,READ_MEDIA_VIDEO,READ_MEDIA_AUDIO,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+android.permissions = INTERNET,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,READ_MEDIA_IMAGES,READ_MEDIA_VIDEO,READ_MEDIA_AUDIO
 
 # Garden requirements explicitly included
 garden_requirements = mapview

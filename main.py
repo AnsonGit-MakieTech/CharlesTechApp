@@ -51,11 +51,40 @@ class TappableImage(Image):
         return super().on_touch_down(touch)
 
 
+from kivy.uix.image import Image
+from kivy.uix.modalview import ModalView
+from kivy.graphics import Color, Rectangle 
+
+class TappableImage(Image):
+    def __init__(self, modal_ref, **kwargs):
+        super().__init__(**kwargs)
+        self.modal_ref = modal_ref
+
+        # 🔴 Add a red background using hex code and get_color_from_hex
+        with self.canvas.before:
+            Color(*get_color_from_hex('#ABCFE3'))  # Red background
+            self.bg_rect = Rectangle(pos=self.pos, size=self.size)
+
+        # Update background rectangle when resized or moved
+        self.bind(pos=self.update_rect, size=self.update_rect)
+
+    def update_rect(self, *args):
+        self.bg_rect.pos = self.pos
+        self.bg_rect.size = self.size
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.modal_ref.dismiss()
+            return True
+        return super().on_touch_down(touch)
+
+
 class ImageModal(ModalView):
     def __init__(self, image_path, **kwargs):
         super().__init__(**kwargs)
-        self.auto_dismiss = False  # Don't dismiss by tapping outside
-        self.background_color = (0, 0, 0, 0)
+        self.auto_dismiss = False
+        self.background_color = (0, 0, 0, 0)  # Transparent modal background
+
         self.image_widget = TappableImage(
             source=image_path,
             allow_stretch=True,
