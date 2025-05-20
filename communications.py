@@ -198,6 +198,8 @@ class Communications:
     def grab_dashboard(self):
         key = "DASHBOARD"
         
+        
+        
         def event(self_thread):
             while self.has_thread_running:
                 time.sleep(0.5)
@@ -249,6 +251,8 @@ class Communications:
 
     def get_ticket_list(self):
         key = "TICKET_LIST"
+        
+        
 
         def event(self_thread):
             while self.has_thread_running:
@@ -288,7 +292,7 @@ class Communications:
  
     def get_user_tech_info(self):
         key = "GET_USER_TECH_INFO"
-
+        
         def event(self_thread):
             while self.has_thread_running:
                 time.sleep(0.5)

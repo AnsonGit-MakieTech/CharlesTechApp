@@ -55,16 +55,27 @@ class Ticket(FloatLayout):
 
         
 class SearchBoxTicket(login_components.LoginTextInput): 
-        
+    text_tab_px = NumericProperty(8)
+    adjusted_vpad = NumericProperty(15)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def on_parent(self, *args):
+        self.update_padding()
+    
     def update_padding(self, *args):
-        """ Dynamically center text vertically """
-        self.padding_y_dynamic = (self.height - self.line_height) / 2 if self.height > 0 else 8
+        """ Dynamically center text vertically """ 
+        width, height = self.size
+        # Protect padding from going negative
+        vpad = min(max(0, (height - self.line_height) / 2), self.adjusted_vpad) 
+        self.padding = [self.text_tab_px, vpad, self.text_tab_px, vpad] 
+        self._refresh_text(self.text)
         # print("happen here")
         
 class TicketListScreen(Screen):
     
     main_parent : FloatLayout = ObjectProperty(None)
-    text_input_font_size = ObjectProperty(sp(18))
+    text_input_font_size = NumericProperty(0)
     search_box : SearchBoxTicket = ObjectProperty(None)
     refresh_layout : CustomScrollView = ObjectProperty(None)
     ticket_list : MDGridLayout = ObjectProperty(None)
@@ -152,8 +163,9 @@ class TicketListScreen(Screen):
 
     def update_size(self, *args):
         """ Update circle size dynamically when window size changes """  
-        self.text_input_font_size = sp(min(Window.width, Window.height) * 0.02)
-        print("update_size : ", self.text_input_font_size)
+        width, height = self.size
+        self.search_box.update_padding()
+        self.text_input_font_size = min(width, height) * 0.045
 
 
     def refresh_callback(self, *args): 

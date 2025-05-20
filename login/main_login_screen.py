@@ -444,7 +444,11 @@ class PinKeyboard(BoxLayout):
             self.parent.parent.parent.pinholder.pin4.toggle()
             
         if len(self.log_pin) == 4:
+            # home_screen = home.HomeScreen(name=HOME_SCREEN) # Remove after testing
+            # self.parent.parent.parent.manager.parent.manager.add_widget(home_screen) # Remove after testing
+            # self.parent.parent.parent.manager.parent.manager.current = HOME_SCREEN  # Remove after testing
             self.validate_pin()
+            
             
     def validate_pin(self):
         # print('validate_pin : ', self.log_pin)

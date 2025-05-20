@@ -82,9 +82,9 @@ class Dashboard(Screen):
     truck_image_path : str = StringProperty('')
     location_image_path : str = StringProperty('')
 
-    team_name_font_size : int = ObjectProperty(sp(18))
-    title_anl_font_size : int = ObjectProperty(sp(20))
-    body_anl_font_size : int = ObjectProperty(sp(16))
+    team_name_font_size : int = NumericProperty(0)
+    title_anl_font_size : int =  NumericProperty(0)
+    body_anl_font_size : int =  NumericProperty(0)
 
     team_member_container : BoxLayout = ObjectProperty(None)
     # dashboard_server_data : dict = ObjectProperty(None)
@@ -104,9 +104,10 @@ class Dashboard(Screen):
     
     def on_size(self, *args):
         # print("on_size called") 
-        self.team_name_font_size = sp(min(Window.width, Window.height) * 0.055) 
-        self.title_anl_font_size = sp(min(Window.width, Window.height) * 0.02 ) 
-        self.body_anl_font_size = sp(min(Window.width, Window.height) * 0.05) 
+        width, height = self.size
+        self.team_name_font_size = min(width, height) * 0.055
+        self.title_anl_font_size = min(width, height) * 0.025 
+        self.body_anl_font_size = min(width, height) * 0.05 
     
     def on_leave(self, *args):
         
