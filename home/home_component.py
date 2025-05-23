@@ -1,20 +1,16 @@
 from kivy.uix.accordion import ObjectProperty, BooleanProperty
-
-from kivy.uix.scrollview import ScrollView 
-from kivy.effects.dampedscroll import DampedScrollEffect
-from time import time 
 from kivy.uix.modalview import ModalView
 
 from kivy.uix.image import Image
 from kivy.animation import Animation
 from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
 
 import os
 
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 
-from kivy.graphics import PushMatrix, PopMatrix, Rotate, Translate
-from kivy import platform
+from kivy.graphics import PushMatrix, PopMatrix, Rotate, Translate 
 
 
 class CallControl:
@@ -154,7 +150,28 @@ class ProcessingLayout(ModalView):
     spinner : CustomSpinner = ObjectProperty(None)
     proccess_text : str = StringProperty('')
     is_open : bool = BooleanProperty(False)
+    setup_font_size = NumericProperty(14)
+    main_layout : BoxLayout = ObjectProperty(None)
     
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.setup_font_size = 14
+        
+        Clock.schedule_once(self.update_sizing, 0.1)
+        self.bind(size=self.update_sizing)
+        
+    
+    def update_sizing(self, *args):
+        width, height = self.size
+        self.setup_font_size = min(width, height) * 0.035
+        
+        padding_x = int(width * 0.08)
+        padding_y = int(height * 0.05)
+    
+        # Set padding as (left, top, right, bottom)
+        self.main_layout.padding = [padding_x, padding_y, padding_x, padding_y]
+        self.main_layout.spacing = int(height * 0.005)
+        
     def on_pre_open(self):
         self.auto_dismiss = False
         parent_dir = os.path.dirname(os.path.dirname(__file__)) 

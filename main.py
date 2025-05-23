@@ -39,17 +39,6 @@ if platform == "win":
 class MainApp(MDScreenManager):  # Acts as ScreenManager
     pass
 
-class TappableImage(Image):
-    def __init__(self, modal_ref, **kwargs):
-        super().__init__(**kwargs)
-        self.modal_ref = modal_ref
-
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            self.modal_ref.dismiss()
-            return True
-        return super().on_touch_down(touch)
-
 
 from kivy.uix.image import Image
 from kivy.uix.modalview import ModalView

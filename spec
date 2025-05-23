@@ -11,7 +11,7 @@ package.domain = org.billingko
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json,ttf,txt,otf
 version = 0.1
-requirements = cython==0.29.36,python3==3.10,kivy==2.3.1,https://github.com/kivymd/KivyMD/archive/master.zip,materialyoucolor,https://github.com/HyTurtle/plyer/archive/master.zip,requests,pillow,kivy_garden.mapview,androidstorage4kivy,filetype,openssl,asynckivy,asyncgui
+requirements = cython==0.29.36,python3==3.10.0,kivy==2.3.1,https://github.com/kivymd/KivyMD/archive/master.zip,materialyoucolor,https://github.com/HyTurtle/plyer/archive/master.zip,requests,pillow,kivy_garden.mapview,androidstorage4kivy,filetype,openssl,asynckivy,asyncgui
 
 orientation = portrait
 icon.filename = assets/app_logo.png

@@ -10,11 +10,13 @@
     background_color: 0, 0, 0, 0
 
     spinner : spinner
+    main_layout : main_layout
 
     BoxLayout:
+        id: main_layout
         orientation:'vertical'
-        padding: sp(20)
-        spacing: sp(10)
+        padding: 20
+        spacing: 10
         size_hint: 0.85 , 0.3
         pos_hint: { 'center_x': 0.5 , 'center_y': 0.5 }  
 
@@ -51,7 +53,7 @@
             valign: 'middle'  # Or 'center'
             halign: 'center'  # 'left', 'right', or 'center' depending on your goal
             font_name: 'roboto_light'
-            font_size: sp(12)
+            font_size: root.setup_font_size
             color: chex("#014367")
 
 
