@@ -20,7 +20,7 @@ android.presplash_color = #ABCFE3
 
 android.api = 34
 android.minapi = 28
-android.ndk = 25b
+android.ndk = 23b
 android.accept_sdk_license = True
 android.archs = arm64-v8a, armeabi-v7a
 
