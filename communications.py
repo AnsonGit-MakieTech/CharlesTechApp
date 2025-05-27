@@ -8,7 +8,7 @@ import base64
 from utils.app_utils import has_internet
 
 class Communications:
-    server = "https://alpha.billingko.com/api/"
+    server = "https://charlescatv.billingko.com/api/"
     token = None
     data = {}
     threads = []
