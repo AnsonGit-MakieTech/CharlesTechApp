@@ -31,9 +31,9 @@ from kivy.core.window import Window
 Window.show_cursor = True
 
 
-# Set Window Size Before App Starts if platform is 
 if platform == "win":
-    Window.size = (320, 568)
+    # Simulate a mid-sized Android phone
+    Window.size = (360, 780)
 
 
 class MainApp(MDScreenManager):  # Acts as ScreenManager

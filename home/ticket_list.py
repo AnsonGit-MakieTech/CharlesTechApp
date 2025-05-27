@@ -165,7 +165,7 @@ class TicketListScreen(Screen):
         """ Update circle size dynamically when window size changes """  
         width, height = self.size
         self.search_box.update_padding()
-        self.text_input_font_size = min(width, height) * 0.045
+        self.text_input_font_size = min(width, height) * 0.05
 
 
     def refresh_callback(self, *args): 

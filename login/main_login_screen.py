@@ -59,7 +59,7 @@ class RegisterPinScreen(Screen):
         self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
         self.go_back_screen_font_size = min(width, height) * 0.035
         self.title_font_size = min(width, height) * 0.04
-        self.text_input_font_size = min(width, height) * 0.04
+        self.text_input_font_size = min(width, height) * 0.05
         self.pin_info_font_size = min(width, height) * 0.03
         self.pin_input.adjusted_vpad = 12
         self.pin_input_2.adjusted_vpad = 12
@@ -267,7 +267,7 @@ class RegisterAccountScreen(Screen):
         self.circle_size = min(Window.width * 0.9, Window.height * 0.5)
         self.go_back_screen_font_size = min(width, height) * 0.035
         self.title_font_size = min(width, height) * 0.04
-        self.text_input_font_size = min(width, height) * 0.04
+        self.text_input_font_size = min(width, height) * 0.05
     
     def update_keyboard_height(self, dt):
         """ Detect keyboard height and move screen if necessary """
