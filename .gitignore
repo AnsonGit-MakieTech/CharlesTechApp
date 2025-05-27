@@ -40,3 +40,4 @@ credentials.json
 
 # Ignore all files in the data folder
 cache/
+test.py
