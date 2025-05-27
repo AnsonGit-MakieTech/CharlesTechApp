@@ -5,12 +5,22 @@ from kivy.uix.image import Image
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
+from kivy.effects.dampedscroll import DampedScrollEffect
 
 import os
 
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 
 from kivy.graphics import PushMatrix, PopMatrix, Rotate, Translate 
+from kivy.uix.accordion import ObjectProperty, BooleanProperty
+
+from kivy.uix.scrollview import ScrollView 
+from kivy.effects.dampedscroll import DampedScrollEffect
+from time import time 
+
+from kivy.graphics import PushMatrix, PopMatrix, Rotate, Translate
+
+
 
 
 class CallControl:
