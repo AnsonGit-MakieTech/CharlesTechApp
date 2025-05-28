@@ -9,8 +9,8 @@ from utils.app_utils import has_internet
 import variables
 
 class Communications:
-    # server = "https://charlescatv.billingko.com/api/" # OFFICIAL SERVER
-    server = "https://alpha.billingko.com/api/"
+    server = "https://charlescatv.billingko.com/api/" # OFFICIAL SERVER
+    # server = "https://alpha.billingko.com/api/" # DUMMY SERVER
     token = None
     data = {}
     threads = []
