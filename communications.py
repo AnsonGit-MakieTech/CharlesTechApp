@@ -6,9 +6,11 @@ import os
 import base64
 
 from utils.app_utils import has_internet
+import variables
 
 class Communications:
-    server = "https://charlescatv.billingko.com/api/"
+    # server = "https://charlescatv.billingko.com/api/" # OFFICIAL SERVER
+    server = "https://alpha.billingko.com/api/"
     token = None
     data = {}
     threads = []
@@ -109,7 +111,8 @@ class Communications:
                 "username": username,
                 "password": password,
                 "pin": pin,
-                "action": "verify_pin"
+                "action": "verify_pin",
+                "version" : variables.VERSION_APP
             }            
             url = self.server + "technical_unauthenticated_api"
             headers = {
@@ -126,7 +129,9 @@ class Communications:
                     # print(data)
                     self.data[key] = {"result" : True, "message" : "Logging In!" , "data" : data}
                 else:
-                    self.data[key] = {"result" : False, "message" : "Incorrect Pin!"}
+                    data = response.json()
+                    message = data.get("message", "Incorrect Pin!")
+                    self.data[key] = {"result" : False, "message" : message}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : "Server Is Down" } 
 

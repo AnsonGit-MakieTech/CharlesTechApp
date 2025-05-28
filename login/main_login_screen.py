@@ -492,7 +492,8 @@ class PinKeyboard(BoxLayout):
                     self.parent.parent.parent.manager.parent.manager.add_widget(home_screen)  # ✅ Add screens via Python 
                     self.parent.parent.parent.manager.parent.manager.current = HOME_SCREEN 
                 else:
-                    self.parent.parent.parent.manager.custom_popup.my_text = "Incorrect Pin!" 
+                    message = data.get("message", "No Internet Connection")
+                    self.parent.parent.parent.manager.custom_popup.my_text = message
 
                 self.parent.parent.parent.manager.custom_popup.open()
                 Clock.schedule_once(done_registering, 0.1)
