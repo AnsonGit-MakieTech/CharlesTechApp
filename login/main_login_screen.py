@@ -496,7 +496,7 @@ class PinKeyboard(BoxLayout):
                     self.parent.parent.parent.manager.custom_popup.my_text = message
 
                 self.parent.parent.parent.manager.custom_popup.open()
-                Clock.schedule_once(done_registering, 0.1)
+                Clock.schedule_once(done_registering, 0.5)
                 return False
         
         Clock.schedule_interval(communication_event, 1)
