@@ -130,7 +130,7 @@ class Communications:
                     self.data[key] = {"result" : True, "message" : "Logging In!" , "data" : data}
                 else:
                     data = response.json()
-                    message = data.get("message", "Incorrect Pin!")
+                    message = data.get("text", "Incorrect Pin!")
                     self.data[key] = {"result" : False, "message" : message}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : "Server Is Down" } 
