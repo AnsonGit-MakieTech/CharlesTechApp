@@ -57,7 +57,12 @@ class Communications:
                     self.threads.remove(self_thread) 
                 return
 
-            json_data = {"username": username, "password": password, "action": "technical_register_system_user"}
+            json_data = {
+                "username": username, 
+                "password": password, 
+                "action": "technical_register_system_user",
+                "version" : variables.VERSION_APP
+            }
             # csrf_token = self.session.cookies.get('csrftoken')  # Django sets this
             url = self.server + "technical_unauthenticated_api"
             headers = {
@@ -167,7 +172,8 @@ class Communications:
                 "username": username,
                 "password": password,
                 "new_pin": pin,
-                "action": "register_new_pin"
+                "action": "register_new_pin",
+                "version" : variables.VERSION_APP
             }            
             url = self.server + "technical_unauthenticated_api"
             headers = {
@@ -455,7 +461,13 @@ class Communications:
                     self.threads.remove(self_thread) 
                 return
 
-            json_data = {"username": username, "password": password, "new_pin": new_pin, "action": "reset_pin"}
+            json_data = {
+                "username": username, 
+                "password": password, 
+                "new_pin": new_pin, 
+                "action": "reset_pin",
+                "version" : variables.VERSION_APP
+                }
             # csrf_token = self.session.cookies.get('csrftoken')  # Django sets this
             url = self.server + "technical_unauthenticated_api"
             headers = {
@@ -500,7 +512,8 @@ class Communications:
                 "action": "update_pin",
                 "old_pin": old_pin,
                 "new_pin": new_pin,
-                "confirm_pin": confirm_pin
+                "confirm_pin": confirm_pin,
+                "version" : variables.VERSION_APP
             } 
             url = self.server + "technical_center_api"
             headers = {
