@@ -79,7 +79,9 @@ class Communications:
                     self.data[key] = {"result" : True, "message" : "Verified Users!" , "data" : data}
                 else:
                     # print(response.text)
-                    self.data[key] = {"result" : False, "message" : "No Pin Found! Please Register!"}
+                    data = response.json()
+                    message = data.get("text", "No Pin Found! Please Register!")
+                    self.data[key] = {"result" : False, "message" : message}
                 
             except Exception as e:
                     self.data[key] = {"result" : False, "message" : "Error: " + str(e)}
@@ -187,10 +189,12 @@ class Communications:
                 response = self.session.post(url, headers=headers, json=json_data)
                 if response.ok:
                     data = response.json()
+
                     self.data[key] = {"result" : True, "message" : "Registration successful" , "data" : data}
                 else:
-                    # print(response.text)
-                    self.data[key] = {"result" : False, "message" : "Registration failed"}
+                    data = response.json()
+                    message = data.get("text", "Registration failed")
+                    self.data[key] = {"result" : False, "message" : message}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
 
@@ -484,7 +488,9 @@ class Communications:
                     self.data[key] = {"result" : True, "message" : "Verified Users!" , "data" : data}
                 else:
                     # print(response.text)
-                    self.data[key] = {"result" : False, "message" : "No Pin Found! Please Register!"}
+                    data = response.json()
+                    message = data.get("text",  "No Pin Found! Please Register!")
+                    self.data[key] = {"result" : False, "message" : message}
                 
             except Exception as e:
                     self.data[key] = {"result" : False, "message" : "Error: " + str(e)}

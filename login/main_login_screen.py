@@ -171,7 +171,8 @@ class RegisterPinScreen(Screen):
                         self.manager.custom_popup.auto_dismiss = False 
                         Clock.schedule_once(continue_registering, 2) 
                     else:
-                        self.manager.custom_popup.my_text = "Pin is incorrect"
+                        text = data.get("message", "Pin is incorrect")
+                        self.manager.custom_popup.my_text = text
                         Clock.schedule_once(done_registering, 2)
                     self.manager.custom_popup.open()
                     return False
@@ -221,7 +222,7 @@ class RegisterPinScreen(Screen):
                         self.manager.custom_popup.auto_dismiss = False 
                         Clock.schedule_once(continue_registering, 2) 
                     else:
-                        self.manager.custom_popup.my_text = data.get("data", {}).get("text", "Please try again")
+                        self.manager.custom_popup.my_text = data.get("message", "Please try again")
                         Clock.schedule_once(done_registering, 2)
                     self.manager.custom_popup.open()
                     return False
@@ -374,7 +375,8 @@ class RegisterAccountScreen(Screen):
                             Clock.schedule_once(continue_registering, 2)
                             return False
                         else:
-                            self.manager.custom_popup.my_text = "Not Verified Users!"
+                            message = data.get("message", "Not Verified Users!")
+                            self.manager.custom_popup.my_text = message
                             Clock.schedule_once(done_registering, 0.1)
                         self.manager.custom_popup.open()
                         return False
