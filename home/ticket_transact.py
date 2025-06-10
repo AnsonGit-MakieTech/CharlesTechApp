@@ -142,6 +142,7 @@ class POCUploaderLayout(MDBoxLayout):
     selected_images = DictProperty({}) # {index: image_path}
     poc_images_container : BoxLayout = ObjectProperty(None)
     is_selecting_file : bool = BooleanProperty(False)
+    chooser : Chooser = ObjectProperty(None)
     
     def setup_poc_uploader_layout(self, step_text, step_instruction):
         self.step_text = step_text
@@ -177,21 +178,83 @@ class POCUploaderLayout(MDBoxLayout):
             self.is_selecting_file = False
 
         Clock.schedule_once( reset_selecting  , 1)
-
-        if platform == "win":
-            filechooser.open_file(on_selection=self.handle_selection)
-        elif platform == "android":
-            # SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
-            self.chooser = Chooser(self.on_image_selected)
-            self.chooser.choose_content('image/*', multiple=False)
+        try:
+            if platform == "win":
+                filechooser.open_file(on_selection=self.handle_selection)
+            elif platform == "android":
+                # SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
+                if self.chooser is None:
+                    self.chooser = Chooser(self.on_image_selected)
+                    self.chooser.choose_content('image/*', multiple=False)
+        except Exception as e:
+            print("Error:", e)
+            self.is_selecting_file = False
 
     def handle_selection(self, selection):
-        if selection:
-            image_path = selection[0]  # Display the selected image
-            if not is_image(image_path):
-                if platform == "android":
-                    toast("Invalid image format. Please select a valid image file.") 
+        try:
+            if selection:
+                image_path = selection[0]  # Display the selected image
+                if not is_image(image_path):
+                    # if platform == "android":
+                    #     toast("Invalid image format. Please select a valid image file.") 
+                    return
+                index = ''.join(random.choices('0123456789', k=5))
+                self.selected_images[index] = image_path
+                image = POCImageLayout(image_path=image_path, index=index)
+                image.parent_event = self.delete_image
+                self.poc_images_container.add_widget(image)
+                self.parent_event()
+                self.is_selecting_file = False
+            else:
+                self.is_selecting_file = False
+        except Exception as e:
+            print("Error:", e)
+            Clock.schedule_once(self.parent.parent.parent.parent.manager.proccess_layout.open)
+            Clock.schedule_once(lambda dt: self.parent.parent.parent.parent.manager.proccess_layout.display_error(str(e)), 0.5)
+            self.is_selecting_file = False
+
+    def on_image_selected(self, uri_list):
+        try:
+            if uri_list:
+                uri = uri_list[0]
+                ss = SharedStorage()
+
+                # ✅ Copy file from shared storage to app cache
+                private_file_path = ss.copy_from_shared(uri)
+                if private_file_path: 
+                    Clock.schedule_once(lambda dt: self.on_image_loaded_path(private_file_path))
+                else:
+                    # if platform == "android":
+                    #     toast("Failed to load image from storage.")
+                    self.is_selecting_file = False
+            else:
+                self.is_selecting_file = False
+        except Exception as e:
+            print("Error:", e)
+            self.is_selecting_file = False
+            Clock.schedule_once(self.parent.parent.parent.parent.manager.proccess_layout.open)
+            Clock.schedule_once(lambda dt: self.parent.parent.parent.parent.manager.proccess_layout.display_error(str(e)), 0.5)
+            
+    def on_image_loaded_path(self, private_file_path):
+        try:
+            filename = os.path.basename(private_file_path)
+
+            # ✅ Check if it's an image
+            if not is_image_ext(filename):
+                # if platform == "android":
+                #     toast("Invalid image format. Please select a valid image file.")
+                self.is_selecting_file = False
                 return
+
+            save_dir = os.path.join(self.get_save_path(), "selected_images")
+            os.makedirs(save_dir, exist_ok=True)
+
+            image_path = os.path.join(save_dir, filename)
+
+            # ✅ Copy file to save location
+            shutil.copy(private_file_path, image_path)
+
+            # ✅ Update UI
             index = ''.join(random.choices('0123456789', k=5))
             self.selected_images[index] = image_path
             image = POCImageLayout(image_path=image_path, index=index)
@@ -199,52 +262,12 @@ class POCUploaderLayout(MDBoxLayout):
             self.poc_images_container.add_widget(image)
             self.parent_event()
             self.is_selecting_file = False
-        else:
+            # print(f"✅ Saved and loaded image path (Android): {image_path}")
+        except Exception as e:
+            print("Error:", e)
             self.is_selecting_file = False
-
-    def on_image_selected(self, uri_list):
-        if uri_list:
-            uri = uri_list[0]
-            ss = SharedStorage()
-
-            # ✅ Copy file from shared storage to app cache
-            private_file_path = ss.copy_from_shared(uri)
-            if private_file_path: 
-                Clock.schedule_once(lambda dt: self.on_image_loaded_path(private_file_path))
-            else:
-                if platform == "android":
-                    toast("Failed to load image from storage.")
-                self.is_selecting_file = False
-        else:
-            self.is_selecting_file = False
-
-    def on_image_loaded_path(self, private_file_path):
-        filename = os.path.basename(private_file_path)
-
-        # ✅ Check if it's an image
-        if not is_image_ext(filename):
-            if platform == "android":
-                toast("Invalid image format. Please select a valid image file.")
-            self.is_selecting_file = False
-            return
-
-        save_dir = os.path.join(self.get_save_path(), "selected_images")
-        os.makedirs(save_dir, exist_ok=True)
-
-        image_path = os.path.join(save_dir, filename)
-
-        # ✅ Copy file to save location
-        shutil.copy(private_file_path, image_path)
-
-        # ✅ Update UI
-        index = ''.join(random.choices('0123456789', k=5))
-        self.selected_images[index] = image_path
-        image = POCImageLayout(image_path=image_path, index=index)
-        image.parent_event = self.delete_image
-        self.poc_images_container.add_widget(image)
-        self.parent_event()
-        self.is_selecting_file = False
-        # print(f"✅ Saved and loaded image path (Android): {image_path}")
+            Clock.schedule_once(self.parent.parent.parent.parent.manager.proccess_layout.open)
+            Clock.schedule_once(lambda dt: self.parent.parent.parent.parent.manager.proccess_layout.display_error(str(e)), 0.5)
 
     def get_save_path(self):
         # Return a writable path depending on the platform
