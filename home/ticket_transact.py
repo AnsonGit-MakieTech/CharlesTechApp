@@ -142,7 +142,7 @@ class POCUploaderLayout(MDBoxLayout):
     selected_images = DictProperty({}) # {index: image_path}
     poc_images_container : BoxLayout = ObjectProperty(None)
     is_selecting_file : bool = BooleanProperty(False)
-    chooser : Chooser = ObjectProperty(None)
+    chooser = ObjectProperty(None)
     
     def setup_poc_uploader_layout(self, step_text, step_instruction):
         self.step_text = step_text
