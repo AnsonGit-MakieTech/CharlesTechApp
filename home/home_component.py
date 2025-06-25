@@ -74,7 +74,8 @@ class CustomScrollView(ScrollView):
         # Call refresh only after overscroll + release
         if isinstance(self.effect_y, CustomScrollEffect):
             if self.effect_y.should_refresh():
-                self.effect_y.refresh()
+                self.effect_y.refresh() 
+                
         return super().on_touch_up(touch)
 
 class CustomSpinner(Image):

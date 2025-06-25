@@ -140,8 +140,7 @@ class TicketListScreen(Screen):
         # self.refresh_layout.on_pull_refresh()
         self.search_box.update_padding()
 
-        if len(self.tickets) == 0:
-            self.refresh_callback()
+        self.refresh_callback() # refresh the tickets list when entering the screen
         
         transact_screen = self.manager.get_screen(HOME_SCREEN_TRANSACT_SCREEN)
         if transact_screen.has_changed_data:
@@ -168,7 +167,7 @@ class TicketListScreen(Screen):
         self.text_input_font_size = min(width, height) * 0.05
 
 
-    def refresh_callback(self, *args): 
+    def refresh_callback(self, *args):  
         if self.is_calling_refresh:
             return
         self.is_calling_refresh = True
@@ -197,7 +196,7 @@ class TicketListScreen(Screen):
                         del self.tickets[rkey]
     
 
-
+                    print("DISPLAY TICKETS : ", len(self.tickets))
                     if len(self.tickets) > 0: 
                         for tkey , ticket in self.tickets.items():
                             new_ticket = Ticket()
@@ -205,14 +204,17 @@ class TicketListScreen(Screen):
                                 new_ticket.ticket_number = ticket.get("ticketnumber", "N/A")
                                 new_ticket.ticket_type = ticket.get("tickettype", "N/A")
                                 new_ticket.ticket_date = ticket.get("ticket_open_date", "N/A")
+                                print("Try Line")
                             except Exception as e:
                                 print("Error : ", e)
                                 new_ticket.ticket_number = "N/A"
                                 new_ticket.ticket_type = "N/A"
                                 new_ticket.ticket_date = "N/A"
+                                print("Error Line")
 
                             new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
                             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
+                            print("Added Ticket")
                             # print("ticket : ", ticket)
                             time.sleep(0.1)
                     self.is_calling_refresh = False

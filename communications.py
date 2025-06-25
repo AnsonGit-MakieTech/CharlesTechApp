@@ -9,8 +9,8 @@ from utils.app_utils import has_internet
 import variables
 
 class Communications:
-    server = "https://charlescatv.billingko.com/api/" # OFFICIAL SERVER
-    # server = "https://alpha.billingko.com/api/" # DUMMY SERVER
+    # server = "https://charlescatv.billingko.com/api/" # OFFICIAL SERVER
+    server = "https://alpha.billingko.com/api/" # DUMMY SERVER
     token = None
     data = {}
     threads = []
@@ -291,15 +291,18 @@ class Communications:
                 if response.ok:
                     data = response.json()
                     self.data[key] = {"result" : True, "message" : "" , "data" : data.get('tickets',[])}
+                    # print("Tikect data : ", data)
                 else:
+                    # print("Tikect data : ", None)
                     self.data[key] = {"result" : False, "message" : ""}
             except Exception as e:
                 self.data[key] = {"result" : False, "message" : str(e)}
+                # print("Tikect data error: ", None)
             self.has_thread_running = False
             self.key_running.remove(key)
             if self_thread in self.threads:
                 self.threads.remove(self_thread)
-
+            
         
         thread = threading.Thread(target=lambda: event(thread))
         self.threads.append(thread)
