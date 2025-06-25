@@ -215,8 +215,9 @@ class TicketListScreen(Screen):
                             new_ticket.parent_event = lambda td=ticket: self.change_screen(td)
                             self.ticket_list.add_widget(new_ticket, index=len(self.ticket_list.children))
                             print("Added Ticket")
-                            # print("ticket : ", ticket)
-                            time.sleep(0.1)
+                        widget = self.ticket_list.children[-1]
+                        print("widget : ", widget.ticket_number)
+                        self.refresh_layout.scroll_to(widget, padding=10, animate=True)
                     self.is_calling_refresh = False
                     return False
                 elif data.get("result", False) == False: 
