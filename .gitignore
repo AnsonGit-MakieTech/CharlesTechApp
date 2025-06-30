@@ -1,8 +1,4 @@
 # Ignore Python compiled files
-__pycache__/
-*.py[cod]
-*$py.class
-*.pyc
 
 # Ignore virtual environment
 venv/
@@ -38,6 +34,15 @@ config.json
 credentials.json
 
 
+.pyc
 # Ignore all files in the data folder
 cache/
 test.py
+
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+
