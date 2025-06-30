@@ -217,7 +217,8 @@ class TicketListScreen(Screen):
                             print("Added Ticket")
                         widget = self.ticket_list.children[-1]
                         print("widget : ", widget.ticket_number)
-                        self.refresh_layout.scroll_to(widget, padding=10, animate=True)
+                        if self.refresh_layout.height < self.ticket_list.height: 
+                            self.refresh_layout.scroll_to(widget, padding=10, animate=True)
                     self.is_calling_refresh = False
                     return False
                 elif data.get("result", False) == False: 
