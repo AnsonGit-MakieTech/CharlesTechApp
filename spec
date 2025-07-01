@@ -1,5 +1,8 @@
 [app]
 
+# Strip debug symbols from your .so files to make them less fingerprint-y:
+android.strip = True
+
 # (str) Title of your application
 title = TechApp
 
