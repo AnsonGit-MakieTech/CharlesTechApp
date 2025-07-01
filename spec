@@ -45,6 +45,15 @@ android.permissions = INTERNET,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,READ_
 garden_requirements = mapview
 android.gradle_dependencies = com.google.android.gms:play-services-location:21.0.1
 
+
+# — Your release keystore for in-place updates — 
+android.release_keystore = releasekey.jks
+android.release_keyalias = techcharlesapp
+android.release_keystore_password = Charles691Tech
+android.release_keyalias_password = Charles691Tech
+
+
+
 # P4A settings
 p4a.branch = master
 p4a.python_version = 3.10
