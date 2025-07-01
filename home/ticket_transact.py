@@ -1325,89 +1325,91 @@ class TicketTransactionScreeen(Screen):
 
 
     def update_image_data(self):
+
+        category = self.ticket.get('ticket_category', 'default')
         
         poc1 = self.poc_uploader_layout_1.selected_images
-        if not poc1:
+        if not poc1 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc2 = self.poc_uploader_layout_2.selected_images
-        if not poc2:
+        if not poc2 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc3 = self.poc_uploader_layout_3.selected_images
-        if not poc3:
+        if not poc3 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc4 = self.poc_uploader_layout_4.selected_images
-        if not poc4:
+        if not poc4 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc5 = self.poc_uploader_layout_5.selected_images
-        if not poc5:
+        if not poc5 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc6 = self.poc_uploader_layout_6.selected_images
-        if not poc6:
+        if not poc6 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc7 = self.poc_uploader_layout_7.selected_images
-        if not poc7:
+        if not poc7 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
         poc8 = self.poc_uploader_layout_8.selected_images
-        if not poc8:
+        if not poc8 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
 
         poc9 = self.poc_uploader_layout_9.selected_images
-        if not poc9:
+        if not poc9 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
         
 
         poc10 = self.poc_uploader_layout_10.selected_images
-        if not poc10:
+        if not poc10 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc11 = self.poc_uploader_layout_11.selected_images
-        if not poc11:
+        if not poc11 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc12 = self.poc_uploader_layout_12.selected_images
-        if not poc12:
+        if not poc12 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc13 = self.poc_uploader_layout_13.selected_images
-        if not poc13:
+        if not poc13 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return
 
         poc14 = self.poc_uploader_layout_14.selected_images
-        if not poc14:
+        if not poc14 and (category == 'default'):
             self.poc_layout.is_not_done = True
             self.for_review_layout.is_ready = False
             return 
